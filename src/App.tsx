@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import CodeMirror from '@uiw/react-codemirror';
 import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import { ic10 } from "codemirror-lang-ic10";
+import { yaml } from "@codemirror/lang-yaml";
 import { Box, Grid, GridItem } from "@chakra-ui/react"
 
 function App() {
@@ -24,7 +25,7 @@ function App() {
       <GridItem >
         <Box>Ic10</Box>
         <Box flex="1">
-          <CodeMirror value={value} theme={vscodeDark} extensions={[ic10()]} onChange={onChange} />
+          <CodeMirror value={value} theme={vscodeDark} extensions={[yaml()]} onChange={onChange} />
         </Box>
       </GridItem>
     </Grid>
