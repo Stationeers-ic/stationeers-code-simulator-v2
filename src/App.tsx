@@ -1,35 +1,34 @@
-import { useCallback, useState } from "react";
 import CodeMirror from '@uiw/react-codemirror';
 import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import { ic10 } from "codemirror-lang-ic10";
 import { yaml } from "@codemirror/lang-yaml";
-import { Box, Grid, GridItem } from "@chakra-ui/react"
+import { Box, Button, Grid, GridItem } from "@chakra-ui/react"
+import useIc10 from "./hooks/Builder";
 
 function App() {
-  const [value, setValue] = useState("");
-  const onChange = useCallback((val: string) => {
-    setValue(val);
-  }, []);
-  return <>
-    <Grid templateColumns="repeat(3, 1fr)" gap="6" height={"100vh"}>
-      <GridItem  >
-        <Box>Ic10</Box>
-        <Box flex="1" >
-          <CodeMirror height="200px" value={value} theme={vscodeDark} extensions={[ic10()]} onChange={onChange} />
-        </Box>
-      </GridItem>
-      <GridItem >
-        output
-      </GridItem>
+  const height = "620px"
 
-      <GridItem >
-        <Box>Ic10</Box>
-        <Box flex="1">
-          <CodeMirror value={value} theme={vscodeDark} extensions={[yaml()]} onChange={onChange} />
-        </Box>
-      </GridItem>
-    </Grid>
-  </>
+  const { ic10Code, setIc10, setYaml, step, yamlCode, run } = useIc10()
+
+
+  return <Grid templateColumns="repeat(3, 1fr)" gap="6" >
+    <GridItem colSpan={2} >
+      <Box>Ic10
+
+        <Button onClick={step}>step</Button>
+        <Button onClick={run}>run</Button>
+      </Box>
+      <Box flex="1" >
+        <CodeMirror value={ic10Code} onChange={(v) => setIc10(v)} height={height} theme={vscodeDark} extensions={[ic10()]} />
+      </Box>
+    </GridItem>
+    <GridItem >
+      <Box>Env</Box>
+      <Box flex="1">
+        <CodeMirror value={yamlCode} onChange={(v) => setYaml(v)} height={height} theme={vscodeDark} extensions={[yaml()]} />
+      </Box>
+    </GridItem>
+  </Grid>
     ;
 }
 export default App;
