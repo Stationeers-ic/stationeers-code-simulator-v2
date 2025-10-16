@@ -16,12 +16,12 @@ function useIc10({ printMessage, getRunners }: useIc10Params) {
   // Инициализация из YAML
   const initializeFromYaml = useCallback(async (yaml: string) => {
     try {
+      setInitialized(false);
       setLoading(true);
       const b = ic10.Builer.from(yaml);
       if (await b.init()) {
         setCurrentEnv(b.toYaml());
         setBuilder(b);
-        setLoading(false);
         setInitialized(true);
         if (getRunners) {
           getRunners(b.Runners)
@@ -36,6 +36,7 @@ function useIc10({ printMessage, getRunners }: useIc10Params) {
           })
         })
       }
+      setLoading(false);
     } catch (e) {
       if (e instanceof ic10.Ic10Error && printMessage) {
         printMessage(e.formated_message)

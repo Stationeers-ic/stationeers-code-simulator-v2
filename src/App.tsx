@@ -15,16 +15,10 @@ version: 1
 chips:
   - id: 1
     code: |
-      move r1 1
-      move r2 1
-      move r3 1
-      move r4
-      move r5 1
-      move r6 1
-      move r7 1
-      move r8 1
-      move r9 1
-      move r10 1
+      move r0 0
+      loop:
+      add r0 r0 1
+      j loop
 
 devices:
   - id: 1
@@ -39,7 +33,8 @@ networks:
     type: data
     `);
   const [ic10Code, setIc10] = useState("");
-  const [runners, setRunners] = useState<Map<number, Ic10Runner>>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_runners, setRunners] = useState<Map<number, Ic10Runner> | null>(null);
   const [terminalOutput, setTerminalOutput] = useState<string[]>([]);
   const addToTerminal = (message: string) => {
     setTerminalOutput(prev => [...prev, `> ${message}`])
