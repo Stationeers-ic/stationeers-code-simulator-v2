@@ -2,11 +2,14 @@
 import * as ic10 from "ic10";
 import { useState, useCallback } from "react";
 
+type useIc10Params = {
+  printMessage?: (msg: string) => void,
+  getRunners?: (runners: Map<number, ic10.Ic10Runner>) => void,
+}
 
-function useIc10() {
+function useIc10({ printMessage, getRunners }: useIc10Params) {
   const [builder, setBuilder] = useState<ic10.Builer | null>(null);
   const [currentEnv, setCurrentEnv] = useState("");
-  const [line, setLine] = useState(0);
   const [loading, setLoading] = useState(false);
   const [initialized, setInitialized] = useState(false);
 
@@ -14,19 +17,34 @@ function useIc10() {
   const initializeFromYaml = useCallback(async (yaml: string) => {
     try {
       setLoading(true);
-      setLine(0)
       const b = ic10.Builer.from(yaml);
       await b.init();
+
+      if (printMessage) {
+        b.Runners.forEach((runner) => {
+          runner.sanboxContext.$errors.forEach((error) => {
+            if (error) {
+              printMessage(error.formated_message)
+            }
+          })
+        })
+      }
       setCurrentEnv(b.toYaml());
       setBuilder(b);
       setLoading(false);
       setInitialized(true);
+      if (getRunners) {
+        getRunners(b.Runners)
+      }
     } catch (e) {
+      if (e instanceof ic10.Ic10Error && printMessage) {
+        printMessage(e.formated_message)
+      }
       console.warn(e);
       setLoading(false);
       setInitialized(false);
     }
-  }, []);
+  }, [getRunners, printMessage]);
 
   const step = useCallback(async () => {
     if (!builder) {
@@ -39,12 +57,23 @@ function useIc10() {
         setInitialized(false);
       }
       setCurrentEnv(builder.toYaml());
-      setLine(line + 1)
+      if (printMessage) {
+        builder.Runners.forEach((runner) => {
+          runner.realContext.$errors.forEach((error) => {
+            if (error) {
+              printMessage(error.formated_message)
+            }
+          })
+        })
+      }
     } catch (e) {
+      if (e instanceof ic10.Ic10Error && printMessage) {
+        printMessage(e.formated_message)
+      }
       console.warn(e)
       setInitialized(false);
     }
-  }, [builder, line]);
+  }, [builder, printMessage]);
 
   return {
     currentEnv,
@@ -52,7 +81,6 @@ function useIc10() {
     step,
     loading,
     initialized,
-    line
   };
 }
 

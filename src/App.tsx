@@ -5,22 +5,31 @@ import { yaml } from "@codemirror/lang-yaml";
 import { Box, Button, Grid, GridItem, Spinner, VStack, HStack, Text } from "@chakra-ui/react"
 import useIc10 from "./hooks/Builder";
 import { useState } from 'react';
+import type { Ic10Runner } from 'ic10';
 
 function App() {
   const height = "590px"
   const terminalHeight = "200px"
   const [intiEnv, setIntiEnv] = useState("");
   const [ic10Code, setIc10] = useState("");
+  const [runners, setRunners] = useState<Map<number, Ic10Runner>>(null);
   const [terminalOutput, setTerminalOutput] = useState<string[]>([]);
-  const { currentEnv, step, init, loading, initialized, line } = useIc10()
-
-  const Load = () => {
-    init(intiEnv)
-  }
-
   const addToTerminal = (message: string) => {
     setTerminalOutput(prev => [...prev, `> ${message}`])
   }
+  const { currentEnv, step, init, loading, initialized } = useIc10({
+    printMessage: addToTerminal,
+    getRunners: (runners) => {
+      setRunners(runners)
+    }
+  })
+
+  const Load = () => {
+    init(intiEnv)
+    clearTerminal()
+  }
+
+
 
   const handleStep = () => {
     step()
@@ -29,7 +38,6 @@ function App() {
   const clearTerminal = () => {
     setTerminalOutput([])
   }
-
   return (
     <Box p={4}>
       <Grid templateColumns="repeat(4, 1fr)" gap={6} mb={6}>
@@ -39,7 +47,7 @@ function App() {
             <HStack justify="space-between">
               <Text fontWeight="bold">IC10 Code</Text>
               <HStack>
-                <Text fontSize="sm" color="gray.500">Line: {line}</Text>
+                <Text fontSize="sm" color="gray.500">Line: {0}</Text>
                 <Button
                   size="sm"
                   onClick={handleStep}
@@ -75,7 +83,7 @@ function App() {
                 readOnly={true}
                 height={height}
                 theme={vscodeDark}
-                extensions={yaml()}
+                extensions={[yaml()]}
               />
             </Box>
           </VStack>
@@ -90,8 +98,15 @@ function App() {
                 {loading && <Spinner size="sm" />}
                 <Button
                   size="sm"
+                  onClick={handleStep}
+                  disabled={!initialized}
+                  colorScheme="blue"
+                >
+                  Step
+                </Button>
+                <Button
+                  size="sm"
                   onClick={Load}
-                  disabled={initialized}
                   colorScheme="green"
                 >
                   Initialize
@@ -104,7 +119,7 @@ function App() {
                 onChange={setIntiEnv}
                 height={height}
                 theme={vscodeDark}
-                extensions={yaml()}
+                extensions={[yaml()]}
               />
             </Box>
           </VStack>
