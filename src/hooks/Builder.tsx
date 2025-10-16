@@ -24,7 +24,7 @@ function useIc10({ printMessage, getRunners }: useIc10Params) {
         b.Runners.forEach((runner) => {
           runner.sanboxContext.$errors.forEach((error) => {
             if (error) {
-              printMessage(error.formated_message)
+              printMessage(`In device ${runner.realContext.housing.id.toString().padEnd(3)} | ${error.formated_message}`)
             }
           })
         })
@@ -47,8 +47,14 @@ function useIc10({ printMessage, getRunners }: useIc10Params) {
   }, [getRunners, printMessage]);
 
   const step = useCallback(async () => {
+
     if (!builder) {
       setInitialized(false);
+      if (printMessage) printMessage("Не инициализирован")
+      return
+    }
+    if (!initialized) {
+      if (printMessage) printMessage("Не инициализирован")
       return
     }
     try {
@@ -61,7 +67,7 @@ function useIc10({ printMessage, getRunners }: useIc10Params) {
         builder.Runners.forEach((runner) => {
           runner.realContext.$errors.forEach((error) => {
             if (error) {
-              printMessage(error.formated_message)
+              printMessage(`In device ${runner.realContext.housing.id.toString().padEnd(3)} | ${error.formated_message}`)
             }
           })
         })
@@ -73,7 +79,7 @@ function useIc10({ printMessage, getRunners }: useIc10Params) {
       console.warn(e)
       setInitialized(false);
     }
-  }, [builder, printMessage]);
+  }, [builder, initialized, printMessage]);
 
   return {
     currentEnv,
