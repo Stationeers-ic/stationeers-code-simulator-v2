@@ -18,8 +18,15 @@ function useIc10({ printMessage, getRunners }: useIc10Params) {
     try {
       setLoading(true);
       const b = ic10.Builer.from(yaml);
-      await b.init();
-
+      if (await b.init()) {
+        setCurrentEnv(b.toYaml());
+        setBuilder(b);
+        setLoading(false);
+        setInitialized(true);
+        if (getRunners) {
+          getRunners(b.Runners)
+        }
+      }
       if (printMessage) {
         b.Runners.forEach((runner) => {
           runner.sanboxContext.$errors.forEach((error) => {
@@ -28,13 +35,6 @@ function useIc10({ printMessage, getRunners }: useIc10Params) {
             }
           })
         })
-      }
-      setCurrentEnv(b.toYaml());
-      setBuilder(b);
-      setLoading(false);
-      setInitialized(true);
-      if (getRunners) {
-        getRunners(b.Runners)
       }
     } catch (e) {
       if (e instanceof ic10.Ic10Error && printMessage) {

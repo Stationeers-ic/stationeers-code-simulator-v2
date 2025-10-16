@@ -10,7 +10,34 @@ import type { Ic10Runner } from 'ic10';
 function App() {
   const height = "590px"
   const terminalHeight = "200px"
-  const [intiEnv, setIntiEnv] = useState("");
+  const [intiEnv, setIntiEnv] = useState(`
+version: 1
+chips:
+  - id: 1
+    code: |
+      move r1 1
+      move r2 1
+      move r3 1
+      move r4
+      move r5 1
+      move r6 1
+      move r7 1
+      move r8 1
+      move r9 1
+      move r10 1
+
+devices:
+  - id: 1
+    PrefabName: StructureCircuitHousingCompact
+    name: MyDevice
+    chip: 1
+    ports:
+      - port: default
+        network: base
+networks:
+  - id: base
+    type: data
+    `);
   const [ic10Code, setIc10] = useState("");
   const [runners, setRunners] = useState<Map<number, Ic10Runner>>(null);
   const [terminalOutput, setTerminalOutput] = useState<string[]>([]);
