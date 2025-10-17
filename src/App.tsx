@@ -1,30 +1,38 @@
 import CodeMirror from '@uiw/react-codemirror';
 import { vscodeDark } from '@uiw/codemirror-theme-vscode';
-import { ic10 } from "codemirror-lang-ic10";
 import { yaml } from "@codemirror/lang-yaml";
 import { Box, Button, Grid, GridItem, Spinner, VStack, HStack, Text } from "@chakra-ui/react"
 import useIc10 from "./hooks/Builder";
 import { useState } from 'react';
 import type { Ic10Runner } from 'ic10';
+import Runners from './components/ui/runners';
 
 function App() {
   const height = "590px"
   const terminalHeight = "200px"
   const [intiEnv, setIntiEnv] = useState(`
+
 version: 1
 chips:
   - id: 1
     code: |
-      move r0 0
-      loop:
-      add r0 r0 1
-      j loop
+      s db:0 Channel4 15
+  - id: 2
+    code: |
+      yield
+      l r1 db:0 Channel4
+
 
 devices:
   - id: 1
     PrefabName: StructureCircuitHousingCompact
-    name: MyDevice
     chip: 1
+    ports:
+      - port: default
+        network: base
+  - id: 2
+    PrefabName: StructureCircuitHousingCompact
+    chip: 2
     ports:
       - port: default
         network: base
@@ -32,14 +40,12 @@ networks:
   - id: base
     type: data
     `);
-  const [ic10Code, setIc10] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_runners, setRunners] = useState<Map<number, Ic10Runner> | null>(null);
+  const [runners, setRunners] = useState<Map<number, Ic10Runner> | null>(null);
   const [terminalOutput, setTerminalOutput] = useState<string[]>([]);
   const addToTerminal = (message: string) => {
     setTerminalOutput(prev => [...prev, `> ${message}`])
   }
-  const { currentEnv, step, init, loading, initialized } = useIc10({
+  const { currentEnv, step, init, loading, initialized, getCurrentEnv } = useIc10({
     printMessage: addToTerminal,
     getRunners: (runners) => {
       setRunners(runners)
@@ -51,7 +57,14 @@ networks:
     clearTerminal()
   }
 
-
+  const update = () => {
+    const yaml = getCurrentEnv()
+    if (yaml) {
+      setIntiEnv(yaml)
+      init(yaml)
+      clearTerminal()
+    }
+  }
 
   const handleStep = () => {
     step()
@@ -81,13 +94,7 @@ networks:
               </HStack>
             </HStack>
             <Box flex={1} border="1px solid" borderColor="gray.200" borderRadius="md">
-              <CodeMirror
-                value={ic10Code}
-                onChange={setIc10}
-                height={height}
-                theme={vscodeDark}
-                extensions={[ic10()]}
-              />
+              {runners ? <Runners runners={runners} update={update} /> : null}
             </Box>
           </VStack>
         </GridItem>
