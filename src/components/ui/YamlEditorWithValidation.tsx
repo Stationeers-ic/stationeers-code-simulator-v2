@@ -120,50 +120,56 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 
     return (
         <div className="yaml-editor-with-validation" style={{ width: codeMirrorProps.width || "100%" }}>
-            <div className={`editor-container ${!isValid && errors.length > 0 ? "has-errors" : ""}`}>
-                <CodeMirror
-                    value={yamlValue}
-                    height={codeMirrorProps.height || "400px"}
-                    extensions={[yaml()]}
-                    onChange={handleChange}
-                    {...codeMirrorProps}
-                />
+            <div className="editor-wrapper">
+                <div className={`editor-container ${!isValid && errors.length > 0 ? "has-errors" : ""}`}>
+                    <CodeMirror
+                        value={yamlValue}
+                        height={codeMirrorProps.height || "400px"}
+                        extensions={[yaml()]}
+                        onChange={handleChange}
+                        {...codeMirrorProps}
+                    />
+                </div>
+
+                {errors.length > 0 && (
+                    <div className="validation-errors">
+                        <div className="errors-header">
+                            <strong>Validation Errors:</strong>
+                            <span className="error-count">{errors.length} error(s)</span>
+                        </div>
+                        <div className="errors-list">
+                            {errors.map((error, index) => (
+                                <div key={index} className="error-item">
+                                    <span className="error-icon">❌</span>
+                                    <span className="error-message">
+                                        {getErrorMessage(error)}
+                                        {error.line !== undefined && (
+                                            <span className="error-location">
+                                                (line: {error.line}, column: {error.column})
+                                            </span>
+                                        )}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {isValid && yamlValue.trim() && (
+                    <div className="validation-success">
+                        <span className="success-icon">✅</span>
+                        YAML is valid and conforms to the schema
+                    </div>
+                )}
             </div>
-
-            {errors.length > 0 && (
-                <div className="validation-errors">
-                    <div className="errors-header">
-                        <strong>Validation Errors:</strong>
-                        <span className="error-count">{errors.length} error(s)</span>
-                    </div>
-                    <div className="errors-list">
-                        {errors.map((error, index) => (
-                            <div key={index} className="error-item">
-                                <span className="error-icon">❌</span>
-                                <span className="error-message">
-                                    {getErrorMessage(error)}
-                                    {error.line !== undefined && (
-                                        <span className="error-location">
-                                            (line: {error.line}, column: {error.column})
-                                        </span>
-                                    )}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )}
-
-            {isValid && yamlValue.trim() && (
-                <div className="validation-success">
-                    <span className="success-icon">✅</span>
-                    YAML is valid and conforms to the schema
-                </div>
-            )}
 
             <style>{`
         .yaml-editor-with-validation {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .editor-wrapper {
+          position: relative;
         }
         
         .editor-container {
@@ -178,12 +184,20 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
         }
         
         .validation-errors {
-          margin-top: 12px;
+          position: absolute;
+          bottom: 12px;
+          left: 12px;
+          right: 12px;
+          z-index: 10;
           padding: 12px;
-          background-color: #fee;
+          background-color: rgba(254, 238, 238, 0.98);
           border: 1px solid #f5c6cb;
           border-radius: 4px;
           color: #721c24;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          backdrop-filter: blur(4px);
+          max-height: 200px;
+          overflow-y: auto;
         }
         
         .errors-header {
@@ -199,6 +213,11 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
           padding: 2px 8px;
           border-radius: 12px;
           font-size: 12px;
+        }
+        
+        .errors-list {
+          max-height: 140px;
+          overflow-y: auto;
         }
         
         .error-item {
@@ -225,15 +244,21 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
         }
         
         .validation-success {
-          margin-top: 12px;
+          position: absolute;
+          bottom: 12px;
+          left: 12px;
+          right: 12px;
+          z-index: 10;
           padding: 8px 12px;
-          background-color: #efffed;
+          background-color: rgba(239, 255, 237, 0.98);
           border: 1px solid #c3e6cb;
           border-radius: 4px;
           color: #155724;
           display: flex;
           align-items: center;
           gap: 8px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          backdrop-filter: blur(4px);
         }
         
         .success-icon {
