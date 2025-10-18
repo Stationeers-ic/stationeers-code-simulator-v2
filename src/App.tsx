@@ -67,6 +67,7 @@ networks:
     clearTerminal();
   };
 
+
   const update = () => {
     const yaml = getCurrentEnv();
     if (yaml) {
