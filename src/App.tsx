@@ -1,15 +1,24 @@
-import CodeMirror from '@uiw/react-codemirror';
-import { vscodeDark } from '@uiw/codemirror-theme-vscode';
+import {
+  Box,
+  Button,
+  Grid,
+  GridItem,
+  HStack,
+  Spinner,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { yaml } from "@codemirror/lang-yaml";
-import { Box, Button, Grid, GridItem, Spinner, VStack, HStack, Text } from "@chakra-ui/react"
+import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import CodeMirror from "@uiw/react-codemirror";
+import type { Ic10Runner } from "ic10";
+import { useState } from "react";
+import Runners from "./components/ui/runners";
 import useIc10 from "./hooks/Builder";
-import { useState } from 'react';
-import type { Ic10Runner } from 'ic10';
-import Runners from './components/ui/runners';
 
 function App() {
-  const height = "590px"
-  const terminalHeight = "200px"
+  const height = "590px";
+  const terminalHeight = "200px";
   const [intiEnv, setIntiEnv] = useState(`
 
 version: 1
@@ -43,36 +52,37 @@ networks:
   const [runners, setRunners] = useState<Map<number, Ic10Runner> | null>(null);
   const [terminalOutput, setTerminalOutput] = useState<string[]>([]);
   const addToTerminal = (message: string) => {
-    setTerminalOutput(prev => [...prev, `> ${message}`])
-  }
-  const { currentEnv, step, init, loading, initialized, getCurrentEnv } = useIc10({
-    printMessage: addToTerminal,
-    getRunners: (runners) => {
-      setRunners(runners)
-    }
-  })
+    setTerminalOutput((prev) => [...prev, `> ${message}`]);
+  };
+  const { currentEnv, step, init, loading, initialized, getCurrentEnv } =
+    useIc10({
+      printMessage: addToTerminal,
+      getRunners: (runners) => {
+        setRunners(runners);
+      },
+    });
 
-  const Load = () => {
-    init(intiEnv)
-    clearTerminal()
-  }
+  const load = () => {
+    init(intiEnv);
+    clearTerminal();
+  };
 
   const update = () => {
-    const yaml = getCurrentEnv()
+    const yaml = getCurrentEnv();
     if (yaml) {
-      setIntiEnv(yaml)
-      init(yaml)
-      clearTerminal()
+      setIntiEnv(yaml);
+      init(yaml);
+      clearTerminal();
     }
-  }
+  };
 
   const handleStep = () => {
-    step()
-  }
+    step();
+  };
 
   const clearTerminal = () => {
-    setTerminalOutput([])
-  }
+    setTerminalOutput([]);
+  };
   return (
     <Box p={4}>
       <Grid templateColumns="repeat(4, 1fr)" gap={6} mb={6}>
@@ -82,7 +92,9 @@ networks:
             <HStack justify="space-between">
               <Text fontWeight="bold">IC10 Code</Text>
               <HStack>
-                <Text fontSize="sm" color="gray.500">Line: {0}</Text>
+                <Text fontSize="sm" color="gray.500">
+                  Line: {0}
+                </Text>
                 <Button
                   size="sm"
                   onClick={handleStep}
@@ -93,7 +105,12 @@ networks:
                 </Button>
               </HStack>
             </HStack>
-            <Box flex={1} border="1px solid" borderColor="gray.200" borderRadius="md">
+            <Box
+              flex={1}
+              border="1px solid"
+              borderColor="gray.200"
+              borderRadius="md"
+            >
               {runners ? <Runners runners={runners} update={update} /> : null}
             </Box>
           </VStack>
@@ -106,7 +123,12 @@ networks:
               <Text fontWeight="bold">Current Environment</Text>
               <Box width="47px" height={35} />
             </HStack>
-            <Box flex={1} border="1px solid" borderColor="gray.200" borderRadius="md">
+            <Box
+              flex={1}
+              border="1px solid"
+              borderColor="gray.200"
+              borderRadius="md"
+            >
               <CodeMirror
                 value={currentEnv}
                 readOnly={true}
@@ -133,16 +155,17 @@ networks:
                 >
                   Step
                 </Button>
-                <Button
-                  size="sm"
-                  onClick={Load}
-                  colorScheme="green"
-                >
+                <Button size="sm" onClick={load} colorScheme="green">
                   Initialize
                 </Button>
               </HStack>
             </HStack>
-            <Box flex={1} border="1px solid" borderColor="gray.200" borderRadius="md">
+            <Box
+              flex={1}
+              border="1px solid"
+              borderColor="gray.200"
+              borderRadius="md"
+            >
               <CodeMirror
                 value={intiEnv}
                 onChange={setIntiEnv}
@@ -175,10 +198,14 @@ networks:
           overflow="auto"
         >
           {terminalOutput.length === 0 ? (
-            <Text color="gray.400">No output yet. Execute steps to see output...</Text>
+            <Text color="gray.400">
+              No output yet. Execute steps to see output...
+            </Text>
           ) : (
-            terminalOutput.map((line, index) => (
-              <Text key={index} fontSize="sm">{line}</Text>
+            terminalOutput.map((line) => (
+              <Text key={line} fontSize="sm">
+                {line}
+              </Text>
             ))
           )}
         </Box>
