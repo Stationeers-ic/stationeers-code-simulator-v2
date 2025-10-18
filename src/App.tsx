@@ -3,10 +3,17 @@ import { Box, Button, Grid, GridItem, HStack, Spinner, Text, VStack } from "@cha
 import { yaml } from "@codemirror/lang-yaml";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import CodeMirror from "@uiw/react-codemirror";
+import { use } from "react";
 import Runners from "./components/ui/runners";
+import YamlEditorWithValidation from "./components/ui/YamlEditorWithValidation";
+import { fetchData } from "./stores/data";
 import { useIc10Store } from "./stores/ic10Store";
+import type { JSONSchemaType } from "ajv";
 
 function App() {
+	const schema = use<JSONSchemaType<any>>(
+		fetchData("https://raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Schemas/env.schema.json"),
+	);
 	const height = "590px";
 	const terminalHeight = "200px";
 
@@ -22,7 +29,7 @@ function App() {
 		initializeFromYaml,
 		step,
 		getCurrentEnv,
-		clearTerminal
+		clearTerminal,
 	} = useIc10Store();
 
 	const load = () => {
@@ -45,22 +52,6 @@ function App() {
 				{/* IC10 Code Editor */}
 				<GridItem colSpan={2}>
 					<VStack align="stretch" height="100%">
-						<HStack justify="space-between">
-							<Text fontWeight="bold">IC10 Code</Text>
-							<HStack>
-								<Text fontSize="sm" color="gray.500">
-									Line: {0}
-								</Text>
-								<Button
-									size="sm"
-									onClick={step}
-									disabled={!initialized}
-									colorScheme="blue"
-								>
-									Step
-								</Button>
-							</HStack>
-						</HStack>
 						<Box flex={1} border="1px solid" borderColor="gray.200" borderRadius="md">
 							{runners ? <Runners runners={runners} update={update} /> : null}
 						</Box>
@@ -75,13 +66,7 @@ function App() {
 							<Box width="47px" height={35} />
 						</HStack>
 						<Box flex={1} border="1px solid" borderColor="gray.200" borderRadius="md">
-							<CodeMirror
-								value={currentEnv}
-								readOnly={true}
-								height={height}
-								theme={vscodeDark}
-								extensions={[yaml()]}
-							/>
+							<CodeMirror value={currentEnv} readOnly={true} height={height} theme={vscodeDark} extensions={[yaml()]} />
 						</Box>
 					</VStack>
 				</GridItem>
@@ -93,12 +78,7 @@ function App() {
 							<Text fontWeight="bold">Initial Environment</Text>
 							<HStack>
 								{loading && <Spinner size="sm" />}
-								<Button
-									size="sm"
-									onClick={step}
-									disabled={!initialized}
-									colorScheme="blue"
-								>
+								<Button size="sm" onClick={step} disabled={!initialized} colorScheme="blue">
 									Step
 								</Button>
 								<Button size="sm" onClick={load} colorScheme="green">
@@ -107,12 +87,14 @@ function App() {
 							</HStack>
 						</HStack>
 						<Box flex={1} border="1px solid" borderColor="gray.200" borderRadius="md">
-							<CodeMirror
+							<YamlEditorWithValidation
 								value={initialEnv}
 								onChange={setInitialEnv}
-								height={height}
-								theme={vscodeDark}
-								extensions={[yaml()]}
+								codeMirrorProps={{
+									theme: vscodeDark,
+									height,
+								}}
+								schema={schema}
 							/>
 						</Box>
 					</VStack>

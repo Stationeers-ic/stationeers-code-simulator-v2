@@ -19,15 +19,7 @@ export function Ic10Code(props: Ic10CodeProps) {
 		update();
 	};
 
-	return (
-		<CodeMirror
-			value={code}
-			onChange={updateCode}
-			height={"600px"}
-			theme={vscodeDark}
-			extensions={[ic10()]}
-		/>
-	);
+	return <CodeMirror value={code} onChange={updateCode} height={"580px"} theme={vscodeDark} extensions={[ic10()]} />;
 }
 
 export default Ic10Code;
