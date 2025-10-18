@@ -32,9 +32,7 @@ function useIc10({ printMessage, getRunners }: useIc10Params) {
 					b.Runners.forEach((runner) => {
 						runner.sanboxContext.$errors.forEach((error) => {
 							if (error) {
-								printMessage(
-									`[chip: ${runner.realContext.housing.id}] ${error.formated_message}`,
-								);
+								printMessage(`[chip: ${runner.realContext.housing.id}] ${error.formated_message}`);
 							}
 						});
 					});
@@ -72,9 +70,7 @@ function useIc10({ printMessage, getRunners }: useIc10Params) {
 				builder.Runners.forEach((runner) => {
 					runner.realContext.$errors.forEach((error) => {
 						if (error) {
-							printMessage(
-								`[chip: ${runner.realContext.housing.id}] ${error.formated_message}`,
-							);
+							printMessage(`[chip: ${runner.realContext.housing.id}] ${error.formated_message}`);
 						}
 					});
 				});

@@ -12,24 +12,14 @@ type Ic10CodeProps = {
 export function Ic10Code(props: Ic10CodeProps) {
 	const { runner, update } = props;
 
-	const [code, _setCode] = useState(
-		runner.realContext.housing.chip?.getIc10Code(),
-	);
+	const [code, _setCode] = useState(runner.realContext.housing.chip?.getIc10Code());
 
 	const updateCode = (newCode: string) => {
 		runner.realContext.housing.chip?.setIc10Code(newCode);
 		update();
 	};
 
-	return (
-		<CodeMirror
-			value={code}
-			onChange={updateCode}
-			height={"600px"}
-			theme={vscodeDark}
-			extensions={[ic10()]}
-		/>
-	);
+	return <CodeMirror value={code} onChange={updateCode} height={"600px"} theme={vscodeDark} extensions={[ic10()]} />;
 }
 
 export default Ic10Code;
