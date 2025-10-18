@@ -1,3 +1,4 @@
+// components/ui/Ic10Code.tsx
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import CodeMirror from "@uiw/react-codemirror";
 import { ic10 } from "codemirror-lang-ic10";
@@ -11,7 +12,6 @@ type Ic10CodeProps = {
 
 export function Ic10Code(props: Ic10CodeProps) {
 	const { runner, update } = props;
-
 	const [code, _setCode] = useState(runner.realContext.housing.chip?.getIc10Code());
 
 	const updateCode = (newCode: string) => {
@@ -19,7 +19,15 @@ export function Ic10Code(props: Ic10CodeProps) {
 		update();
 	};
 
-	return <CodeMirror value={code} onChange={updateCode} height={"600px"} theme={vscodeDark} extensions={[ic10()]} />;
+	return (
+		<CodeMirror
+			value={code}
+			onChange={updateCode}
+			height={"600px"}
+			theme={vscodeDark}
+			extensions={[ic10()]}
+		/>
+	);
 }
 
 export default Ic10Code;

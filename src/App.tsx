@@ -1,78 +1,44 @@
+// App.tsx
 import { Box, Button, Grid, GridItem, HStack, Spinner, Text, VStack } from "@chakra-ui/react";
 import { yaml } from "@codemirror/lang-yaml";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import CodeMirror from "@uiw/react-codemirror";
-import type { Ic10Runner } from "ic10";
-import { useState } from "react";
 import Runners from "./components/ui/runners";
-import useIc10 from "./hooks/Builder";
+import { useIc10Store } from "./stores/ic10Store";
 
 function App() {
 	const height = "590px";
 	const terminalHeight = "200px";
-	const [intiEnv, setIntiEnv] = useState(`
 
-version: 1
-chips:
-  - id: 1
-    code: |
-      s db:0 Channel4 15
-  - id: 2
-    code: |
-      yield
-      l r1 db:0 Channel4
-
-
-devices:
-  - id: 1
-    PrefabName: StructureCircuitHousingCompact
-    chip: 1
-    ports:
-      - port: default
-        network: base
-  - id: 2
-    PrefabName: StructureCircuitHousingCompact
-    chip: 2
-    ports:
-      - port: default
-        network: base
-networks:
-  - id: base
-    type: data
-    `);
-	const [runners, setRunners] = useState<Map<number, Ic10Runner> | null>(null);
-	const [terminalOutput, setTerminalOutput] = useState<string[]>([]);
-	const addToTerminal = (message: string) => {
-		setTerminalOutput((prev) => [...prev, `> ${message}`]);
-	};
-	const { currentEnv, step, init, loading, initialized, getCurrentEnv } = useIc10({
-		printMessage: addToTerminal,
-		getRunners: (runners) => {
-			setRunners(runners);
-		},
-	});
+	// Получаем состояние и действия из хранилища
+	const {
+		initialEnv,
+		currentEnv,
+		terminalOutput,
+		runners,
+		loading,
+		initialized,
+		setInitialEnv,
+		initializeFromYaml,
+		step,
+		getCurrentEnv,
+		clearTerminal
+	} = useIc10Store();
 
 	const load = () => {
-		init(intiEnv);
+		initializeFromYaml(initialEnv);
 		clearTerminal();
 	};
 
 	const update = () => {
 		const yaml = getCurrentEnv();
 		if (yaml) {
-			setIntiEnv(yaml);
-			init(yaml);
+			setInitialEnv(yaml);
+			initializeFromYaml(yaml);
 			clearTerminal();
 		}
 	};
 
-	const handleStep = () => {
-		step();
-	};
-
-	const clearTerminal = () => {
-		setTerminalOutput([]);
-	};
 	return (
 		<Box p={4}>
 			<Grid templateColumns="repeat(4, 1fr)" gap={6} mb={6}>
@@ -85,7 +51,12 @@ networks:
 								<Text fontSize="sm" color="gray.500">
 									Line: {0}
 								</Text>
-								<Button size="sm" onClick={handleStep} disabled={!initialized} colorScheme="blue">
+								<Button
+									size="sm"
+									onClick={step}
+									disabled={!initialized}
+									colorScheme="blue"
+								>
 									Step
 								</Button>
 							</HStack>
@@ -104,7 +75,13 @@ networks:
 							<Box width="47px" height={35} />
 						</HStack>
 						<Box flex={1} border="1px solid" borderColor="gray.200" borderRadius="md">
-							<CodeMirror value={currentEnv} readOnly={true} height={height} theme={vscodeDark} extensions={[yaml()]} />
+							<CodeMirror
+								value={currentEnv}
+								readOnly={true}
+								height={height}
+								theme={vscodeDark}
+								extensions={[yaml()]}
+							/>
 						</Box>
 					</VStack>
 				</GridItem>
@@ -116,7 +93,12 @@ networks:
 							<Text fontWeight="bold">Initial Environment</Text>
 							<HStack>
 								{loading && <Spinner size="sm" />}
-								<Button size="sm" onClick={handleStep} disabled={!initialized} colorScheme="blue">
+								<Button
+									size="sm"
+									onClick={step}
+									disabled={!initialized}
+									colorScheme="blue"
+								>
 									Step
 								</Button>
 								<Button size="sm" onClick={load} colorScheme="green">
@@ -126,8 +108,8 @@ networks:
 						</HStack>
 						<Box flex={1} border="1px solid" borderColor="gray.200" borderRadius="md">
 							<CodeMirror
-								value={intiEnv}
-								onChange={setIntiEnv}
+								value={initialEnv}
+								onChange={setInitialEnv}
 								height={height}
 								theme={vscodeDark}
 								extensions={[yaml()]}
@@ -159,8 +141,8 @@ networks:
 					{terminalOutput.length === 0 ? (
 						<Text color="gray.400">No output yet. Execute steps to see output...</Text>
 					) : (
-						terminalOutput.map((line) => (
-							<Text key={line} fontSize="sm">
+						terminalOutput.map((line, index) => (
+							<Text key={index} fontSize="sm">
 								{line}
 							</Text>
 						))

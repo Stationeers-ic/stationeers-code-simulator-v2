@@ -1,3 +1,4 @@
+// components/ui/runners.tsx
 import { Tabs } from "@chakra-ui/react";
 import type { Ic10Runner } from "ic10";
 import { LuTerminal } from "react-icons/lu";
@@ -10,27 +11,22 @@ type RunnersProps = {
 
 export function Runners(props: RunnersProps) {
 	const { runners, update } = props;
-
 	const runnersArray = Array.from(runners.entries());
 
 	return (
 		<Tabs.Root defaultValue="1">
 			<Tabs.List>
-				{runnersArray.map(([key, _runner]) => (
-					<>
-						<Tabs.Trigger value={key.toString()}>
-							<LuTerminal />
-							{key}
-						</Tabs.Trigger>
-					</>
+				{runnersArray.map(([key]) => (
+					<Tabs.Trigger key={key} value={key.toString()}>
+						<LuTerminal />
+						{key}
+					</Tabs.Trigger>
 				))}
 			</Tabs.List>
 			{runnersArray.map(([key, runner]) => (
-				<>
-					<Tabs.Content value={key.toString()}>
-						<Ic10Code runner={runner} update={update}></Ic10Code>
-					</Tabs.Content>
-				</>
+				<Tabs.Content key={key} value={key.toString()}>
+					<Ic10Code runner={runner} update={update} />
+				</Tabs.Content>
 			))}
 		</Tabs.Root>
 	);
