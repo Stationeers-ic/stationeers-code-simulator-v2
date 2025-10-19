@@ -16,10 +16,11 @@ export function Runners(props: RunnersProps) {
 	return (
 		<Tabs.Root defaultValue="1">
 			<Tabs.List>
-				{runnersArray.map(([key]) => (
+				{runnersArray.map(([key, runner]) => (
 					<Tabs.Trigger key={key} value={key.toString()}>
 						<LuTerminal />
 						{key}
+						{/* line: {runner?.realContext?.executeLine?.position ?? 0} */}
 					</Tabs.Trigger>
 				))}
 			</Tabs.List>
