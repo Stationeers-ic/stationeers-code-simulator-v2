@@ -12,28 +12,38 @@ type Ic10CodeProps = {
 	update: () => void;
 };
 
-const cmLine = new lineClassController("nextRunLine");
 const [ruler] = createRuler(90, "ruler");
 export function Ic10Code(props: Ic10CodeProps) {
 	const { runner, update } = props;
 	const [line, setLine] = useState(0);
+	const [cmLine] = useState(new lineClassController("nextRunLine"));
 	const [code, _setCode] = useState(runner.realContext.housing.chip?.getIc10Code());
 
-	// Функция для обновления кода
 	const updateCode = (newCode: string) => {
 		runner.realContext.housing.chip?.setIc10Code(newCode);
 		update();
 	};
 
 	useEffect(() => {
-		runner.on("step", () => {
+		// Обработчик события
+		const onStep = () => {
 			const pos = runner.realContext.currentLinePosition;
-			if (pos) {
-				setLine(pos);
+			console.log(pos)
+			if (pos !== undefined) {
+				setLine(pos+1);
 			}
-		});
-	}, []);
+		};
+		// Навешиваем обработчик
+		runner.on("stepEnd", onStep);
+
+		// Снимаем обработчик при размонтировании или смене runner
+		return () => {
+			runner.off("stepEnd", onStep);
+		};
+	}, [runner]);
+
 	useEffect(() => {
+		console.log(line)
 		if (line) cmLine.highlightLine(line);
 	}, [line]);
 
