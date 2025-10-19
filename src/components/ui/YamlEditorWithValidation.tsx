@@ -125,6 +125,12 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 		}
 	}, [value]);
 
+	useEffect(() => {
+		if (value) {
+			validateYaml(value);
+		}
+	}, []);
+
 	const getErrorMessage = (error: ValidationError): string => {
 		if (error.type === "yaml-syntax") {
 			return `YAML Syntax Error: ${error.message}`;
@@ -160,19 +166,11 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 							zIndex: 11,
 						}}
 					>
-						<Stack gap="4" width="full">
+						<Stack gap="4" width="full" maxH={200} overflow="auto">
 							{errors.map((error, index) => (
 								<Alert.Root key={index} status="error">
 									<Alert.Indicator />
-									<Alert.Title>
-										{" "}
-										{getErrorMessage(error)}
-										{error.line !== undefined && (
-											<span className="error-location">
-												(line: {error.line}, column: {error.column})
-											</span>
-										)}
-									</Alert.Title>
+									<Alert.Title>{getErrorMessage(error)}</Alert.Title>
 								</Alert.Root>
 							))}
 						</Stack>
