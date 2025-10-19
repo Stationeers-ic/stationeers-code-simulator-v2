@@ -30,7 +30,7 @@ interface Ic10State {
 	// IC10 операции
 	initializeFromYaml: (yaml: string) => Promise<void>;
 	step: () => Promise<void>;
-	getCurrentEnv: () => string | undefined;
+	getCurrentEnv: (debug?: boolean) => string | undefined;
 }
 
 export const useIc10Store = create<Ic10State>()(
@@ -69,10 +69,9 @@ export const useIc10Store = create<Ic10State>()(
 						set({ initialized: false, loading: true });
 						try {
 							const builder = ic10.Builer.from(yaml);
-							console.log(builder.toData());
 							if (await builder.init()) {
 								set({
-									currentEnv: stringify(builder.toData(), {}),
+									currentEnv: builder.toYaml(),
 									builder,
 									initialized: true,
 									runners: builder.Runners,
@@ -139,9 +138,9 @@ export const useIc10Store = create<Ic10State>()(
 					}
 				},
 
-				getCurrentEnv: () => {
+				getCurrentEnv: (debug: boolean = false) => {
 					const { builder } = get();
-					return builder?.toYaml();
+					return builder?.toYaml(debug);
 				},
 			}),
 			{

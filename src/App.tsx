@@ -9,6 +9,7 @@ import Runners from "./components/ui/runners";
 import YamlEditorWithValidation from "./components/ui/YamlEditorWithValidation";
 import { fetchData } from "./stores/data";
 import { useIc10Store } from "./stores/ic10Store";
+import { BugReportButton } from "./components/ui/BugReport";
 
 function App() {
 	const schema = use<JSONSchemaType<any>>(
@@ -38,7 +39,7 @@ function App() {
 	};
 
 	const update = () => {
-		const yaml = getCurrentEnv();
+		const yaml = getCurrentEnv(false);
 		if (yaml) {
 			setInitialEnv(yaml);
 			clearTerminal();
@@ -46,91 +47,100 @@ function App() {
 	};
 
 	return (
-		<Box p={4}>
-			<Grid templateColumns="repeat(4, 1fr)" gap={6} mb={6}>
-				{/* IC10 Code Editor */}
-				<GridItem colSpan={2}>
-					<VStack align="stretch" height="100%">
-						<Box flex={1} border="1px solid" borderColor="gray.200" borderRadius="md">
-							{runners ? <Runners runners={runners} update={update} /> : null}
-						</Box>
-					</VStack>
-				</GridItem>
+		<>
+			<Box p={4}>
+				<Grid templateColumns="repeat(4, 1fr)" gap={6} mb={6}>
+					{/* IC10 Code Editor */}
+					<GridItem colSpan={2}>
+						<VStack align="stretch" height="100%">
+							<Box flex={1} border="1px solid" borderColor="gray.200" borderRadius="md">
+								{runners ? <Runners runners={runners} update={update} /> : null}
+							</Box>
+						</VStack>
+					</GridItem>
 
-				{/* Current Environment */}
-				<GridItem colSpan={1}>
-					<VStack align="stretch" height="100%">
-						<HStack justify="space-between" minH="32px">
-							<Text fontWeight="bold">Current Environment</Text>
-							<Box width="47px" height={35} />
-						</HStack>
-						<Box flex={1} border="1px solid" borderColor="gray.200" borderRadius="md">
-							<CodeMirror value={currentEnv} readOnly={true} height={height} theme={vscodeDark} extensions={[yaml()]} />
-						</Box>
-					</VStack>
-				</GridItem>
-
-				{/* Initial Environment */}
-				<GridItem colSpan={1}>
-					<VStack align="stretch" height="100%">
-						<HStack justify="space-between">
-							<Text fontWeight="bold">Initial Environment</Text>
-							<HStack>
-								{loading && <Spinner size="sm" />}
-								<Button size="sm" onClick={step} disabled={!initialized} colorScheme="blue">
-									Step
-								</Button>
-								<Button size="sm" onClick={load} colorScheme="green">
-									Initialize
-								</Button>
+					{/* Current Environment */}
+					<GridItem colSpan={1}>
+						<VStack align="stretch" height="100%">
+							<HStack justify="space-between" minH="32px">
+								<Text fontWeight="bold">Current Environment</Text>
+								<Box width="47px" height={35} />
 							</HStack>
-						</HStack>
-						<Box flex={1} border="1px solid" borderColor="gray.200" borderRadius="md">
-							<YamlEditorWithValidation
-								value={initialEnv}
-								onChange={setInitialEnv}
-								codeMirrorProps={{
-									theme: vscodeDark,
-									height,
-								}}
-								schema={schema}
-							/>
-						</Box>
-					</VStack>
-				</GridItem>
-			</Grid>
+							<Box flex={1} border="1px solid" borderColor="gray.200" borderRadius="md">
+								<CodeMirror
+									value={currentEnv}
+									readOnly={true}
+									height={height}
+									theme={vscodeDark}
+									extensions={[yaml()]}
+								/>
+							</Box>
+						</VStack>
+					</GridItem>
 
-			{/* Terminal Output */}
-			<VStack align="stretch">
-				<HStack justify="space-between">
-					<Text fontWeight="bold">Terminal Output</Text>
-					<Button size="sm" onClick={clearTerminal} colorScheme="gray">
-						Clear
-					</Button>
-				</HStack>
-				<Box
-					height={terminalHeight}
-					border="1px solid"
-					borderColor="gray.200"
-					borderRadius="md"
-					bg="black"
-					color="white"
-					fontFamily="monospace"
-					p={3}
-					overflow="auto"
-				>
-					{terminalOutput.length === 0 ? (
-						<Text color="gray.400">No output yet. Execute steps to see output...</Text>
-					) : (
-						terminalOutput.map((line, index) => (
-							<Text key={index} fontSize="sm">
-								{line}
-							</Text>
-						))
-					)}
-				</Box>
-			</VStack>
-		</Box>
+					{/* Initial Environment */}
+					<GridItem colSpan={1}>
+						<VStack align="stretch" height="100%">
+							<HStack justify="space-between">
+								<Text fontWeight="bold">Initial Environment</Text>
+								<HStack>
+									{loading && <Spinner size="sm" />}
+									<Button size="sm" onClick={step} disabled={!initialized} colorScheme="blue">
+										Step
+									</Button>
+									<Button size="sm" onClick={load} colorScheme="green">
+										Initialize
+									</Button>
+								</HStack>
+							</HStack>
+							<Box flex={1} border="1px solid" borderColor="gray.200" borderRadius="md">
+								<YamlEditorWithValidation
+									value={initialEnv}
+									onChange={setInitialEnv}
+									codeMirrorProps={{
+										theme: vscodeDark,
+										height,
+									}}
+									schema={schema}
+								/>
+							</Box>
+						</VStack>
+					</GridItem>
+				</Grid>
+
+				{/* Terminal Output */}
+				<VStack align="stretch">
+					<HStack justify="space-between">
+						<Text fontWeight="bold">Terminal Output</Text>
+						<Button size="sm" onClick={clearTerminal} colorScheme="gray">
+							Clear
+						</Button>
+					</HStack>
+					<Box
+						height={terminalHeight}
+						border="1px solid"
+						borderColor="gray.200"
+						borderRadius="md"
+						bg="black"
+						color="white"
+						fontFamily="monospace"
+						p={3}
+						overflow="auto"
+					>
+						{terminalOutput.length === 0 ? (
+							<Text color="gray.400">No output yet. Execute steps to see output...</Text>
+						) : (
+							terminalOutput.map((line, index) => (
+								<Text key={index} fontSize="sm">
+									{line}
+								</Text>
+							))
+						)}
+					</Box>
+				</VStack>
+			</Box>
+			<BugReportButton />
+		</>
 	);
 }
 
