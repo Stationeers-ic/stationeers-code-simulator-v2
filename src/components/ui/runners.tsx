@@ -1,8 +1,8 @@
 import { Kbd, Tabs } from "@chakra-ui/react";
 import type { Chip } from "ic10";
 import { LuTerminal } from "react-icons/lu";
-import Ic10Code from "./Ic10Code";
 import { useIc10Store } from "@/stores/ic10Store";
+import Ic10Code from "./Ic10Code";
 
 type RunnersProps = {
 	chips: Chip[];

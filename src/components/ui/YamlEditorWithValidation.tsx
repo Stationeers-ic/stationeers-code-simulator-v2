@@ -3,7 +3,7 @@ import { yaml } from "@codemirror/lang-yaml";
 import CodeMirror, { type ReactCodeMirrorProps } from "@uiw/react-codemirror";
 import Ajv, { type JSONSchemaType } from "ajv";
 import type React from "react";
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { parse } from "yaml";
 
 // Типы для пропсов
