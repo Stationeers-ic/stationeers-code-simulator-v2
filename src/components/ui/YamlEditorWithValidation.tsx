@@ -1,3 +1,4 @@
+import { Alert, Box, Show, Stack } from "@chakra-ui/react";
 import { yaml } from "@codemirror/lang-yaml";
 import CodeMirror, { type ReactCodeMirrorProps } from "@uiw/react-codemirror";
 import Ajv, { type JSONSchemaType } from "ajv";
@@ -40,6 +41,21 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 	const [errors, setErrors] = useState<ValidationError[]>([]);
 	const [isValid, setIsValid] = useState<boolean>(false);
 	const [_parsedData, setParsedData] = useState<any>(null);
+
+	const [showValid, setShowValid] = useState(false);
+
+	useEffect(() => {
+		if (isValid && yamlValue.trim()) {
+			setShowValid(true);
+			const timer = setTimeout(() => {
+				setShowValid(false);
+			}, 1500);
+
+			return () => clearTimeout(timer);
+		} else {
+			setShowValid(false);
+		}
+	}, [isValid, yamlValue]);
 
 	const validateYaml = useCallback(
 		(text: string) => {
@@ -119,7 +135,10 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 	};
 
 	return (
-		<div className="yaml-editor-with-validation" style={{ width: codeMirrorProps.width || "100%" }}>
+		<div
+			className="yaml-editor-with-validation"
+			style={{ width: codeMirrorProps.width || "100%", position: "relative" }}
+		>
 			<div className="editor-wrapper">
 				<div className={`editor-container ${!isValid && errors.length > 0 ? "has-errors" : ""}`}>
 					<CodeMirror
@@ -132,139 +151,51 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 				</div>
 
 				{errors.length > 0 && (
-					<div className="validation-errors">
-						<div className="errors-header">
-							<strong>Validation Errors:</strong>
-							<span className="error-count">{errors.length} error(s)</span>
-						</div>
-						<div className="errors-list">
+					<Box
+						style={{
+							position: "absolute",
+							bottom: "12px",
+							left: "12px",
+							right: "12px",
+							zIndex: 11,
+						}}
+					>
+						<Stack gap="4" width="full">
 							{errors.map((error, index) => (
-								<div key={index} className="error-item">
-									<span className="error-icon">❌</span>
-									<span className="error-message">
+								<Alert.Root key={index} status="error">
+									<Alert.Indicator />
+									<Alert.Title>
+										{" "}
 										{getErrorMessage(error)}
 										{error.line !== undefined && (
 											<span className="error-location">
 												(line: {error.line}, column: {error.column})
 											</span>
 										)}
-									</span>
-								</div>
+									</Alert.Title>
+								</Alert.Root>
 							))}
-						</div>
-					</div>
+						</Stack>
+					</Box>
 				)}
 
-				{isValid && yamlValue.trim() && (
-					<div className="validation-success">
-						<span className="success-icon">✅</span>
-						YAML is valid and conforms to the schema
-					</div>
-				)}
+				<Show when={showValid}>
+					<Box
+						style={{
+							position: "absolute",
+							bottom: "12px",
+							left: "12px",
+							right: "12px",
+							zIndex: 11,
+						}}
+					>
+						<Alert.Root status="success">
+							<Alert.Indicator />
+							<Alert.Title>Is valid</Alert.Title>
+						</Alert.Root>
+					</Box>
+				</Show>
 			</div>
-
-			<style>{`
-        .yaml-editor-with-validation {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-        
-        .editor-wrapper {
-          position: relative;
-        }
-        
-        .editor-container {
-          border: 2px solid #e1e5e9;
-          border-radius: 6px;
-          overflow: hidden;
-          transition: border-color 0.2s ease;
-        }
-        
-        .editor-container.has-errors {
-          border-color: #e74c3c;
-        }
-        
-        .validation-errors {
-          position: absolute;
-          bottom: 12px;
-          left: 12px;
-          right: 12px;
-          z-index: 10;
-          padding: 12px;
-          background-color: rgba(254, 238, 238, 0.98);
-          border: 1px solid #f5c6cb;
-          border-radius: 4px;
-          color: #721c24;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          backdrop-filter: blur(4px);
-          max-height: 200px;
-          overflow-y: auto;
-        }
-        
-        .errors-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 8px;
-        }
-        
-        .error-count {
-          background: #e74c3c;
-          color: white;
-          padding: 2px 8px;
-          border-radius: 12px;
-          font-size: 12px;
-        }
-        
-        .errors-list {
-          max-height: 140px;
-          overflow-y: auto;
-        }
-        
-        .error-item {
-          display: flex;
-          align-items: flex-start;
-          gap: 8px;
-          padding: 4px 0;
-          font-size: 14px;
-        }
-        
-        .error-icon {
-          flex-shrink: 0;
-          margin-top: 1px;
-        }
-        
-        .error-message {
-          flex: 1;
-        }
-        
-        .error-location {
-          font-size: 12px;
-          color: #666;
-          margin-left: 8px;
-        }
-        
-        .validation-success {
-          position: absolute;
-          bottom: 12px;
-          left: 12px;
-          right: 12px;
-          z-index: 10;
-          padding: 8px 12px;
-          background-color: rgba(239, 255, 237, 0.98);
-          border: 1px solid #c3e6cb;
-          border-radius: 4px;
-          color: #155724;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          backdrop-filter: blur(4px);
-        }
-        
-        .success-icon {
-          font-size: 16px;
-        }
-      `}</style>
 		</div>
 	);
 };
