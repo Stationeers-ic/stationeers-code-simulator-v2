@@ -13,6 +13,7 @@ interface ValidationError {
 	column?: number;
 	type?: string;
 	instancePath?: string;
+	params?: Record<string, any>;
 }
 
 interface YamlEditorProps {
@@ -86,6 +87,7 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 						message: error.message || "Validation error",
 						instancePath: error.instancePath,
 						type: error.keyword,
+						params: error.params,
 					}));
 					setErrors(validationErrors);
 					setIsValid(false);
@@ -135,10 +137,12 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 		if (error.type === "yaml-syntax") {
 			return `YAML Syntax Error: ${error.message}`;
 		}
-
+		console.log(error);
 		const path = error.instancePath ? `at path "${error.instancePath}"` : "";
 		return `${error.message} ${path}`.trim();
 	};
+
+	const uniqueErrors = Array.from(new Map(errors.map((error) => [getErrorMessage(error), error])).values());
 
 	return (
 		<div
@@ -156,7 +160,7 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 					/>
 				</div>
 
-				{errors.length > 0 && (
+				{uniqueErrors.length > 0 && (
 					<Box
 						style={{
 							position: "absolute",
@@ -167,7 +171,7 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 						}}
 					>
 						<Stack gap="4" width="full" maxH={200} overflow="auto">
-							{errors.map((error, index) => (
+							{uniqueErrors.map((error, index) => (
 								<Alert.Root key={index} status="error">
 									<Alert.Indicator />
 									<Alert.Title>{getErrorMessage(error)}</Alert.Title>
