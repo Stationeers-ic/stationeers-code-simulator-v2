@@ -1,7 +1,6 @@
 // stores/ic10Store.ts
 
 import * as ic10 from "ic10";
-import { stringify } from "yaml";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 

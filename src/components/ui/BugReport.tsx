@@ -1,7 +1,7 @@
-import { useIc10Store } from "@/stores/ic10Store";
 import { Box, Button, createToaster, IconButton, Input, Portal, Textarea, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { LuBug, LuX } from "react-icons/lu";
+import { useIc10Store } from "@/stores/ic10Store";
 
 interface BugReportData {
 	email: string;

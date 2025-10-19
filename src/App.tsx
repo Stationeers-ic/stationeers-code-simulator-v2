@@ -5,11 +5,11 @@ import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import CodeMirror from "@uiw/react-codemirror";
 import type { JSONSchemaType } from "ajv";
 import { use } from "react";
+import { BugReportButton } from "./components/ui/BugReport";
 import Runners from "./components/ui/runners";
 import YamlEditorWithValidation from "./components/ui/YamlEditorWithValidation";
 import { fetchData } from "./stores/data";
 import { useIc10Store } from "./stores/ic10Store";
-import { BugReportButton } from "./components/ui/BugReport";
 
 function App() {
 	const schema = use<JSONSchemaType<any>>(
