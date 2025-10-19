@@ -9,7 +9,7 @@ interface Ic10State {
 	initialEnv: string;
 	currentEnv: string;
 	terminalOutput: string[];
-	runners: Map<number, ic10.Ic10Runner> | null;
+	chips: Map<number, ic10.Chip> | null;
 	loading: boolean;
 	initialized: boolean;
 	builder: ic10.Builer | null;
@@ -17,7 +17,7 @@ interface Ic10State {
 	// Действия
 	setInitialEnv: (env: string) => void;
 	setCurrentEnv: (env: string) => void;
-	setRunners: (runners: Map<number, ic10.Ic10Runner>) => void;
+	setChips: (runners: Map<number, ic10.Chip>) => void;
 	setLoading: (loading: boolean) => void;
 	setInitialized: (initialized: boolean) => void;
 	setBuilder: (builder: ic10.Builer | null) => void;
@@ -40,7 +40,7 @@ export const useIc10Store = create<Ic10State>()(
 				initialEnv: "",
 				currentEnv: "",
 				terminalOutput: [],
-				runners: null,
+				chips: null,
 				loading: false,
 				initialized: false,
 				builder: null,
@@ -48,7 +48,7 @@ export const useIc10Store = create<Ic10State>()(
 				// Сеттеры
 				setInitialEnv: (initialEnv) => set({ initialEnv }),
 				setCurrentEnv: (currentEnv) => set({ currentEnv }),
-				setRunners: (runners) => set({ runners }),
+				setChips: (chips) => set({ chips }),
 				setLoading: (loading) => set({ loading }),
 				setInitialized: (initialized) => set({ initialized }),
 				setBuilder: (builder) => set({ builder }),
@@ -63,39 +63,30 @@ export const useIc10Store = create<Ic10State>()(
 
 				// IC10 операции
 				initializeFromYaml: async (yaml: string) => {
+					const { addToTerminal } = get();
 					try {
-						const { addToTerminal, setRunners } = get();
 						set({ initialized: false, loading: true });
-						try {
-							const builder = ic10.Builer.from(yaml);
-							if (await builder.init()) {
-								set({
-									currentEnv: builder.toYaml(),
-									builder,
-									initialized: true,
-									runners: builder.Runners,
-								});
-								setRunners(builder.Runners);
 
-								// Обработка ошибок
-								builder.Runners.forEach((runner) => {
-									runner.realContext.reset();
-									runner.sanboxContext.$errors.forEach((error) => {
-										if (error) {
-											addToTerminal(`[chip: ${runner.realContext.housing.id}] ${error.formated_message}`);
-										}
-									});
-								});
-							}
-						} catch (e) {
-							console.error(e);
-							console.debug(yaml);
-						} finally {
-							set({ loading: false });
-						}
+						const builder = ic10.Builer.from(yaml);
+						await builder.init();
+						set({
+							currentEnv: builder.toYaml(),
+							builder,
+							initialized: true,
+							chips: builder.Chips,
+						});
+
+						// Обработка ошибок
+						builder.Runners.forEach((runner) => {
+							runner.realContext.reset();
+							runner.sanboxContext.$errors.forEach((error) => {
+								if (error) {
+									addToTerminal(`[chip: ${runner.realContext.housing.id}] ${error.formated_message}`);
+								}
+							});
+						});
+						set({ loading: false });
 					} catch (e) {
-						const { addToTerminal } = get();
-
 						if (e instanceof ic10.Ic10Error) {
 							addToTerminal(e.formated_message);
 						}

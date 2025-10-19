@@ -1,16 +1,15 @@
 // components/ui/runners.tsx
 import { Tabs } from "@chakra-ui/react";
-import type { Ic10Runner } from "ic10";
+import type { Chip } from "ic10";
 import { LuTerminal } from "react-icons/lu";
 import Ic10Code from "./Ic10Code";
 
 type RunnersProps = {
-	runners: Map<number, Ic10Runner>;
-	update: () => void;
+	chips: Map<number, Chip>;
 };
 
-export function Runners(props: RunnersProps) {
-	const { runners, update } = props;
+export function Chips(props: RunnersProps) {
+	const { chips: runners } = props;
 	const runnersArray = Array.from(runners.entries());
 
 	return (
@@ -24,13 +23,13 @@ export function Runners(props: RunnersProps) {
 					</Tabs.Trigger>
 				))}
 			</Tabs.List>
-			{runnersArray.map(([key, runner]) => (
+			{runnersArray.map(([key, chip]) => (
 				<Tabs.Content key={key} value={key.toString()}>
-					<Ic10Code runner={runner} update={update} />
+					<Ic10Code chip={chip} chipId={key} />
 				</Tabs.Content>
 			))}
 		</Tabs.Root>
 	);
 }
 
-export default Runners;
+export default Chips;

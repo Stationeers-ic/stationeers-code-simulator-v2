@@ -4,24 +4,35 @@ import { EditorView } from "@codemirror/view";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import CodeMirror from "@uiw/react-codemirror";
 import { createRuler, ic10, ic10Snippets, lineClassController, zeroLineNumbers } from "codemirror-lang-ic10";
-import type { Ic10Runner } from "ic10";
+import type { Chip, ChipSchema, EnvSchema } from "ic10";
 import { useEffect, useState } from "react";
+import { parse, stringify } from "yaml";
+import { useIc10Store } from "@/stores/ic10Store";
 
 type Ic10CodeProps = {
-	runner: Ic10Runner;
-	update: () => void;
+	chip: Chip;
+	chipId: number;
 };
 
 const [ruler] = createRuler(90, "ruler");
 export function Ic10Code(props: Ic10CodeProps) {
-	const { runner, update } = props;
+	const { chip } = props;
+	const runner = chip!.housing!.runner!;
 	const [line, setLine] = useState(1);
 	const [cmLine] = useState(new lineClassController("nextRunLine"));
 	const [code, _setCode] = useState(runner.realContext.housing.chip?.getIc10Code());
 
+	const { initialEnv, setInitialEnv } = useIc10Store();
+
 	const updateCode = (newCode: string) => {
-		runner.realContext.housing.chip?.setIc10Code(newCode);
-		update();
+		const yaml = parse(initialEnv) as EnvSchema;
+		yaml.chips = yaml.chips.map((c: ChipSchema) => {
+			if (c.id === chip.id) {
+				c.code = newCode;
+			}
+			return c;
+		});
+		setInitialEnv(stringify(yaml));
 	};
 	useEffect(() => {
 		setLine(1);
