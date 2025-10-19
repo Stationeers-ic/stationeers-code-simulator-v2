@@ -16,14 +16,14 @@ const toaster = createToaster({
 });
 
 export const BugReportButton = () => {
-	const { initialEnv, getCurrentEnv } = useIc10Store();
+	const { getInitialEnv, getDebugEnv } = useIc10Store();
 	const [isOpen, setIsOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [formData, setFormData] = useState<BugReportData>({
 		email: "",
 		message: "",
-		init_env: initialEnv,
-		debug_env: getCurrentEnv(true) ?? "",
+		init_env: getInitialEnv() ?? "",
+		debug_env: getDebugEnv() ?? "",
 	});
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -31,8 +31,8 @@ export const BugReportButton = () => {
 		setIsLoading(true);
 
 		try {
-			formData.debug_env = getCurrentEnv(true) ?? "";
-			formData.init_env = initialEnv;
+			formData.debug_env = getDebugEnv() ?? "";
+			formData.init_env = getInitialEnv() ?? "";
 			const response = await fetch("https://n8n.traineratwot.site/webhook-test/b2f66dcc-a2a7-4ed1-9b2d-0261de8ca648", {
 				method: "POST",
 				headers: {

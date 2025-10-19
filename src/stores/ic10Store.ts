@@ -9,7 +9,7 @@ interface Ic10State {
 	initialEnv: string;
 	currentEnv: string;
 	terminalOutput: string[];
-	chips: Map<number, ic10.Chip> | null;
+	chips: ic10.Chip[] | null;
 	loading: boolean;
 	initialized: boolean;
 	builder: ic10.Builer | null;
@@ -29,7 +29,12 @@ interface Ic10State {
 	// IC10 операции
 	initializeFromYaml: (yaml: string) => Promise<void>;
 	step: () => Promise<void>;
-	getCurrentEnv: (debug?: boolean) => string | undefined;
+	getCurrentEnv: () => string | undefined;
+	getDebugEnv: () => string | undefined;
+	getInitialEnv: () => string | undefined;
+
+	updateCounter: number; // Добавьте это поле
+	forceUpdate: () => void; // Добавьте это действие
 }
 
 export const useIc10Store = create<Ic10State>()(
@@ -44,26 +49,31 @@ export const useIc10Store = create<Ic10State>()(
 				loading: false,
 				initialized: false,
 				builder: null,
+				updateCounter: 0,
 
+				forceUpdate: () => set((state) => ({ updateCounter: state.updateCounter + 1 })),
 				// Сеттеры
 				setInitialEnv: (initialEnv) => set({ initialEnv }),
 				setCurrentEnv: (currentEnv) => set({ currentEnv }),
-				setChips: (chips) => set({ chips }),
+				setChips: (chips) => set({ chips: Array.from(chips.entries()).map((a) => a[1]) }),
 				setLoading: (loading) => set({ loading }),
 				setInitialized: (initialized) => set({ initialized }),
 				setBuilder: (builder) => set({ builder }),
 
 				// Действия терминала
 				addToTerminal: (message) =>
-					set((state) => ({
-						terminalOutput: [...state.terminalOutput, `> ${message}`],
-					})),
+					set((state) => {
+						console.debug(message);
+						return {
+							terminalOutput: [...state.terminalOutput, `> ${message}`],
+						};
+					}),
 
 				clearTerminal: () => set({ terminalOutput: [] }),
 
 				// IC10 операции
 				initializeFromYaml: async (yaml: string) => {
-					const { addToTerminal } = get();
+					const { addToTerminal, setChips, forceUpdate } = get();
 					try {
 						set({ initialized: false, loading: true });
 
@@ -73,8 +83,8 @@ export const useIc10Store = create<Ic10State>()(
 							currentEnv: builder.toYaml(),
 							builder,
 							initialized: true,
-							chips: builder.Chips,
 						});
+						setChips(builder.Chips);
 
 						// Обработка ошибок
 						builder.Runners.forEach((runner) => {
@@ -93,13 +103,14 @@ export const useIc10Store = create<Ic10State>()(
 						console.warn(e);
 						set({ loading: false, initialized: false });
 					}
+					forceUpdate();
 				},
 
 				step: async () => {
-					const { builder, initialized, addToTerminal, setCurrentEnv, setInitialized } = get();
+					const { builder, initialized, addToTerminal, setCurrentEnv, setInitialized, forceUpdate } = get();
 
 					if (!builder || !initialized) {
-						addToTerminal("Не инициализирован");
+						addToTerminal("Not initialized");
 						return;
 					}
 
@@ -108,8 +119,8 @@ export const useIc10Store = create<Ic10State>()(
 						if (end === false) {
 							setInitialized(false);
 						}
-
-						setCurrentEnv(builder.toYaml());
+						const newEnv = builder.toYaml();
+						setCurrentEnv(newEnv);
 
 						// Обработка ошибок
 						builder.Runners.forEach((runner) => {
@@ -126,11 +137,20 @@ export const useIc10Store = create<Ic10State>()(
 						console.warn(e);
 						setInitialized(false);
 					}
+					forceUpdate();
 				},
 
-				getCurrentEnv: (debug: boolean = false) => {
+				getCurrentEnv: () => {
 					const { builder } = get();
-					return builder?.toYaml(debug);
+					return builder?.toYaml();
+				},
+				getDebugEnv: () => {
+					const { builder } = get();
+					return builder?.toYaml();
+				},
+				getInitialEnv: () => {
+					const { initialEnv } = get();
+					return initialEnv;
 				},
 			}),
 			{

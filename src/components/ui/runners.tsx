@@ -1,31 +1,31 @@
-// components/ui/runners.tsx
-import { Tabs } from "@chakra-ui/react";
+import { Kbd, Tabs } from "@chakra-ui/react";
 import type { Chip } from "ic10";
 import { LuTerminal } from "react-icons/lu";
 import Ic10Code from "./Ic10Code";
+import { useIc10Store } from "@/stores/ic10Store";
 
 type RunnersProps = {
-	chips: Map<number, Chip>;
+	chips: Chip[];
 };
 
 export function Chips(props: RunnersProps) {
-	const { chips: runners } = props;
-	const runnersArray = Array.from(runners.entries());
+	const { chips } = props;
+	const updateCounter = useIc10Store((state) => state.updateCounter); // Добавьте это
 
 	return (
 		<Tabs.Root defaultValue="1">
 			<Tabs.List>
-				{runnersArray.map(([key]) => (
-					<Tabs.Trigger key={key} value={key.toString()}>
+				{chips.map((chip) => (
+					<Tabs.Trigger key={`${chip.id}-${updateCounter}`} value={chip.id.toString()}>
 						<LuTerminal />
-						{key}
-						{/* line: {runner?.realContext?.executeLine?.position ?? 0} */}
+						{chip.id}
+						<Kbd>{chip.getRunner()?.realContext?.currentLinePosition ?? 0}</Kbd>
 					</Tabs.Trigger>
 				))}
 			</Tabs.List>
-			{runnersArray.map(([key, chip]) => (
-				<Tabs.Content key={key} value={key.toString()}>
-					<Ic10Code chip={chip} chipId={key} />
+			{chips.map((chip) => (
+				<Tabs.Content key={chip.id} value={chip.id.toString()}>
+					<Ic10Code chip={chip} />
 				</Tabs.Content>
 			))}
 		</Tabs.Root>

@@ -1,80 +1,80 @@
-// components/ui/Ic10Code.tsx
-
 import { EditorView } from "@codemirror/view";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import CodeMirror from "@uiw/react-codemirror";
 import { createRuler, ic10, ic10Snippets, lineClassController, zeroLineNumbers } from "codemirror-lang-ic10";
 import type { Chip, ChipSchema, EnvSchema } from "ic10";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { parse, stringify } from "yaml";
 import { useIc10Store } from "@/stores/ic10Store";
 
 type Ic10CodeProps = {
 	chip: Chip;
-	chipId: number;
 };
-
+type Timeout = ReturnType<typeof setTimeout>;
 const [ruler] = createRuler(90, "ruler");
+
 export function Ic10Code(props: Ic10CodeProps) {
 	const { chip } = props;
 	const runner = chip!.housing!.runner!;
-	const [line, setLine] = useState(1);
+	const updateCounter = useIc10Store((state) => state.updateCounter); // Добавьте это
+
+	const [line, setLine] = useState(runner.realContext.currentLinePosition + 1);
 	const [cmLine] = useState(new lineClassController("nextRunLine"));
-	const [code, _setCode] = useState(runner.realContext.housing.chip?.getIc10Code());
+	const [code, setCode] = useState(runner.realContext.housing.chip?.getIc10Code() || "");
 
 	const { initialEnv, setInitialEnv } = useIc10Store();
 
-	const updateCode = (newCode: string) => {
-		const yaml = parse(initialEnv) as EnvSchema;
-		yaml.chips = yaml.chips.map((c: ChipSchema) => {
-			if (c.id === chip.id) {
-				c.code = newCode;
-			}
-			return c;
-		});
-		setInitialEnv(stringify(yaml));
-	};
+	const debounceTimerRef = useRef<Timeout | null>(null);
 	useEffect(() => {
-		setLine(1);
-	}, [runner]);
+		cmLine.highlightLine(line);
+	});
+	// Обновляем код при изменении updateCounter
 	useEffect(() => {
-		// Обработчик события
-		const onStep = () => {
-			const pos = runner.realContext.currentLinePosition;
-			console.log(pos);
-			if (pos !== undefined) {
-				setLine(pos + 1);
-			}
-		};
-		const reset = () => {
-			setLine(1);
-		};
-		// Навешиваем обработчик
-		runner.on("stepEnd", onStep);
-		runner.on("reset", reset);
+		const newCode = runner.realContext.housing.chip?.getIc10Code() || "";
+		setCode(newCode);
+		const pos = runner.realContext.currentLinePosition;
+		setLine(pos !== undefined ? pos + 1 : 1);
+	}, [updateCounter, runner]);
 
-		// Снимаем обработчик при размонтировании или смене runner
+	const updateCode = useCallback(
+		(newCode: string) => {
+			setCode(newCode); // Обновляем локальное состояние сразу
+
+			if (debounceTimerRef.current) {
+				clearTimeout(debounceTimerRef.current);
+			}
+
+			debounceTimerRef.current = setTimeout(() => {
+				const yaml = parse(initialEnv) as EnvSchema;
+				yaml.chips = yaml.chips.map((c: ChipSchema) => {
+					if (c.id === chip.id) {
+						c.code = newCode;
+					}
+					return c;
+				});
+				setInitialEnv(stringify(yaml));
+			}, 500);
+		},
+		[initialEnv, chip.id, setInitialEnv],
+	);
+
+	useEffect(() => {
 		return () => {
-			runner.off("stepEnd", onStep);
-			runner.off("reset", reset);
+			if (debounceTimerRef.current) {
+				clearTimeout(debounceTimerRef.current);
+			}
 		};
-	}, [runner]);
-
-	useEffect(() => {
-		console.log(line);
-		if (line) cmLine.highlightLine(line);
-	}, [line]);
+	}, []);
 
 	return (
-		<div className="ic10-code-editor">
-			<CodeMirror
-				value={code}
-				onChange={updateCode}
-				height={"580px"}
-				theme={vscodeDark}
-				extensions={[ic10(), EditorView.lineWrapping, zeroLineNumbers, cmLine.extension, ic10Snippets(), ruler]}
-			/>
-		</div>
+		<CodeMirror
+			key={`editor-${chip.id}-${updateCounter}`} // Добавьте key для принудительного обновления
+			value={code}
+			onChange={updateCode}
+			height={"580px"}
+			theme={vscodeDark}
+			extensions={[ic10(), EditorView.lineWrapping, zeroLineNumbers, cmLine.extension, ic10Snippets(), ruler]}
+		/>
 	);
 }
 

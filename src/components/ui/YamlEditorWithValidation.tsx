@@ -3,7 +3,7 @@ import { yaml } from "@codemirror/lang-yaml";
 import CodeMirror, { type ReactCodeMirrorProps } from "@uiw/react-codemirror";
 import Ajv, { type JSONSchemaType } from "ajv";
 import type React from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { parse } from "yaml";
 
 // Типы для пропсов
@@ -27,6 +27,8 @@ interface YamlEditorProps {
 	onValidation?: (parsedData: any | null, isValid: boolean, errors: ValidationError[]) => void;
 	/** Дополнительные пропсы для CodeMirror */
 	codeMirrorProps?: Omit<ReactCodeMirrorProps, "value" | "onChange" | "extensions" | "basicSetup">;
+	/** Задержка debounce в миллисекундах (по умолчанию 300) */
+	debounceDelay?: number;
 }
 
 const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
@@ -35,13 +37,18 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 	onChange,
 	onValidation,
 	codeMirrorProps = {},
+	debounceDelay = 300,
 }) => {
 	const [yamlValue, setYamlValue] = useState<string>(value);
 	const [errors, setErrors] = useState<ValidationError[]>([]);
 	const [isValid, setIsValid] = useState<boolean>(false);
 	const [_parsedData, setParsedData] = useState<any>(null);
+	const [isValidating, setIsValidating] = useState<boolean>(false);
 
 	const [showValid, setShowValid] = useState(false);
+
+	// Ref для хранения таймера debounce
+	const debounceTimerRef = useRef<number | null>(null);
 
 	useEffect(() => {
 		if (isValid && yamlValue.trim()) {
@@ -58,6 +65,8 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 
 	const validateYaml = useCallback(
 		(text: string) => {
+			setIsValidating(false);
+
 			if (!text.trim()) {
 				const emptyErrors: ValidationError[] = [];
 				setErrors(emptyErrors);
@@ -167,19 +176,37 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 		[schema, onValidation],
 	);
 
+	// Debounced версия валидации
+	const debouncedValidate = useCallback(
+		(text: string) => {
+			// Очищаем предыдущий таймер
+			if (debounceTimerRef.current) {
+				clearTimeout(debounceTimerRef.current);
+			}
+
+			setIsValidating(true);
+
+			// Устанавливаем новый таймер
+			debounceTimerRef.current = setTimeout(() => {
+				validateYaml(text);
+			}, debounceDelay);
+		},
+		[validateYaml, debounceDelay],
+	);
+
 	const handleChange = useCallback(
 		(value: string) => {
 			setYamlValue(value);
 			onChange?.(value);
-			validateYaml(value);
+			debouncedValidate(value);
 		},
-		[onChange, validateYaml],
+		[onChange, debouncedValidate],
 	);
 
 	useEffect(() => {
 		if (value !== yamlValue) {
 			setYamlValue(value);
-			validateYaml(value);
+			debouncedValidate(value);
 		}
 	}, [value]);
 
@@ -187,6 +214,15 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 		if (value) {
 			validateYaml(value);
 		}
+	}, []);
+
+	// Очистка таймера при размонтировании
+	useEffect(() => {
+		return () => {
+			if (debounceTimerRef.current) {
+				clearTimeout(debounceTimerRef.current);
+			}
+		};
 	}, []);
 
 	const getErrorMessage = (error: ValidationError): string => {
@@ -233,6 +269,24 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 						{...codeMirrorProps}
 					/>
 				</div>
+
+				{isValidating && (
+					<Box
+						style={{
+							position: "absolute",
+							bottom: "12px",
+							right: "12px",
+							zIndex: 10,
+							padding: "8px 12px",
+							background: "rgba(0, 0, 0, 0.7)",
+							color: "white",
+							borderRadius: "4px",
+							fontSize: "12px",
+						}}
+					>
+						Validating...
+					</Box>
+				)}
 
 				{uniqueErrors.length > 0 && (
 					<Box

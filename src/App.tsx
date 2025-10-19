@@ -36,12 +36,12 @@ function App() {
 		clearTerminal();
 	};
 	return (
-		<Box p={4}>
+		<Box p={3}>
 			<Grid templateColumns="repeat(4, 1fr)" gap={6} mb={6}>
 				{/* IC10 Code Editor */}
 				<GridItem colSpan={2}>
 					<VStack align="stretch" height="100%">
-						<Box flex={1} border="1px solid" borderColor="gray.200" borderRadius="md">
+						<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
 							{chips ? <Chips chips={chips} /> : null}
 						</Box>
 					</VStack>
@@ -54,7 +54,7 @@ function App() {
 							<Text fontWeight="bold">Current Environment</Text>
 							<Box width="47px" height={35} />
 						</HStack>
-						<Box flex={1} border="1px solid" borderColor="gray.200" borderRadius="md">
+						<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
 							<CodeMirror value={currentEnv} readOnly={true} height={height} theme={vscodeDark} extensions={[yaml()]} />
 						</Box>
 					</VStack>
@@ -75,7 +75,7 @@ function App() {
 								</Button>
 							</HStack>
 						</HStack>
-						<Box flex={1} border="1px solid" borderColor="gray.200" borderRadius="md">
+						<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
 							<YamlEditorWithValidation
 								value={initialEnv}
 								onChange={setInitialEnv}
