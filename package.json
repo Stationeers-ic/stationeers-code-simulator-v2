@@ -1,7 +1,7 @@
 {
 	"name": "react",
 	"private": true,
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
@@ -31,6 +31,7 @@
 		"zustand": "^5.0.8"
 	},
 	"devDependencies": {
+		"sass-embedded": "^1.93.2",
 		"@chakra-ui/cli": "^3.27.1",
 		"@types/node": "^24.8.1",
 		"@types/react": "^19.2.2",

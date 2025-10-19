@@ -41,7 +41,6 @@ function App() {
 		const yaml = getCurrentEnv();
 		if (yaml) {
 			setInitialEnv(yaml);
-			initializeFromYaml(yaml);
 			clearTerminal();
 		}
 	};

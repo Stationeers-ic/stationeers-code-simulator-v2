@@ -16,7 +16,7 @@ export function Runners(props: RunnersProps) {
 	return (
 		<Tabs.Root defaultValue="1">
 			<Tabs.List>
-				{runnersArray.map(([key, runner]) => (
+				{runnersArray.map(([key]) => (
 					<Tabs.Trigger key={key} value={key.toString()}>
 						<LuTerminal />
 						{key}

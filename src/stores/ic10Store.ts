@@ -1,6 +1,7 @@
 // stores/ic10Store.ts
 
 import * as ic10 from "ic10";
+import { stringify } from "yaml";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
@@ -65,30 +66,34 @@ export const useIc10Store = create<Ic10State>()(
 				initializeFromYaml: async (yaml: string) => {
 					try {
 						const { addToTerminal, setRunners } = get();
-
 						set({ initialized: false, loading: true });
-						const builder = ic10.Builer.from(yaml);
-
-						if (await builder.init()) {
-							set({
-								currentEnv: builder.toYaml(),
-								builder,
-								initialized: true,
-								runners: builder.Runners,
-							});
-
-							setRunners(builder.Runners);
-
-							// Обработка ошибок
-							builder.Runners.forEach((runner) => {
-								runner.sanboxContext.$errors.forEach((error) => {
-									if (error) {
-										addToTerminal(`[chip: ${runner.realContext.housing.id}] ${error.formated_message}`);
-									}
+						try {
+							const builder = ic10.Builer.from(yaml);
+							console.log(builder.toData());
+							if (await builder.init()) {
+								set({
+									currentEnv: stringify(builder.toData(), {}),
+									builder,
+									initialized: true,
+									runners: builder.Runners,
 								});
-							});
+								setRunners(builder.Runners);
+
+								// Обработка ошибок
+								builder.Runners.forEach((runner) => {
+									runner.sanboxContext.$errors.forEach((error) => {
+										if (error) {
+											addToTerminal(`[chip: ${runner.realContext.housing.id}] ${error.formated_message}`);
+										}
+									});
+								});
+							}
+						} catch (e) {
+							console.error(e);
+							console.debug(yaml);
+						} finally {
+							set({ loading: false });
 						}
-						set({ loading: false });
 					} catch (e) {
 						const { addToTerminal } = get();
 
