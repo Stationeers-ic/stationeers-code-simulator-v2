@@ -15,7 +15,7 @@ type Ic10CodeProps = {
 const [ruler] = createRuler(90, "ruler");
 export function Ic10Code(props: Ic10CodeProps) {
 	const { runner, update } = props;
-	const [line, setLine] = useState(0);
+	const [line, setLine] = useState(1);
 	const [cmLine] = useState(new lineClassController("nextRunLine"));
 	const [code, _setCode] = useState(runner.realContext.housing.chip?.getIc10Code());
 
@@ -23,27 +23,34 @@ export function Ic10Code(props: Ic10CodeProps) {
 		runner.realContext.housing.chip?.setIc10Code(newCode);
 		update();
 	};
-
+	useEffect(() => {
+		setLine(1);
+	}, [runner]);
 	useEffect(() => {
 		// Обработчик события
 		const onStep = () => {
 			const pos = runner.realContext.currentLinePosition;
-			console.log(pos)
+			console.log(pos);
 			if (pos !== undefined) {
-				setLine(pos+1);
+				setLine(pos + 1);
 			}
+		};
+		const reset = () => {
+			setLine(1);
 		};
 		// Навешиваем обработчик
 		runner.on("stepEnd", onStep);
+		runner.on("reset", reset);
 
 		// Снимаем обработчик при размонтировании или смене runner
 		return () => {
 			runner.off("stepEnd", onStep);
+			runner.off("reset", reset);
 		};
 	}, [runner]);
 
 	useEffect(() => {
-		console.log(line)
+		console.log(line);
 		if (line) cmLine.highlightLine(line);
 	}, [line]);
 

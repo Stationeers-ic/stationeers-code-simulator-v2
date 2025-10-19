@@ -81,6 +81,7 @@ export const useIc10Store = create<Ic10State>()(
 
 								// Обработка ошибок
 								builder.Runners.forEach((runner) => {
+									runner.realContext.reset();
 									runner.sanboxContext.$errors.forEach((error) => {
 										if (error) {
 											addToTerminal(`[chip: ${runner.realContext.housing.id}] ${error.formated_message}`);
