@@ -25,8 +25,6 @@ interface YamlEditorProps {
 	onChange?: (value: string) => void;
 	/** Callback при валидации */
 	onValidation?: (parsedData: any | null, isValid: boolean, errors: ValidationError[]) => void;
-	/** Тема редактора */
-	theme?: "light" | "dark";
 	/** Дополнительные пропсы для CodeMirror */
 	codeMirrorProps?: Omit<ReactCodeMirrorProps, "value" | "onChange" | "extensions" | "basicSetup">;
 }
@@ -89,9 +87,67 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 						type: error.keyword,
 						params: error.params,
 					}));
-					setErrors(validationErrors);
+
+					// Группируем ошибки по instancePath и type
+					const groupedErrors = validationErrors.reduce(
+						(acc, error) => {
+							const key = `${error.instancePath}::${error.type}`;
+
+							if (!acc[key]) {
+								acc[key] = {
+									message: error.message,
+									instancePath: error.instancePath,
+									type: error.type,
+									params: {},
+									originalParams: [],
+								};
+							}
+
+							acc[key].originalParams.push(error.params);
+
+							return acc;
+						},
+						{} as Record<string, ValidationError & { originalParams: any[] }>,
+					);
+
+					// Объединяем params для каждой группы
+					const mergedErrors: ValidationError[] = Object.values(groupedErrors).map((group) => {
+						const mergedParams: Record<string, any> = {};
+
+						// Собираем все ключи из всех params
+						const allKeys = new Set<string>();
+						group.originalParams.forEach((param) => {
+							if (param) {
+								Object.keys(param).forEach((key) => allKeys.add(key));
+							}
+						});
+
+						// Для каждого ключа собираем все значения
+						allKeys.forEach((key) => {
+							const values = group.originalParams
+								.filter((param) => param && param[key] !== undefined)
+								.map((param) => param[key]);
+
+							// Если значений больше одного, делаем массив, иначе оставляем одно значение
+							if (values.length > 1) {
+								// Убираем дубликаты
+								mergedParams[key] = Array.from(new Set(values));
+							} else if (values.length === 1) {
+								mergedParams[key] = values[0];
+							}
+						});
+
+						return {
+							message: group.message,
+							instancePath: group.instancePath,
+							type: group.type,
+							params: mergedParams,
+						};
+					});
+
+					setErrors(mergedErrors);
 					setIsValid(false);
-					onValidation?.(parsed, false, validationErrors);
+					onValidation?.(parsed, false, mergedErrors);
 				}
 			} catch (yamlError: any) {
 				const errorList: ValidationError[] = [
@@ -137,9 +193,27 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 		if (error.type === "yaml-syntax") {
 			return `YAML Syntax Error: ${error.message}`;
 		}
-		console.log(error);
+
 		const path = error.instancePath ? `at path "${error.instancePath}"` : "";
-		return `${error.message} ${path}`.trim();
+
+		// Форматируем params для отображения
+		let paramsInfo = "";
+		if (error.params) {
+			const paramEntries = Object.entries(error.params);
+			if (paramEntries.length > 0) {
+				paramsInfo = paramEntries
+					.map(([key, value]) => {
+						if (Array.isArray(value)) {
+							return `${key}: [${value.join(", ")}]`;
+						}
+						return `${key}: ${value}`;
+					})
+					.join(", ");
+				paramsInfo = ` (${paramsInfo})`;
+			}
+		}
+
+		return `${error.message} ${path}${paramsInfo}`.trim();
 	};
 
 	const uniqueErrors = Array.from(new Map(errors.map((error) => [getErrorMessage(error), error])).values());
