@@ -238,7 +238,7 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 					<Box
 						style={{
 							position: "absolute",
-							bottom: "12px",
+							bottom: "-12px",
 							left: "12px",
 							right: "12px",
 							zIndex: 11,
