@@ -3,12 +3,12 @@ import { Box, Button, Grid, GridItem, HStack, Spinner, Text, VStack } from "@cha
 import { yaml } from "@codemirror/lang-yaml";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import CodeMirror from "@uiw/react-codemirror";
+import type { JSONSchemaType } from "ajv";
 import { use } from "react";
 import Runners from "./components/ui/runners";
 import YamlEditorWithValidation from "./components/ui/YamlEditorWithValidation";
 import { fetchData } from "./stores/data";
 import { useIc10Store } from "./stores/ic10Store";
-import type { JSONSchemaType } from "ajv";
 
 function App() {
 	const schema = use<JSONSchemaType<any>>(
