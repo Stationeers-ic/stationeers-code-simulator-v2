@@ -1,14 +1,26 @@
 import { Box, Button, createToaster, IconButton, Input, Portal, Textarea, VStack } from "@chakra-ui/react";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { LuBug, LuX } from "react-icons/lu";
 import { useIc10Store } from "@/stores/ic10Store";
+import { useTerminalStore } from "@/stores/terminalStore";
 
 interface BugReportData {
 	email: string;
 	message: string;
 	init_env: string;
 	debug_env: string;
+	terminal: string;
 }
+
+const WEBHOOK_URL = "https://n8n.traineratwot.site/webhook/b2f66dcc-a2a7-4ed1-9b2d-0261de8ca648";
+
+const INITIAL_FORM_STATE: BugReportData = {
+	email: "",
+	message: "",
+	init_env: "",
+	debug_env: "",
+	terminal: "",
+};
 
 const toaster = createToaster({
 	placement: "top-end",
@@ -16,66 +28,106 @@ const toaster = createToaster({
 });
 
 export const BugReportButton = () => {
+	const { terminalOutput } = useTerminalStore();
 	const { getInitialEnv, getDebugEnv } = useIc10Store();
+
 	const [isOpen, setIsOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
-	const [formData, setFormData] = useState<BugReportData>({
-		email: "",
-		message: "",
-		init_env: getInitialEnv() ?? "",
-		debug_env: getDebugEnv() ?? "",
-	});
+	const [formData, setFormData] = useState<BugReportData>(INITIAL_FORM_STATE);
 
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
-		setIsLoading(true);
+	const toggleForm = useCallback(() => {
+		setIsOpen((prev) => !prev);
+	}, []);
 
-		try {
-			formData.debug_env = getDebugEnv() ?? "";
-			formData.init_env = getInitialEnv() ?? "";
-			const response = await fetch("https://n8n.traineratwot.site/webhook-test/b2f66dcc-a2a7-4ed1-9b2d-0261de8ca648", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(formData),
-			});
+	const closeForm = useCallback(() => {
+		setIsOpen(false);
+	}, []);
 
-			if (response.ok) {
-				toaster.create({
-					title: "Успешно отправлено",
-					description: "Спасибо за ваш отчет об ошибке!",
-					type: "success",
-					duration: 3000,
-				});
-				setFormData({
-					email: "",
-					message: "",
-					init_env: "",
-					debug_env: "",
-				});
-				setIsOpen(false);
-			} else {
-				throw new Error("Ошибка отправки");
-			}
-		} catch (error) {
-			toaster.create({
-				title: "Ошибка",
-				description: "Не удалось отправить отчет. Попробуйте позже.",
-				type: "error",
-				duration: 3000,
-			});
-		} finally {
-			setIsLoading(false);
-		}
-	};
+	const resetForm = useCallback(() => {
+		setFormData(INITIAL_FORM_STATE);
+	}, []);
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-		setFormData({
-			...formData,
-			[e.target.name]: e.target.value,
+	const showSuccessToast = useCallback(() => {
+		toaster.create({
+			title: "Успешно отправлено",
+			description: "Спасибо за ваш отчет об ошибке!",
+			type: "success",
+			duration: 3000,
 		});
-	};
+	}, []);
+
+	const showErrorToast = useCallback(() => {
+		toaster.create({
+			title: "Ошибка",
+			description: "Не удалось отправить отчет. Попробуйте позже.",
+			type: "error",
+			duration: 3000,
+		});
+	}, []);
+
+	const submitBugReport = useCallback(async (data: BugReportData): Promise<void> => {
+		const response = await fetch(WEBHOOK_URL, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(data),
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+	}, []);
+
+	const handleSubmit = useCallback(
+		async (e: React.FormEvent) => {
+			e.preventDefault();
+			setIsLoading(true);
+
+			try {
+				const dataToSubmit = {
+					...formData,
+					debug_env: getDebugEnv() ?? "",
+					init_env: getInitialEnv() ?? "",
+					terminal: terminalOutput.join("\n") ?? "",
+				};
+
+				await submitBugReport(dataToSubmit);
+
+				showSuccessToast();
+				resetForm();
+				closeForm();
+			} catch (error) {
+				console.error("Failed to submit bug report:", error);
+				showErrorToast();
+			} finally {
+				setIsLoading(false);
+			}
+		},
+		[
+			formData,
+			getDebugEnv,
+			getInitialEnv,
+			terminalOutput,
+			submitBugReport,
+			showSuccessToast,
+			showErrorToast,
+			resetForm,
+			closeForm,
+		],
+	);
+
+	const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+		const { name, value } = e.target;
+		setFormData((prev) => ({
+			...prev,
+			[name]: value,
+		}));
+	}, []);
+
+	const isSubmitDisabled = useMemo(() => {
+		return isLoading || !formData.message.trim();
+	}, [isLoading, formData.message]);
 
 	return (
 		<Portal>
@@ -97,7 +149,7 @@ export const BugReportButton = () => {
 						<Box fontSize="lg" fontWeight="bold">
 							Сообщить об ошибке
 						</Box>
-						<IconButton aria-label="Закрыть" size="sm" variant="ghost" onClick={() => setIsOpen(false)}>
+						<IconButton aria-label="Закрыть" size="sm" variant="ghost" onClick={closeForm} disabled={isLoading}>
 							<LuX />
 						</IconButton>
 					</Box>
@@ -114,6 +166,7 @@ export const BugReportButton = () => {
 									value={formData.email}
 									onChange={handleChange}
 									placeholder="your@email.com"
+									disabled={isLoading}
 								/>
 							</Box>
 
@@ -131,6 +184,7 @@ export const BugReportButton = () => {
 									placeholder="Опишите проблему..."
 									rows={4}
 									required
+									disabled={isLoading}
 								/>
 							</Box>
 
@@ -138,7 +192,7 @@ export const BugReportButton = () => {
 							<input type="hidden" name="init_env" value={formData.init_env} />
 							<input type="hidden" name="debug_env" value={formData.debug_env} />
 
-							<Button type="submit" colorScheme="blue" width="full" loading={isLoading}>
+							<Button type="submit" colorScheme="blue" width="full" loading={isLoading} disabled={isSubmitDisabled}>
 								Отправить
 							</Button>
 						</VStack>
@@ -157,7 +211,7 @@ export const BugReportButton = () => {
 				borderRadius="full"
 				boxShadow="lg"
 				zIndex={999}
-				onClick={() => setIsOpen(!isOpen)}
+				onClick={toggleForm}
 			>
 				<LuBug />
 			</IconButton>
