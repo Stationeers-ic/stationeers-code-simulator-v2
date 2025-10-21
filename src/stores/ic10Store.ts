@@ -3,12 +3,12 @@
 import * as ic10 from "ic10";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
+import { useTerminalStore } from "./terminalStore";
 
 interface Ic10State {
 	// Состояние
 	initialEnv: string;
 	currentEnv: string;
-	terminalOutput: string[];
 	chips: ic10.Chip[] | null;
 	loading: boolean;
 	initialized: boolean;
@@ -22,10 +22,6 @@ interface Ic10State {
 	setInitialized: (initialized: boolean) => void;
 	setBuilder: (builder: ic10.Builer | null) => void;
 
-	// Действия терминала
-	addToTerminal: (message: string) => void;
-	clearTerminal: () => void;
-
 	// IC10 операции
 	initializeFromYaml: (yaml: string) => Promise<void>;
 	step: () => Promise<void>;
@@ -33,8 +29,8 @@ interface Ic10State {
 	getDebugEnv: () => string | undefined;
 	getInitialEnv: () => string | undefined;
 
-	updateCounter: number; // Добавьте это поле
-	forceUpdate: () => void; // Добавьте это действие
+	updateCounter: number;
+	forceUpdate: () => void;
 }
 
 export const useIc10Store = create<Ic10State>()(
@@ -44,7 +40,6 @@ export const useIc10Store = create<Ic10State>()(
 				// Начальное состояние
 				initialEnv: "",
 				currentEnv: "",
-				terminalOutput: [],
 				chips: null,
 				loading: false,
 				initialized: false,
@@ -52,6 +47,7 @@ export const useIc10Store = create<Ic10State>()(
 				updateCounter: 0,
 
 				forceUpdate: () => set((state) => ({ updateCounter: state.updateCounter + 1 })),
+
 				// Сеттеры
 				setInitialEnv: (initialEnv) => set({ initialEnv }),
 				setCurrentEnv: (currentEnv) => set({ currentEnv }),
@@ -60,20 +56,9 @@ export const useIc10Store = create<Ic10State>()(
 				setInitialized: (initialized) => set({ initialized }),
 				setBuilder: (builder) => set({ builder }),
 
-				// Действия терминала
-				addToTerminal: (message) =>
-					set((state) => {
-						console.debug(message);
-						return {
-							terminalOutput: [...state.terminalOutput, `> ${message}`],
-						};
-					}),
-
-				clearTerminal: () => set({ terminalOutput: [] }),
-
 				// IC10 операции
 				initializeFromYaml: async (yaml: string) => {
-					const { addToTerminal, setChips, forceUpdate } = get();
+					const { setChips, forceUpdate } = get();
 					try {
 						set({ initialized: false, loading: true });
 
@@ -91,26 +76,31 @@ export const useIc10Store = create<Ic10State>()(
 							runner.realContext.reset();
 							runner.sanboxContext.$errors.forEach((error) => {
 								if (error) {
-									addToTerminal(`[chip: ${runner.realContext.housing.id}] ${error.formated_message}`);
+									useTerminalStore
+										.getState()
+										.addToTerminal(`[chip: ${runner.realContext.housing.id}] ${error.formated_message}`);
 								}
 							});
 						});
 						set({ loading: false });
 					} catch (e) {
 						if (e instanceof ic10.Ic10Error) {
-							addToTerminal(e.formated_message);
+							useTerminalStore.getState().addToTerminal(e.formated_message);
+						} else if (e instanceof Error) {
+							useTerminalStore.getState().addToTerminal(e.message);
+						} else {
+							useTerminalStore.getState().addToTerminal("Error");
 						}
-						console.warn(e);
 						set({ loading: false, initialized: false });
 					}
 					forceUpdate();
 				},
 
 				step: async () => {
-					const { builder, initialized, addToTerminal, setCurrentEnv, setInitialized, forceUpdate } = get();
+					const { builder, initialized, setCurrentEnv, setInitialized, forceUpdate } = get();
 
 					if (!builder || !initialized) {
-						addToTerminal("Not initialized");
+						useTerminalStore.getState().addToTerminal("Not initialized");
 						return;
 					}
 
@@ -126,13 +116,15 @@ export const useIc10Store = create<Ic10State>()(
 						builder.Runners.forEach((runner) => {
 							runner.realContext.$errors.forEach((error) => {
 								if (error) {
-									addToTerminal(`[chip: ${runner.realContext.housing.id}] ${error.formated_message}`);
+									useTerminalStore
+										.getState()
+										.addToTerminal(`[chip: ${runner.realContext.housing.id}] ${error.formated_message}`);
 								}
 							});
 						});
 					} catch (e) {
 						if (e instanceof ic10.Ic10Error) {
-							addToTerminal(e.formated_message);
+							useTerminalStore.getState().addToTerminal(e.formated_message);
 						}
 						console.warn(e);
 						setInitialized(false);
@@ -154,20 +146,17 @@ export const useIc10Store = create<Ic10State>()(
 				},
 			}),
 			{
-				name: "ic10-storage", // имя ключа в localStorage
+				name: "ic10-storage",
 				partialize: (state) => ({
-					// Сохраняем только initialEnv в localStorage
 					initialEnv: state.initialEnv,
 				}),
-				// Опционально: миграция для будущих изменений структуры
 				migrate: (persistedState: any, version: number) => {
 					if (version === 0) {
-						// Миграция с версии 0 на версию 1, если понадобится в будущем
 						return persistedState;
 					}
 					return persistedState;
 				},
-				version: 1, // версия для миграций
+				version: 1,
 			},
 		),
 	),

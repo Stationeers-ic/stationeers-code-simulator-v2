@@ -5,35 +5,26 @@ import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import CodeMirror from "@uiw/react-codemirror";
 import type { JSONSchemaType } from "ajv";
 import { use } from "react";
-import Chips from "./components/ui/runners";
+import Chips from "./components/ui/Chips";
+import { Terminal } from "./components/ui/Terminal";
 import YamlEditorWithValidation from "./components/ui/YamlEditorWithValidation";
 import { fetchData } from "./stores/data";
 import { useIc10Store } from "./stores/ic10Store";
+import { useTerminalStore } from "./stores/terminalStore";
 
 function App() {
 	const schema = use<JSONSchemaType<any>>(
 		fetchData("https://raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Schemas/env.schema.json"),
 	);
 	const height = "590px";
-	const terminalHeight = "200px";
-
+	const { clearTerminal } = useTerminalStore();
 	// Получаем состояние и действия из хранилища
-	const {
-		initialEnv,
-		currentEnv,
-		terminalOutput,
-		chips,
-		loading,
-		initialized,
-		setInitialEnv,
-		initializeFromYaml,
-		step,
-		clearTerminal,
-	} = useIc10Store();
+	const { initialEnv, currentEnv, chips, loading, initialized, setInitialEnv, initializeFromYaml, step } =
+		useIc10Store();
 
 	const load = () => {
-		initializeFromYaml(initialEnv);
 		clearTerminal();
+		initializeFromYaml(initialEnv);
 	};
 	return (
 		<Box p={3}>
@@ -91,35 +82,7 @@ function App() {
 			</Grid>
 
 			{/* Terminal Output */}
-			<VStack align="stretch">
-				<HStack justify="space-between">
-					<Text fontWeight="bold">Terminal Output</Text>
-					<Button size="sm" onClick={clearTerminal} colorScheme="gray">
-						Clear
-					</Button>
-				</HStack>
-				<Box
-					height={terminalHeight}
-					border="1px solid"
-					borderColor="gray.200"
-					borderRadius="md"
-					bg="black"
-					color="white"
-					fontFamily="monospace"
-					p={3}
-					overflow="auto"
-				>
-					{terminalOutput.length === 0 ? (
-						<Text color="gray.400">No output yet. Execute steps to see output...</Text>
-					) : (
-						terminalOutput.map((line, index) => (
-							<Text key={index} fontSize="sm">
-								{line}
-							</Text>
-						))
-					)}
-				</Box>
-			</VStack>
+			<Terminal />
 		</Box>
 	);
 }
