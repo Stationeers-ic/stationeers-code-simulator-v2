@@ -1,3 +1,4 @@
+import { Alert } from "@chakra-ui/react";
 import { EditorView } from "@codemirror/view";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import CodeMirror from "@uiw/react-codemirror";
@@ -15,30 +16,37 @@ const [ruler] = createRuler(90, "ruler");
 
 export function Ic10Code(props: Ic10CodeProps) {
 	const { chip } = props;
-	const runner = chip!.housing!.runner!;
-	const updateCounter = useIc10Store((state) => state.updateCounter); // Добавьте это
-
-	const [line, setLine] = useState(runner.realContext.currentLinePosition + 1);
-	const [cmLine] = useState(new lineClassController("nextRunLine"));
-	const [code, setCode] = useState(runner.realContext.housing.chip?.getIc10Code() || "");
-
+	const runner = chip?.housing?.runner;
+	const updateCounter = useIc10Store((state) => state.updateCounter);
 	const { initialEnv, setInitialEnv } = useIc10Store();
 
-	const debounceTimerRef = useRef<Timeout | null>(null);
-	useEffect(() => {
-		cmLine.highlightLine(line);
+	const [line, setLine] = useState(() => {
+		const position = runner?.realContext?.currentLinePosition;
+		return position !== undefined ? position + 1 : 1;
 	});
-	// Обновляем код при изменении updateCounter
+	const [cmLine] = useState(new lineClassController("nextRunLine"));
+	const [code, setCode] = useState(() => runner?.realContext?.housing?.chip?.getIc10Code() || "");
+
+	const debounceTimerRef = useRef<Timeout | null>(null);
+
 	useEffect(() => {
-		const newCode = runner.realContext.housing.chip?.getIc10Code() || "";
-		setCode(newCode);
-		const pos = runner.realContext.currentLinePosition;
-		setLine(pos !== undefined ? pos + 1 : 1);
+		if (runner) {
+			cmLine.highlightLine(line);
+		}
+	}, [line, cmLine, runner]);
+
+	useEffect(() => {
+		if (runner) {
+			const newCode = runner.realContext?.housing?.chip?.getIc10Code() || "";
+			setCode(newCode);
+			const pos = runner.realContext?.currentLinePosition;
+			setLine(pos !== undefined ? pos + 1 : 1);
+		}
 	}, [updateCounter, runner]);
 
 	const updateCode = useCallback(
 		(newCode: string) => {
-			setCode(newCode); // Обновляем локальное состояние сразу
+			setCode(newCode);
 
 			if (debounceTimerRef.current) {
 				clearTimeout(debounceTimerRef.current);
@@ -66,9 +74,24 @@ export function Ic10Code(props: Ic10CodeProps) {
 		};
 	}, []);
 
+	// Проверка наличия runner ПОСЛЕ всех хуков
+	if (!runner) {
+		return (
+			<Alert.Root status="error">
+				<Alert.Indicator />
+				<Alert.Content>
+					<Alert.Title>Ошибка</Alert.Title>
+					<Alert.Description>
+						У чипа {chip.id} отсутствует runner. Убедитесь, что чип правильно инициализирован.
+					</Alert.Description>
+				</Alert.Content>
+			</Alert.Root>
+		);
+	}
+
 	return (
 		<CodeMirror
-			key={`editor-${chip.id}-${updateCounter}`} // Добавьте key для принудительного обновления
+			key={`editor-${chip.id}-${updateCounter}`}
 			value={code}
 			onChange={updateCode}
 			height={"580px"}

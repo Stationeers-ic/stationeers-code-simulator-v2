@@ -10,7 +10,7 @@ type RunnersProps = {
 
 export function Chips(props: RunnersProps) {
 	const { chips } = props;
-	const updateCounter = useIc10Store((state) => state.updateCounter); // Добавьте это
+	const updateCounter = useIc10Store((state) => state.updateCounter);
 
 	return (
 		<Tabs.Root defaultValue="1">

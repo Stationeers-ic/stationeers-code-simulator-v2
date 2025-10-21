@@ -1,8 +1,13 @@
-import { i18n as ic10Lang } from "ic10";
+import { i18n as ic10Lang, Languages } from "ic10";
 import { use } from "react";
 
 // Создаём промис один раз вне компонента
-const langPromise = ic10Lang.init();
+const langPromise = ic10Lang.init({
+	lng: "ru", // язык по умолчанию
+	fallbackLng: "ru",
+	debug: true,
+	resources: Languages,
+});
 
 export function LoadLang() {
 	use(langPromise);
