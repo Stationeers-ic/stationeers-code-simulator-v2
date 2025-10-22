@@ -18,12 +18,12 @@
         "codemirror-lang-ic10": "^0.4.1",
         "i18next": "^25.6.0",
         "i18next-http-backend": "^3.0.2",
-        "ic10": "^5.1.2",
+        "ic10": "^5.2.0",
         "next-themes": "^0.4.6",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
         "react-highlight-syntax": "^1.3.0",
-        "react-i18next": "^16.1.4",
+        "react-i18next": "^16.1.5",
         "react-icons": "^5.5.0",
         "react-markdown": "^10.1.0",
         "yaml": "^2.8.1",
@@ -652,7 +652,9 @@
 
     "estree-util-is-identifier-name": ["estree-util-is-identifier-name@3.0.0", "", {}, "sha512-hFtqIDZTIUZ9BXLb8y4pYGyk6+wekIivNVTcmvk8NoOh+VeRn5y6cEHzbURrWbfp1fIqdVipilzj+lfaadNZmg=="],
 
-    "exact-ic10-math": ["exact-ic10-math@0.5.0", "", {}, "sha512-6ZHOWVR9Tp5Dntl5gyLorz3rqZmTG+ZRjFoAS8Xe4S4B6kkFCrURLDxx8YYaM4SPImWMPF3LZpAaVXllmYlR/g=="],
+    "eventemitter3": ["eventemitter3@5.0.1", "", {}, "sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA=="],
+
+    "exact-ic10-math": ["exact-ic10-math@1.0.1", "", {}, "sha512-+3f+AT1TogjohicPjoVWKhMLhH8u53B4LMOhTdP9ppMhkAWIru7w3PX+a9ra5WXhcRaEnmVQeYBKQwIA+yay2Q=="],
 
     "extend": ["extend@3.0.2", "", {}, "sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g=="],
 
@@ -720,7 +722,7 @@
 
     "i18next-http-backend": ["i18next-http-backend@3.0.2", "", { "dependencies": { "cross-fetch": "4.0.0" } }, "sha512-PdlvPnvIp4E1sYi46Ik4tBYh/v/NbYfFFgTjkwFl0is8A18s7/bx9aXqsrOax9WUbeNS6mD2oix7Z0yGGf6m5g=="],
 
-    "ic10": ["ic10@5.1.2", "", { "dependencies": { "exact-ic10-math": "^0.5.0", "i18next": "^25.6.0", "uuid": "^13.0.0", "valibot": "^1.1.0", "yaml": "^2.8.1" }, "peerDependencies": { "typescript": "^5.8.2" } }, "sha512-e/2wsj6u9BM07n8xO2g5SUMujlLvfVJAtFmSYxllwf+nB1idg9t3J6L0KYzYJOpopUqlfQ5/dcA1JvOoDKxE8A=="],
+    "ic10": ["ic10@5.2.0", "", { "dependencies": { "eventemitter3": "^5.0.1", "exact-ic10-math": "^1.0.1", "i18next": "^25.6.0", "uuid": "^13.0.0", "valibot": "^1.1.0", "yaml": "^2.8.1" }, "peerDependencies": { "typescript": "^5.8.2" } }, "sha512-C4Y5FG6jFnRVbT/Z3niIyqqZfJNk60jX0Tj52W/iSVY++3gwyLjuCryrgX8yZ1eRjouG2iwrVh0sY+Lfa1ewXw=="],
 
     "ignore": ["ignore@7.0.5", "", {}, "sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg=="],
 
