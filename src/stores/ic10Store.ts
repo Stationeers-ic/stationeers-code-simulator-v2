@@ -33,12 +33,29 @@ interface Ic10State {
 	forceUpdate: () => void;
 }
 
+const startEnv = `version: 1
+chips:
+  - id: 1
+    code: ""
+devices:
+  - id: 1
+    PrefabName: StructureCircuitHousingCompact
+    chip: 1
+    ports:
+      - port: default
+        network: base
+networks:
+  - id: base
+    type: data
+
+`;
+
 export const useIc10Store = create<Ic10State>()(
 	devtools(
 		persist(
 			(set, get) => ({
 				// Начальное состояние
-				initialEnv: "",
+				initialEnv: startEnv,
 				currentEnv: "",
 				chips: null,
 				loading: false,
@@ -49,7 +66,7 @@ export const useIc10Store = create<Ic10State>()(
 				forceUpdate: () => set((state) => ({ updateCounter: state.updateCounter + 1 })),
 
 				// Сеттеры
-				setInitialEnv: (initialEnv) => set({ initialEnv }),
+				setInitialEnv: (initialEnv) => set({ initialEnv: initialEnv.trim() }),
 				setCurrentEnv: (currentEnv) => set({ currentEnv }),
 				setChips: (chips) => set({ chips: Array.from(chips.entries()).map((a) => a[1]) }),
 				setLoading: (loading) => set({ loading }),
@@ -150,6 +167,12 @@ export const useIc10Store = create<Ic10State>()(
 				partialize: (state) => ({
 					initialEnv: state.initialEnv,
 				}),
+				onRehydrateStorage: () => (state) => {
+					// Проверяем после восстановления из localStorage
+					if (state && (!state.initialEnv || !state.initialEnv.trim())) {
+						state.initialEnv = startEnv;
+					}
+				},
 				migrate: (persistedState: any, version: number) => {
 					if (version === 0) {
 						return persistedState;
