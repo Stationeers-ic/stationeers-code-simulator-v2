@@ -1,5 +1,5 @@
 // components/ui/Docs.tsx
-import { Box, Button, CloseButton, Drawer, IconButton, Portal, Spinner, Text } from "@chakra-ui/react";
+import { Box, Button, CloseButton, Drawer, Portal, Spinner, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import ReactHighlightSyntax from "react-highlight-syntax";
 import { useTranslation } from "react-i18next";

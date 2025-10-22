@@ -1,9 +1,9 @@
 // components/ui/TopMenu.tsx
 import { Box, Button, HStack, Spinner } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+import { LuPlay, LuRedo } from "react-icons/lu";
 import Docs from "./Docs";
 import { LanguageSelector } from "./LanguageSelector";
-import { LuPlay, LuRedo } from "react-icons/lu";
 
 interface TopMenuProps {
 	onStep: () => void;
