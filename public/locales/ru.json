@@ -1,6 +1,9 @@
 {
-	"menu": {
-		"step": "Шаг",
-		"initialize": "Инициализировать"
-	}
+    "menu": {
+        "step": "Шаг",
+        "initialize": "Инициализировать"
+    },
+    "app": {
+        "currentEnvironment": "Текущая окружающая среда"
+    }
 }
