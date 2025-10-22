@@ -1,7 +1,9 @@
 // components/ui/TopMenu.tsx
 import { Box, Button, HStack, Spinner } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+import Docs from "./Docs";
 import { LanguageSelector } from "./LanguageSelector";
+import { LuPlay, LuRedo } from "react-icons/lu";
 
 interface TopMenuProps {
 	onStep: () => void;
@@ -18,12 +20,15 @@ export function TopMenu({ onStep, onInitialize, loading, initialized }: TopMenuP
 			<HStack justify="space-between">
 				<HStack gap={3}>
 					<Button size="sm" onClick={onStep} disabled={!initialized} colorScheme="blue">
+						<LuPlay />
 						{t("menu.step")}
 					</Button>
 					<Button size="sm" onClick={onInitialize} colorScheme="green">
+						<LuRedo />
 						{loading && <Spinner size="xs" mr={2} />}
 						{t("menu.initialize")}
 					</Button>
+					<Docs />
 				</HStack>
 
 				<LanguageSelector />

@@ -5,6 +5,7 @@ import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import CodeMirror from "@uiw/react-codemirror";
 import type { JSONSchemaType } from "ajv";
 import { use } from "react";
+import { useTranslation } from "react-i18next";
 import Chips from "./components/ui/Chips";
 import { Terminal } from "./components/ui/Terminal";
 import { TopMenu } from "./components/ui/TopMenu";
@@ -12,7 +13,6 @@ import YamlEditorWithValidation from "./components/ui/YamlEditorWithValidation";
 import { fetchData } from "./stores/data";
 import { useIc10Store } from "./stores/ic10Store";
 import { useTerminalStore } from "./stores/terminalStore";
-import { useTranslation } from "react-i18next";
 
 function App() {
 	const { t } = useTranslation();

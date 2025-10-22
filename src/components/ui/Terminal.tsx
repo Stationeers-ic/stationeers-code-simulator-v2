@@ -1,7 +1,7 @@
 // components/ui/Terminal.tsx
 import { Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
-import { useTerminalStore } from "@/stores/terminalStore";
 import { useTranslation } from "react-i18next";
+import { useTerminalStore } from "@/stores/terminalStore";
 
 export function Terminal() {
 	const { t } = useTranslation();

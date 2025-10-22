@@ -3,8 +3,8 @@ import { Button, Menu, Portal } from "@chakra-ui/react";
 import { useLanguageStore } from "@/stores/languageStore";
 
 const languages = [
-	{ code: "ru", name: "Русский", flag: "🇷🇺" },
 	{ code: "en", name: "English", flag: "🇬🇧" },
+	{ code: "ru", name: "Русский", flag: "🇷🇺" },
 ];
 
 export function LanguageSelector() {

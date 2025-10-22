@@ -1,11 +1,11 @@
 // components/ui/Docs.tsx
-import { Box, CloseButton, Drawer, IconButton, Portal, Spinner, Text } from "@chakra-ui/react";
+import { Box, Button, CloseButton, Drawer, IconButton, Portal, Spinner, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import ReactHighlightSyntax from "react-highlight-syntax";
+import { useTranslation } from "react-i18next";
 import { LuDock } from "react-icons/lu";
 import Markdown from "react-markdown";
 import { useLanguageStore } from "@/stores/languageStore";
-import { useTranslation } from "react-i18next";
 
 function Docs() {
 	const { t } = useTranslation();
@@ -35,24 +35,15 @@ function Docs() {
 	}, [currentLanguage]);
 
 	return (
-		<Portal>
-			<Drawer.Root size="xl">
-				<Drawer.Backdrop />
-				<Drawer.Trigger asChild>
-					<IconButton
-						aria-label={t("docs.open")}
-						position="fixed"
-						bottom="20px"
-						left="20px"
-						size="lg"
-						colorScheme="red"
-						borderRadius="full"
-						boxShadow="lg"
-						zIndex={999}
-					>
-						<LuDock />
-					</IconButton>
-				</Drawer.Trigger>
+		<Drawer.Root size="xl">
+			<Drawer.Backdrop />
+			<Drawer.Trigger asChild>
+				<Button>
+					<LuDock />
+					{t("docs.title")}
+				</Button>
+			</Drawer.Trigger>
+			<Portal>
 				<Drawer.Positioner>
 					<Drawer.Content>
 						<Drawer.CloseTrigger asChild>
@@ -93,8 +84,8 @@ function Docs() {
 						<Drawer.Footer />
 					</Drawer.Content>
 				</Drawer.Positioner>
-			</Drawer.Root>
-		</Portal>
+			</Portal>
+		</Drawer.Root>
 	);
 }
 

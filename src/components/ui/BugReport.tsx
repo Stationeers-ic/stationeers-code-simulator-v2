@@ -1,10 +1,10 @@
 // components/ui/BugReportButton.tsx
 import { Box, Button, createToaster, IconButton, Input, Portal, Textarea, VStack } from "@chakra-ui/react";
 import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { LuBug, LuX } from "react-icons/lu";
 import { useIc10Store } from "@/stores/ic10Store";
 import { useTerminalStore } from "@/stores/terminalStore";
-import { useTranslation } from "react-i18next";
 
 interface BugReportData {
 	email: string;
