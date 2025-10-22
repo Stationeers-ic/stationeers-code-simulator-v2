@@ -6,6 +6,7 @@ import { Loading } from "./components/chakra/Loading";
 import LoadLang from "./components/lang/LoadLang";
 import "@/assets/main.scss";
 import { BugReportButton } from "./components/ui/BugReport";
+import Docs from "./components/ui/Docs";
 
 createRoot(document.getElementById("root")!).render(
 	<Provider>
@@ -15,6 +16,7 @@ createRoot(document.getElementById("root")!).render(
 				<App />
 				<BugReportButton />
 			</Suspense>
+			<Docs />
 		</StrictMode>
 	</Provider>,
 );

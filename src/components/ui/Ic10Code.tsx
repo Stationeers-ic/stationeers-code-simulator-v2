@@ -3,12 +3,11 @@ import { EditorView } from "@codemirror/view";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import CodeMirror from "@uiw/react-codemirror";
 import { createRuler, ic10, ic10Snippets, lineClassController, zeroLineNumbers } from "codemirror-lang-ic10";
-import { ValidateIc10Runner, type Chip, type ChipSchema, type EnvSchema } from "ic10";
+import { type Chip, type ChipSchema, type EnvSchema, ValidateIc10Runner } from "ic10";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { parse, stringify } from "yaml";
 import { useIc10Store } from "@/stores/ic10Store";
 import { useTerminalStore } from "@/stores/terminalStore";
-import { error } from "ajv/dist/vocabularies/applicator/dependencies";
 
 type Ic10CodeProps = {
 	chip: Chip;
