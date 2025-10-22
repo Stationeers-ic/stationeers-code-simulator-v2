@@ -1,8 +1,10 @@
+// components/ui/BugReportButton.tsx
 import { Box, Button, createToaster, IconButton, Input, Portal, Textarea, VStack } from "@chakra-ui/react";
 import { useCallback, useMemo, useState } from "react";
 import { LuBug, LuX } from "react-icons/lu";
 import { useIc10Store } from "@/stores/ic10Store";
 import { useTerminalStore } from "@/stores/terminalStore";
+import { useTranslation } from "react-i18next";
 
 interface BugReportData {
 	email: string;
@@ -28,6 +30,7 @@ const toaster = createToaster({
 });
 
 export const BugReportButton = () => {
+	const { t } = useTranslation();
 	const { terminalOutput } = useTerminalStore();
 	const { getInitialEnv, getDebugEnv } = useIc10Store();
 
@@ -49,21 +52,21 @@ export const BugReportButton = () => {
 
 	const showSuccessToast = useCallback(() => {
 		toaster.create({
-			title: "Успешно отправлено",
-			description: "Спасибо за ваш отчет об ошибке!",
+			title: t("bugReport.success.title"),
+			description: t("bugReport.success.description"),
 			type: "success",
 			duration: 3000,
 		});
-	}, []);
+	}, [t]);
 
 	const showErrorToast = useCallback(() => {
 		toaster.create({
-			title: "Ошибка",
-			description: "Не удалось отправить отчет. Попробуйте позже.",
+			title: t("bugReport.error.title"),
+			description: t("bugReport.error.description"),
 			type: "error",
 			duration: 3000,
 		});
-	}, []);
+	}, [t]);
 
 	const submitBugReport = useCallback(async (data: BugReportData): Promise<void> => {
 		const response = await fetch(WEBHOOK_URL, {
@@ -114,6 +117,7 @@ export const BugReportButton = () => {
 			showErrorToast,
 			resetForm,
 			closeForm,
+			t,
 		],
 	);
 
@@ -147,9 +151,15 @@ export const BugReportButton = () => {
 				>
 					<Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
 						<Box fontSize="lg" fontWeight="bold">
-							Сообщить об ошибке
+							{t("bugReport.title")}
 						</Box>
-						<IconButton aria-label="Закрыть" size="sm" variant="ghost" onClick={closeForm} disabled={isLoading}>
+						<IconButton
+							aria-label={t("bugReport.close")}
+							size="sm"
+							variant="ghost"
+							onClick={closeForm}
+							disabled={isLoading}
+						>
 							<LuX />
 						</IconButton>
 					</Box>
@@ -158,7 +168,7 @@ export const BugReportButton = () => {
 						<VStack gap={4} align="stretch">
 							<Box>
 								<Box as="label" display="block" mb={2} fontSize="sm" fontWeight="medium">
-									Email{" "}
+									{t("bugReport.email")}{" "}
 								</Box>
 								<Input
 									name="email"
@@ -172,7 +182,7 @@ export const BugReportButton = () => {
 
 							<Box>
 								<Box as="label" display="block" mb={2} fontSize="sm" fontWeight="medium">
-									Сообщение{" "}
+									{t("bugReport.message")}{" "}
 									<Box as="span" color="red.500">
 										*
 									</Box>
@@ -181,7 +191,7 @@ export const BugReportButton = () => {
 									name="message"
 									value={formData.message}
 									onChange={handleChange}
-									placeholder="Опишите проблему..."
+									placeholder={t("bugReport.messagePlaceholder")}
 									rows={4}
 									required
 									disabled={isLoading}
@@ -193,7 +203,7 @@ export const BugReportButton = () => {
 							<input type="hidden" name="debug_env" value={formData.debug_env} />
 
 							<Button type="submit" colorScheme="blue" width="full" loading={isLoading} disabled={isSubmitDisabled}>
-								Отправить
+								{t("bugReport.submit")}
 							</Button>
 						</VStack>
 					</form>
@@ -202,7 +212,7 @@ export const BugReportButton = () => {
 
 			{/* Плавающая кнопка */}
 			<IconButton
-				aria-label="Сообщить об ошибке"
+				aria-label={t("bugReport.reportBug")}
 				position="fixed"
 				bottom="20px"
 				right="20px"

@@ -12,8 +12,10 @@ import YamlEditorWithValidation from "./components/ui/YamlEditorWithValidation";
 import { fetchData } from "./stores/data";
 import { useIc10Store } from "./stores/ic10Store";
 import { useTerminalStore } from "./stores/terminalStore";
+import { useTranslation } from "react-i18next";
 
 function App() {
+	const { t } = useTranslation();
 	const schema = use<JSONSchemaType<any>>(
 		fetchData("https://raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Schemas/env.schema.json"),
 	);
@@ -46,7 +48,7 @@ function App() {
 					<GridItem colSpan={1}>
 						<VStack align="stretch" height="100%">
 							<HStack justify="space-between" minH="32px">
-								<Text fontWeight="bold">Current Environment</Text>
+								<Text fontWeight="bold">{t("app.currentEnvironment")}</Text>
 								<Box width="47px" height={35} />
 							</HStack>
 							<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
@@ -65,7 +67,8 @@ function App() {
 					<GridItem colSpan={1}>
 						<VStack align="stretch" height="100%">
 							<HStack justify="space-between">
-								<Text fontWeight="bold">Initial Environment</Text>
+								<Text fontWeight="bold">{t("app.initialEnvironment")}</Text>
+								<Box width="47px" height={35} />
 								{loading && <Spinner size="sm" />}
 							</HStack>
 							<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">

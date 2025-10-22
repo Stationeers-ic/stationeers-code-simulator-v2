@@ -1,6 +1,48 @@
 {
+	"app": {
+		"currentEnvironment": "Current Environment",
+		"initialEnvironment": "Initial Environment"
+	},
 	"menu": {
 		"step": "Step",
 		"initialize": "Initialize"
+	},
+	"terminal": {
+		"title": "Terminal Output",
+		"clear": "Clear",
+		"noOutput": "No output yet. Execute steps to see output..."
+	},
+	"yamlEditor": {
+		"yamlSyntaxError": "YAML Syntax Error",
+		"atPath": "at path",
+		"validating": "Validating...",
+		"isValid": "Is valid"
+	},
+	"ic10Code": {
+		"error": "Error",
+		"missingRunner": "Chip {chipId} is missing runner. Make sure the chip is properly initialized."
+	},
+	"docs": {
+		"open": "Open documentation",
+		"title": "Docs",
+		"notFound": "Documentation not found",
+		"error": "Error loading documentation"
+	},
+	"bugReport": {
+		"title": "Report a bug",
+		"close": "Close",
+		"email": "Email",
+		"message": "Message",
+		"messagePlaceholder": "Describe the problem...",
+		"submit": "Submit",
+		"reportBug": "Report a bug",
+		"success": {
+			"title": "Successfully sent",
+			"description": "Thank you for your bug report!"
+		},
+		"error": {
+			"title": "Error",
+			"description": "Failed to send report. Please try again later."
+		}
 	}
 }

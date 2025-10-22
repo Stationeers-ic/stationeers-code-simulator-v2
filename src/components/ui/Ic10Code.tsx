@@ -1,3 +1,4 @@
+// components/ui/Ic10Code.tsx
 import { Alert } from "@chakra-ui/react";
 import { EditorView } from "@codemirror/view";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
@@ -8,6 +9,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { parse, stringify } from "yaml";
 import { useIc10Store } from "@/stores/ic10Store";
 import { useTerminalStore } from "@/stores/terminalStore";
+import { useTranslation } from "react-i18next";
 
 type Ic10CodeProps = {
 	chip: Chip;
@@ -15,6 +17,7 @@ type Ic10CodeProps = {
 type Timeout = ReturnType<typeof setTimeout>;
 const [ruler] = createRuler(90, "ruler");
 export function Ic10Code(props: Ic10CodeProps) {
+	const { t } = useTranslation();
 	const { chip } = props;
 	const runner = chip?.housing?.runner;
 	const updateCounter = useIc10Store((state) => state.updateCounter);
@@ -90,10 +93,8 @@ export function Ic10Code(props: Ic10CodeProps) {
 			<Alert.Root status="error">
 				<Alert.Indicator />
 				<Alert.Content>
-					<Alert.Title>Ошибка</Alert.Title>
-					<Alert.Description>
-						У чипа {chip.id} отсутствует runner. Убедитесь, что чип правильно инициализирован.
-					</Alert.Description>
+					<Alert.Title>{t("ic10Code.error")}</Alert.Title>
+					<Alert.Description>{t("ic10Code.missingRunner", { chipId: chip.id })}</Alert.Description>
 				</Alert.Content>
 			</Alert.Root>
 		);

@@ -1,11 +1,14 @@
+// components/ui/Docs.tsx
 import { Box, CloseButton, Drawer, IconButton, Portal, Spinner, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import ReactHighlightSyntax from "react-highlight-syntax";
 import { LuDock } from "react-icons/lu";
 import Markdown from "react-markdown";
 import { useLanguageStore } from "@/stores/languageStore";
+import { useTranslation } from "react-i18next";
 
 function Docs() {
+	const { t } = useTranslation();
 	const { currentLanguage } = useLanguageStore();
 	const [doc, setDoc] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(false);
@@ -18,11 +21,11 @@ function Docs() {
 			try {
 				const url = `https://raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/docs/${currentLanguage}/env.md`;
 				const response = await fetch(url);
-				if (!response.ok) throw new Error("Документация не найдена");
+				if (!response.ok) throw new Error(t("docs.notFound"));
 				const text = await response.text();
 				setDoc(text);
 			} catch (err: any) {
-				setError(err.message || "Ошибка загрузки");
+				setError(err.message || t("docs.error"));
 				setDoc("");
 			} finally {
 				setLoading(false);
@@ -37,7 +40,7 @@ function Docs() {
 				<Drawer.Backdrop />
 				<Drawer.Trigger asChild>
 					<IconButton
-						aria-label="Открыть документацию"
+						aria-label={t("docs.open")}
 						position="fixed"
 						bottom="20px"
 						left="20px"
@@ -56,7 +59,7 @@ function Docs() {
 							<CloseButton size="sm" />
 						</Drawer.CloseTrigger>
 						<Drawer.Header>
-							<Drawer.Title>Docs</Drawer.Title>
+							<Drawer.Title>{t("docs.title")}</Drawer.Title>
 						</Drawer.Header>
 						<Drawer.Body>
 							<Box overflow="true" maxH={"100%"}>

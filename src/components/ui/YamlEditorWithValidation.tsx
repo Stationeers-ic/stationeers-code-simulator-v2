@@ -1,9 +1,11 @@
+// components/ui/YamlEditorWithValidation.tsx
 import { Alert, Box, Show, Stack } from "@chakra-ui/react";
 import { yaml } from "@codemirror/lang-yaml";
 import CodeMirror, { type ReactCodeMirrorProps } from "@uiw/react-codemirror";
 import Ajv, { type JSONSchemaType } from "ajv";
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { parse } from "yaml";
 
 // Типы для пропсов
@@ -39,6 +41,7 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 	codeMirrorProps = {},
 	debounceDelay = 300,
 }) => {
+	const { t } = useTranslation();
 	const [yamlValue, setYamlValue] = useState<string>(value);
 	const [errors, setErrors] = useState<ValidationError[]>([]);
 	const [isValid, setIsValid] = useState<boolean>(false);
@@ -227,10 +230,10 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 
 	const getErrorMessage = (error: ValidationError): string => {
 		if (error.type === "yaml-syntax") {
-			return `YAML Syntax Error: ${error.message}`;
+			return `${t("yamlEditor.yamlSyntaxError")}: ${error.message}`;
 		}
 
-		const path = error.instancePath ? `at path "${error.instancePath}"` : "";
+		const path = error.instancePath ? `${t("yamlEditor.atPath")} "${error.instancePath}"` : "";
 
 		// Форматируем params для отображения
 		let paramsInfo = "";
@@ -284,7 +287,7 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 							fontSize: "12px",
 						}}
 					>
-						Validating...
+						{t("yamlEditor.validating")}
 					</Box>
 				)}
 
@@ -321,7 +324,7 @@ const YamlEditorWithValidation: React.FC<YamlEditorProps> = ({
 					>
 						<Alert.Root status="success">
 							<Alert.Indicator />
-							<Alert.Title>Is valid</Alert.Title>
+							<Alert.Title>{t("yamlEditor.isValid")}</Alert.Title>
 						</Alert.Root>
 					</Box>
 				</Show>
