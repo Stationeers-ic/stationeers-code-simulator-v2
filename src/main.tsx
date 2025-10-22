@@ -1,4 +1,4 @@
-import { StrictMode, Suspense } from "react";
+import { StrictMode, Suspense, useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import App from "@/App.tsx";
 import { Provider } from "@/components/chakra/provider.tsx";

@@ -1,7 +1,7 @@
 import { Box, CloseButton, Drawer, IconButton, Portal } from "@chakra-ui/react";
+import ReactHighlightSyntax from "react-highlight-syntax";
 import { LuDock } from "react-icons/lu";
 import Markdown from "react-markdown";
-import ReactHighlightSyntax from "react-highlight-syntax";
 
 import doc from "../../../../ic10/docs/ru/env.md?raw";
 

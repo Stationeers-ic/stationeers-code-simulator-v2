@@ -1,5 +1,5 @@
 // App.tsx
-import { Box, Button, Grid, GridItem, HStack, Spinner, Text, VStack } from "@chakra-ui/react";
+import { Box, Grid, GridItem, HStack, Spinner, Text, VStack } from "@chakra-ui/react";
 import { yaml } from "@codemirror/lang-yaml";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import CodeMirror from "@uiw/react-codemirror";
@@ -7,6 +7,7 @@ import type { JSONSchemaType } from "ajv";
 import { use } from "react";
 import Chips from "./components/ui/Chips";
 import { Terminal } from "./components/ui/Terminal";
+import { TopMenu } from "./components/ui/TopMenu";
 import YamlEditorWithValidation from "./components/ui/YamlEditorWithValidation";
 import { fetchData } from "./stores/data";
 import { useIc10Store } from "./stores/ic10Store";
@@ -26,63 +27,65 @@ function App() {
 		clearTerminal();
 		initializeFromYaml(initialEnv);
 	};
+
 	return (
-		<Box p={3}>
-			<Grid templateColumns="repeat(4, 1fr)" gap={6} mb={6}>
-				{/* IC10 Code Editor */}
-				<GridItem colSpan={2}>
-					<VStack align="stretch" height="100%">
-						<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
-							{chips ? <Chips chips={chips} /> : null}
-						</Box>
-					</VStack>
-				</GridItem>
+		<Box>
+			<TopMenu onStep={step} onInitialize={load} loading={loading} initialized={initialized} />
+			<Box p={3}>
+				<Grid templateColumns="repeat(4, 1fr)" gap={6} mb={6}>
+					{/* IC10 Code Editor */}
+					<GridItem colSpan={2}>
+						<VStack align="stretch" height="100%">
+							<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
+								{chips ? <Chips chips={chips} /> : null}
+							</Box>
+						</VStack>
+					</GridItem>
 
-				{/* Current Environment */}
-				<GridItem colSpan={1}>
-					<VStack align="stretch" height="100%">
-						<HStack justify="space-between" minH="32px">
-							<Text fontWeight="bold">Current Environment</Text>
-							<Box width="47px" height={35} />
-						</HStack>
-						<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
-							<CodeMirror value={currentEnv} readOnly={true} height={height} theme={vscodeDark} extensions={[yaml()]} />
-						</Box>
-					</VStack>
-				</GridItem>
-
-				{/* Initial Environment */}
-				<GridItem colSpan={1}>
-					<VStack align="stretch" height="100%">
-						<HStack justify="space-between">
-							<Text fontWeight="bold">Initial Environment</Text>
-							<HStack>
-								{loading && <Spinner size="sm" />}
-								<Button size="sm" onClick={step} disabled={!initialized} colorScheme="blue">
-									Step
-								</Button>
-								<Button size="sm" onClick={load} colorScheme="green">
-									Initialize
-								</Button>
+					{/* Current Environment */}
+					<GridItem colSpan={1}>
+						<VStack align="stretch" height="100%">
+							<HStack justify="space-between" minH="32px">
+								<Text fontWeight="bold">Current Environment</Text>
+								<Box width="47px" height={35} />
 							</HStack>
-						</HStack>
-						<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
-							<YamlEditorWithValidation
-								value={initialEnv}
-								onChange={setInitialEnv}
-								codeMirrorProps={{
-									theme: vscodeDark,
-									height,
-								}}
-								schema={schema}
-							/>
-						</Box>
-					</VStack>
-				</GridItem>
-			</Grid>
+							<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
+								<CodeMirror
+									value={currentEnv}
+									readOnly={true}
+									height={height}
+									theme={vscodeDark}
+									extensions={[yaml()]}
+								/>
+							</Box>
+						</VStack>
+					</GridItem>
 
-			{/* Terminal Output */}
-			<Terminal />
+					{/* Initial Environment */}
+					<GridItem colSpan={1}>
+						<VStack align="stretch" height="100%">
+							<HStack justify="space-between">
+								<Text fontWeight="bold">Initial Environment</Text>
+								{loading && <Spinner size="sm" />}
+							</HStack>
+							<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
+								<YamlEditorWithValidation
+									value={initialEnv}
+									onChange={setInitialEnv}
+									codeMirrorProps={{
+										theme: vscodeDark,
+										height,
+									}}
+									schema={schema}
+								/>
+							</Box>
+						</VStack>
+					</GridItem>
+				</Grid>
+
+				{/* Terminal Output */}
+				<Terminal />
+			</Box>
 		</Box>
 	);
 }
