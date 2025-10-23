@@ -1,15 +1,15 @@
 // App.tsx
 import { Box, Grid, GridItem, HStack, Spinner, Text, VStack } from "@chakra-ui/react";
-import Editor from "@monaco-editor/react";
+import Editor, { type Monaco } from "@monaco-editor/react";
 import type { JSONSchemaType } from "ajv";
-import { use } from "react";
+import { use, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import Chips from "./components/ui/Chips";
-import { Terminal } from "./components/ui/Terminal";
-import { TopMenu } from "./components/ui/TopMenu";
-import { fetchData } from "./stores/data";
-import { useIc10Store } from "./stores/ic10Store";
-import { useTerminalStore } from "./stores/terminalStore";
+import Chips from "@/components/ui/Chips";
+import { Terminal } from "@/components/ui/Terminal";
+import { TopMenu } from "@/components/ui/TopMenu";
+import { fetchData } from "@/stores/data";
+import { useIc10Store } from "@/stores/ic10Store";
+import { useTerminalStore } from "@/stores/terminalStore";
 
 function App() {
 	const { t } = useTranslation();
@@ -17,6 +17,8 @@ function App() {
 		fetchData("https://raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Schemas/env.schema.json"),
 	);
 	const { clearTerminal } = useTerminalStore();
+	const monacoRef = useRef<Monaco | null>(null);
+
 	// Получаем состояние и действия из хранилища
 	const { initialEnv, currentEnv, chips, loading, initialized, setInitialEnv, initializeFromYaml, step } =
 		useIc10Store();
@@ -24,6 +26,23 @@ function App() {
 	const load = () => {
 		clearTerminal();
 		initializeFromYaml(initialEnv);
+	};
+
+	// Функция для настройки Monaco Editor с JSON Schema
+	const handleEditorWillMount = (monaco: Monaco) => {
+		monacoRef.current = monaco;
+
+		// Настройка JSON Schema для валидации
+		monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+			validate: true,
+			schemas: [
+				{
+					uri: "https://raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Schemas/env.schema.json",
+					fileMatch: ["*"], // применяется ко всем JSON файлам
+					schema: schema,
+				},
+			],
+		});
 	};
 
 	return (
@@ -47,15 +66,16 @@ function App() {
 								<Text fontWeight="bold">{t("app.currentEnvironment")}</Text>
 								<Box width="47px" height={35} />
 							</HStack>
-							<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
+							<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md" minH={"200px"}>
 								<Editor
 									value={currentEnv}
-									language="yaml"
+									language="json"
 									options={{
 										minimap: { enabled: false },
 										readOnly: true,
 									}}
 									theme="vs-dark"
+									beforeMount={handleEditorWillMount}
 								/>
 							</Box>
 						</VStack>
@@ -69,17 +89,18 @@ function App() {
 								<Box width="47px" height={35} />
 								{loading && <Spinner size="sm" />}
 							</HStack>
-							<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
+							<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md" minH={"200px"}>
 								<Editor
 									value={initialEnv}
 									onChange={(value) => {
 										value ? setInitialEnv(value) : null;
 									}}
-									language="yaml"
+									language="json"
 									options={{
 										minimap: { enabled: false },
 									}}
 									theme="vs-dark"
+									beforeMount={handleEditorWillMount}
 								/>
 							</Box>
 						</VStack>

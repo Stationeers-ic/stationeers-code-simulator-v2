@@ -33,22 +33,35 @@ interface Ic10State {
 	forceUpdate: () => void;
 }
 
-const startEnv = `version: 1
-chips:
-  - id: 1
-    code: ""
-devices:
-  - id: 1
-    PrefabName: StructureCircuitHousingCompact
-    chip: 1
-    ports:
-      - port: default
-        network: base
-networks:
-  - id: base
-    type: data
-
-`;
+const startEnv = `{
+   "$schema": "https://raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Schemas/env.schema.json",
+   "version": 1,
+   "chips": [
+      {
+         "id": 1,
+         "code": ""
+      }
+   ],
+   "devices": [
+      {
+         "id": 1,
+         "PrefabName": "StructureCircuitHousingCompact",
+         "chip": 1,
+         "ports": [
+            {
+               "port": "default",
+               "network": "base"
+            }
+         ]
+      }
+   ],
+   "networks": [
+      {
+         "id": "base",
+         "type": "data"
+      }
+   ]
+}`;
 
 export const useIc10Store = create<Ic10State>()(
 	devtools(
@@ -82,7 +95,7 @@ export const useIc10Store = create<Ic10State>()(
 						const builder = ic10.Builer.from(yaml);
 						await builder.init();
 						set({
-							currentEnv: builder.toYaml(),
+							currentEnv: builder.toJson(),
 							builder,
 							initialized: true,
 						});
@@ -126,7 +139,7 @@ export const useIc10Store = create<Ic10State>()(
 						if (end === false) {
 							setInitialized(false);
 						}
-						const newEnv = builder.toYaml();
+						const newEnv = builder.toJson();
 						setCurrentEnv(newEnv);
 
 						// Обработка ошибок
@@ -151,11 +164,11 @@ export const useIc10Store = create<Ic10State>()(
 
 				getCurrentEnv: () => {
 					const { builder } = get();
-					return builder?.toYaml();
+					return builder?.toJson();
 				},
 				getDebugEnv: () => {
 					const { builder } = get();
-					return builder?.toYaml();
+					return builder?.toJson();
 				},
 				getInitialEnv: () => {
 					const { initialEnv } = get();
