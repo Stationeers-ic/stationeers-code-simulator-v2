@@ -1,15 +1,12 @@
 // App.tsx
 import { Box, Grid, GridItem, HStack, Spinner, Text, VStack } from "@chakra-ui/react";
-import { yaml } from "@codemirror/lang-yaml";
-import { vscodeDark } from "@uiw/codemirror-theme-vscode";
-import CodeMirror from "@uiw/react-codemirror";
+import Editor from "@monaco-editor/react";
 import type { JSONSchemaType } from "ajv";
 import { use } from "react";
 import { useTranslation } from "react-i18next";
 import Chips from "./components/ui/Chips";
 import { Terminal } from "./components/ui/Terminal";
 import { TopMenu } from "./components/ui/TopMenu";
-import YamlEditorWithValidation from "./components/ui/YamlEditorWithValidation";
 import { fetchData } from "./stores/data";
 import { useIc10Store } from "./stores/ic10Store";
 import { useTerminalStore } from "./stores/terminalStore";
@@ -19,7 +16,6 @@ function App() {
 	const schema = use<JSONSchemaType<any>>(
 		fetchData("https://raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Schemas/env.schema.json"),
 	);
-	const height = "590px";
 	const { clearTerminal } = useTerminalStore();
 	// Получаем состояние и действия из хранилища
 	const { initialEnv, currentEnv, chips, loading, initialized, setInitialEnv, initializeFromYaml, step } =
@@ -52,12 +48,14 @@ function App() {
 								<Box width="47px" height={35} />
 							</HStack>
 							<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
-								<CodeMirror
+								<Editor
 									value={currentEnv}
-									readOnly={true}
-									height={height}
-									theme={vscodeDark}
-									extensions={[yaml()]}
+									language="yaml"
+									options={{
+										minimap: { enabled: false },
+										readOnly: true,
+									}}
+									theme="vs-dark"
 								/>
 							</Box>
 						</VStack>
@@ -72,14 +70,16 @@ function App() {
 								{loading && <Spinner size="sm" />}
 							</HStack>
 							<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
-								<YamlEditorWithValidation
+								<Editor
 									value={initialEnv}
-									onChange={setInitialEnv}
-									codeMirrorProps={{
-										theme: vscodeDark,
-										height,
+									onChange={(value) => {
+										value ? setInitialEnv(value) : null;
 									}}
-									schema={schema}
+									language="yaml"
+									options={{
+										minimap: { enabled: false },
+									}}
+									theme="vs-dark"
 								/>
 							</Box>
 						</VStack>
