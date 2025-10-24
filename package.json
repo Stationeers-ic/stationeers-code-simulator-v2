@@ -1,5 +1,5 @@
 {
-	"name": "react",
+	"name": "stationeers-code-simulator-v3",
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
@@ -46,6 +46,14 @@
 		"sass": "^1.93.2",
 		"typescript": "~5.9.3",
 		"vite": "^7.1.12",
-		"vite-tsconfig-paths": "^5.1.4"
+		"vite-tsconfig-paths": "^5.1.4",
+		"@vite-pwa/assets-generator": "^1.0.2",
+		"vite-plugin-pwa": "^1.1.0",
+		"workbox-core": "^7.3.0",
+		"workbox-window": "^7.3.0"
+	},
+	"resolutions": {
+		"sharp": "^0.33.5",
+		"sharp-ico": "^0.1.5"
 	}
 }
