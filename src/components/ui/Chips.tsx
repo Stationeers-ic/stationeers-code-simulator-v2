@@ -1,4 +1,4 @@
-import { Kbd, Tabs } from "@chakra-ui/react";
+import { Box, Kbd, Tabs } from "@chakra-ui/react";
 import type { Chip } from "ic10";
 import { LuTerminal } from "react-icons/lu";
 import { useIc10Store } from "@/stores/ic10Store";
@@ -19,12 +19,12 @@ export function Chips(props: RunnersProps) {
 					<Tabs.Trigger key={`${chip.id}-${updateCounter}`} value={chip.id.toString()}>
 						<LuTerminal />
 						{chip.id}
-						<Kbd>{chip.getRunner()?.realContext?.currentLinePosition ?? 0}</Kbd>
+						{/* <Kbd>{chip.getRunner()?.realContext?.currentLinePosition ?? 0}</Kbd> */}
 					</Tabs.Trigger>
 				))}
 			</Tabs.List>
 			{chips.map((chip) => (
-				<Tabs.Content key={chip.id} value={chip.id.toString()}>
+				<Tabs.Content key={chip.id} value={chip.id.toString()} minH={"500px"}>
 					<Ic10Code chip={chip} />
 				</Tabs.Content>
 			))}

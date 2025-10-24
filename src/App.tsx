@@ -66,8 +66,9 @@ function App() {
 								<Text fontWeight="bold">{t("app.currentEnvironment")}</Text>
 								<Box width="47px" height={35} />
 							</HStack>
-							<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md" minH={"200px"}>
+							<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md" minH={"500px"}>
 								<Editor
+									height={"100%"}
 									value={currentEnv}
 									language="json"
 									options={{
@@ -89,8 +90,9 @@ function App() {
 								<Box width="47px" height={35} />
 								{loading && <Spinner size="sm" />}
 							</HStack>
-							<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md" minH={"200px"}>
+							<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md" minH={"500px"}>
 								<Editor
+									height={"100%"}
 									value={initialEnv}
 									onChange={(value) => {
 										value ? setInitialEnv(value) : null;

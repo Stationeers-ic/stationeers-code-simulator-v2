@@ -1,20 +1,16 @@
 // components/ui/Ic10Code.tsx
 import { Alert } from "@chakra-ui/react";
-import { EditorView } from "@codemirror/view";
-import { vscodeDark } from "@uiw/codemirror-theme-vscode";
-import CodeMirror from "@uiw/react-codemirror";
-import { createRuler, ic10, ic10Snippets, lineClassController, zeroLineNumbers } from "codemirror-lang-ic10";
 import { type Chip, type ChipSchema, type EnvSchema, ValidateIc10Runner } from "ic10";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useIc10Store } from "@/stores/ic10Store";
 import { useTerminalStore } from "@/stores/terminalStore";
+import { Editor } from "@monaco-editor/react";
 
 type Ic10CodeProps = {
 	chip: Chip;
 };
 type Timeout = ReturnType<typeof setTimeout>;
-const [ruler] = createRuler(90, "ruler");
 export function Ic10Code(props: Ic10CodeProps) {
 	const { t } = useTranslation();
 	const { chip } = props;
@@ -23,20 +19,13 @@ export function Ic10Code(props: Ic10CodeProps) {
 	const { addToTerminal, clearTerminal } = useTerminalStore();
 	const { initialEnv, setInitialEnv } = useIc10Store();
 
-	const [line, setLine] = useState(() => {
+	const [_line, setLine] = useState(() => {
 		const position = runner?.realContext?.currentLinePosition;
 		return position !== undefined ? position + 1 : 1;
 	});
-	const [cmLine] = useState(new lineClassController("nextRunLine"));
 	const [code, setCode] = useState(() => runner?.realContext?.housing?.chip?.getIc10Code() || "");
 
 	const debounceTimerRef = useRef<Timeout | null>(null);
-
-	useEffect(() => {
-		if (runner) {
-			cmLine.highlightLine(line);
-		}
-	}, [line, cmLine, runner]);
 
 	useEffect(() => {
 		if (runner) {
@@ -100,13 +89,16 @@ export function Ic10Code(props: Ic10CodeProps) {
 	}
 
 	return (
-		<CodeMirror
+		<Editor
+			height={"500px"}
+			theme="vs-dark"
 			key={`editor-${chip.id}-${updateCounter}`}
 			value={code}
-			onChange={updateCode}
-			height={"580px"}
-			theme={vscodeDark}
-			extensions={[ic10(), EditorView.lineWrapping, zeroLineNumbers, cmLine.extension, ic10Snippets(), ruler]}
+			language="ic10"
+			onChange={(v) => (v ? updateCode(v) : null)}
+			options={{
+				minimap: { enabled: false },
+			}}
 		/>
 	);
 }
