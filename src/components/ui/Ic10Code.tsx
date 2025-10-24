@@ -98,6 +98,10 @@ export function Ic10Code(props: Ic10CodeProps) {
 			onChange={(v) => (v ? updateCode(v) : null)}
 			options={{
 				minimap: { enabled: false },
+				lineNumbers(lineNumber) {
+					const newLine = lineNumber - 1;
+					return `${newLine}`;
+				},
 			}}
 		/>
 	);

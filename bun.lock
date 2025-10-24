@@ -1180,7 +1180,7 @@
 
     "monaco-editor-core": ["monaco-editor-core@0.54.0", "", { "dependencies": { "dompurify": "3.1.7", "marked": "14.0.0" } }, "sha512-0zQ0Ny1QguMdOicIyRgvgK5le2jxf6sOI6lpFlCXoYD2eQDuD+C3hvAxXDCCzzZkDaIN38BcXxCRu1gj9ZWPZA=="],
 
-    "monaco-lang-ic10": ["monaco-lang-ic10@0.0.3", "", { "dependencies": { "monaco-editor": "^0.54.0", "monaco-editor-core": "^0.54.0" }, "peerDependencies": { "typescript": "^5" } }, "sha512-uewH4t587JDUCw7Z8If44/5NLATjmHj55fxOI8TmfmGA1TE2uN6RWSwXMZE5pgaeE7sYAvtQ/pOF/lVGRtnMfA=="],
+    "monaco-lang-ic10": ["monaco-lang-ic10@0.0.4", "", { "dependencies": { "monaco-editor": "^0.54.0", "monaco-editor-core": "^0.54.0" }, "peerDependencies": { "typescript": "^5" } }, "sha512-r7W8Ydfcchsitkdyd8E8/RIYgFznHlO7xW3yMAGEa6JjgNzJCl5drVu0kNtUHR/zqd+isuChMAiFZntXzILcug=="],
 
     "ms": ["ms@2.1.3", "", {}, "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="],
 
