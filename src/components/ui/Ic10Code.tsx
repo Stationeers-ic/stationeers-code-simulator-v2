@@ -7,7 +7,6 @@ import { createRuler, ic10, ic10Snippets, lineClassController, zeroLineNumbers }
 import { type Chip, type ChipSchema, type EnvSchema, ValidateIc10Runner } from "ic10";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { parse, stringify } from "yaml";
 import { useIc10Store } from "@/stores/ic10Store";
 import { useTerminalStore } from "@/stores/terminalStore";
 
@@ -57,14 +56,14 @@ export function Ic10Code(props: Ic10CodeProps) {
 			}
 
 			debounceTimerRef.current = setTimeout(() => {
-				const yaml = parse(initialEnv) as EnvSchema;
+				const yaml = JSON.parse(initialEnv) as EnvSchema;
 				yaml.chips = yaml.chips.map((c: ChipSchema) => {
 					if (c.id === chip.id) {
 						c.code = newCode;
 					}
 					return c;
 				});
-				setInitialEnv(stringify(yaml));
+				setInitialEnv(JSON.stringify(yaml, null, 2));
 			}, 500);
 		},
 		[initialEnv, chip.id, setInitialEnv],
