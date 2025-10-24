@@ -21,11 +21,14 @@ export default defineConfig({
 			},
 
 			manifest: {
+				display: "fullscreen",
 				name: "Stationeers Code Simulator",
 				short_name: "Ic10",
 				description:
 					"Stationeers Code Simulator (SCS) provides a simulation of the IC10. IDE with devices, slots, networks, error checking, full visibility of stack and registers.",
-				theme_color: "#062845",
+				theme_color: "#ffffff",
+				background_color: "#062845",
+				lang: "en",
 			},
 
 			workbox: {
