@@ -46,8 +46,20 @@ export default defineConfig({
 				type: "module",
 			},
 		}),
+		// Кастомный плагин для добавления скрипта
+		{
+			name: "html-transform",
+			transformIndexHtml(html) {
+				if (process.env.NODE_ENV === "production") {
+					return html.replace(
+						"</body>",
+						'<script defer data-domain="beta.ic10.dev" src="https://thor.traineratwot.site/js/script.hash.js"></script></body>',
+					);
+				}
+				return html;
+			},
+		},
 	],
-	// Добавьте эту секцию для разделения бандла
 	build: {
 		rollupOptions: {
 			output: {

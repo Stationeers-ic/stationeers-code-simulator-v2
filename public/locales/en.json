@@ -39,5 +39,12 @@
             "description": "Failed to send report. Please try again later.",
             "httpStatus": "HTTP error! status: {0}"
         }
+    },
+    "pwa": {
+        "app-ready-to-work-offline": "App ready to work offline",
+        "close": "Close",
+        "new-content-available-click-reload-to-update": "New content available, click reload to update.",
+        "reload": "Reload",
+        "update-available": "Update Available"
     }
 }
