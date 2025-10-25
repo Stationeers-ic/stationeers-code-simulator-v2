@@ -1,5 +1,5 @@
 import { Kbd, Tabs } from "@chakra-ui/react";
-import type { ChipSchema } from "ic10";
+import type { ChipSchema } from "@stationeers-ic/ic10";
 import { LuTerminal } from "react-icons/lu";
 import { useIc10Store } from "@/stores/ic10Store";
 

@@ -1,5 +1,5 @@
 import { Tabs } from "@chakra-ui/react";
-import type { ChipSchema } from "ic10";
+import type { ChipSchema } from "@stationeers-ic/ic10";
 import ChipEditor from "./Editor";
 
 type TabsProps = {

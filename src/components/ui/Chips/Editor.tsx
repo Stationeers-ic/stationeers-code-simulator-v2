@@ -1,5 +1,5 @@
 import { Editor } from "@monaco-editor/react";
-import type { ChipSchema } from "ic10";
+import type { ChipSchema } from "@stationeers-ic/ic10";
 import { useInitIc10 } from "@/components/hooks/initIc10";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
 

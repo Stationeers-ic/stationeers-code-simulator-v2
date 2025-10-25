@@ -1,6 +1,6 @@
 // stores/ic10Store.ts
 
-import * as ic10 from "ic10";
+import * as ic10 from "@stationeers-ic/ic10";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { useTerminalStore } from "./terminalStore";

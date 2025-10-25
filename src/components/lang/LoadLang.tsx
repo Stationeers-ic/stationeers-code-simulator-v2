@@ -1,8 +1,8 @@
 // components/lang/LoadLang.tsx
 
+import { i18n as ic10Lang } from "@stationeers-ic/ic10";
 import i18n from "i18next";
 import HttpBackend from "i18next-http-backend";
-import { i18n as ic10Lang } from "ic10";
 import { useEffect, useState } from "react";
 import { initReactI18next } from "react-i18next";
 import { Loading } from "@/components/chakra/Loading";
