@@ -68,7 +68,7 @@ export function ChipEditor({ chip }: ChipEditorProps) {
 			}
 			intervalRef.current = setTimeout(() => {
 				requestAnimationFrame(updateHighlight);
-			}, 300);
+			}, 30);
 		};
 
 		updateHighlight();
