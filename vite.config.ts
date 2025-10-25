@@ -79,7 +79,7 @@ export default defineConfig({
 							// rearly changes
 							if (ic10.startsWith("dist/Defines")) return `vendor-@stationeers-ic_ic10_defines`;
 
-							return "vendor-@stationeers-ic_ic10_base";
+							return "vendor-@stationeers-ic_ic10";
 						}
 						return `vendor-${scopePkgName.replace("/", "_")}`;
 					}
