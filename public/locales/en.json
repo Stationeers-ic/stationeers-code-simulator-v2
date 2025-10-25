@@ -11,7 +11,7 @@
     "terminal": {
         "title": "Terminal Output",
         "clear": "Clear",
-        "noOutput": "No output yet. Execute steps to see output..."
+        "noOutput": "No output yet. Execute steps to see output…"
     },
     "ic10Code": {
         "error": "Error",
@@ -27,7 +27,7 @@
         "close": "Close",
         "email": "Email",
         "message": "Message",
-        "messagePlaceholder": "Describe the problem...",
+        "messagePlaceholder": "Describe the problem…",
         "submit": "Submit",
         "reportBug": "Report a bug",
         "success": {
