@@ -1,51 +1,50 @@
 {
-	"menu": {
-		"step": "Шаг",
-		"initialize": "Инициализировать",
-		"reset": "Рестарт"
-	},
-	"app": {
-		"currentEnvironment": "Текущее состояние",
-		"initialEnvironment": "Начально состояние"
-	},
-	"terminal": {
-		"title": "Вывод консоли",
-		"clear": "Очистить",
-		"noOutput": "Пока нет результатов. Выполните шаги, чтобы увидеть выход ..."
-	},
-	"yamlEditor": {},
-	"ic10Code": {
-		"missingRunner": "В чипе {{chipId}} отсутствует \"запускатор\". Убедитесь, что чип правильно инициализирован.",
-		"error": "Ошибка"
-	},
-	"docs": {
-		"title": "Документация",
-		"error": "Ошибка при загрузке документации",
-		"notFound": "Документация не найдена"
-	},
-	"bugReport": {
-		"message": "Сообщение",
-		"submit": "Отправить",
-		"title": "Сообщить об ошибке",
-		"close": "Закрыть",
-		"email": "Электронная почта",
-		"messagePlaceholder": "Опишите проблему...",
-		"reportBug": "Сообщить об ошибке",
-		"success": {
-			"title": "Успешно отправлен",
-			"description": "Спасибо за сообщение о баге!"
-		},
-		"error": {
-			"title": "Ошибка",
-			"description": "Не удалось отправить отчет. Пожалуйста, попробуйте еще раз позже.",
-			"httpStatus": "Ошибка HTTP! статус: {0}"
-		}
-	},
-	"pwa": {
-		"app-ready-to-work-offline": "App ready to work offline",
-		"update-available": "Update Available",
-		"new-content-available-click-reload-to-update": "New content available, click reload to update.",
-		"reload": "Reload",
-		"close": "Close"
-	}
+    "menu": {
+        "step": "Шаг",
+        "initialize": "Инициализировать",
+        "reset": "Рестарт"
+    },
+    "app": {
+        "currentEnvironment": "Текущее состояние",
+        "initialEnvironment": "Начально состояние"
+    },
+    "terminal": {
+        "title": "Вывод консоли",
+        "clear": "Очистить",
+        "noOutput": "Пока нет результатов. Выполните шаги, чтобы увидеть выход ..."
+    },
+    "ic10Code": {
+        "missingRunner": "В чипе {{chipId}} отсутствует \"запускатор\". Убедитесь, что чип правильно инициализирован.",
+        "error": "Ошибка"
+    },
+    "docs": {
+        "title": "Документация",
+        "error": "Ошибка при загрузке документации",
+        "notFound": "Документация не найдена"
+    },
+    "bugReport": {
+        "message": "Сообщение",
+        "submit": "Отправить",
+        "title": "Сообщить об ошибке",
+        "close": "Закрыть",
+        "email": "Электронная почта",
+        "messagePlaceholder": "Опишите проблему...",
+        "reportBug": "Сообщить об ошибке",
+        "success": {
+            "title": "Успешно отправлен",
+            "description": "Спасибо за сообщение о баге!"
+        },
+        "error": {
+            "title": "Ошибка",
+            "description": "Не удалось отправить отчет. Пожалуйста, попробуйте еще раз позже.",
+            "httpStatus": "Ошибка HTTP! статус: {0}"
+        }
+    },
+    "pwa": {
+        "app-ready-to-work-offline": "App ready to work offline",
+        "update-available": "Update Available",
+        "new-content-available-click-reload-to-update": "New content available, click reload to update.",
+        "reload": "Reload",
+        "close": "Close"
+    }
 }
