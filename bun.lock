@@ -506,7 +506,9 @@
 
     "@sindresorhus/merge-streams": ["@sindresorhus/merge-streams@2.3.0", "", {}, "sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg=="],
 
-    "@stationeers-ic/ic10": ["@stationeers-ic/ic10@0.1.0", "", { "dependencies": { "eventemitter3": "^5.0.1", "exact-ic10-math": "^1.0.1", "i18next": "^25.6.0", "uuid": "^13.0.0", "valibot": "^1.1.0" }, "peerDependencies": { "typescript": "^5.9.3" } }, "sha512-bsln8Xb6q2LFKThWb81LXNY7jfZXdi+WY59aCmVzwufawHip41OPUlSgz+YIWFwywxryxAxvWLsQ/TUVptSDrA=="],
+    "@stationeers-ic/exact-ic10-math": ["@stationeers-ic/exact-ic10-math@1.0.2", "", {}, "sha512-RCav4HPPQZb7ismVVMYfozEeUveet3Z6/h9rx3jFaQsxzi+eBNlw16znGIIt7u9M7GtuBiwNWHxV/7n+0cloMg=="],
+
+    "@stationeers-ic/ic10": ["@stationeers-ic/ic10@0.1.1", "", { "dependencies": { "@stationeers-ic/exact-ic10-math": "^1.0.1", "eventemitter3": "^5.0.1", "i18next": "^25.6.0", "uuid": "^13.0.0", "valibot": "^1.1.0" }, "peerDependencies": { "typescript": "^5.9.3" } }, "sha512-as8cfnkc7jp6TFLn4Yrn88slGxeHdLfA+Fkm+iLd9VP3sAXQgpVx45N9dDbK04UFJaFmBJUsblhEZgbtOijhXg=="],
 
     "@surma/rollup-plugin-off-main-thread": ["@surma/rollup-plugin-off-main-thread@2.2.3", "", { "dependencies": { "ejs": "^3.1.6", "json5": "^2.2.0", "magic-string": "^0.25.0", "string.prototype.matchall": "^4.0.6" } }, "sha512-lR8q/9W7hZpMWweNiAKU7NQerBnzQQLvi8qnTDU/fxItPhtZVMbPV3lbCwjhIlNBe9Bbr5V+KHshvWmVSG9cxQ=="],
 
@@ -885,8 +887,6 @@
     "esutils": ["esutils@2.0.3", "", {}, "sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g=="],
 
     "eventemitter3": ["eventemitter3@5.0.1", "", {}, "sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA=="],
-
-    "exact-ic10-math": ["exact-ic10-math@1.0.1", "", {}, "sha512-+3f+AT1TogjohicPjoVWKhMLhH8u53B4LMOhTdP9ppMhkAWIru7w3PX+a9ra5WXhcRaEnmVQeYBKQwIA+yay2Q=="],
 
     "extend": ["extend@3.0.2", "", {}, "sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g=="],
 

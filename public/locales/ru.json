@@ -40,5 +40,12 @@
 			"description": "Не удалось отправить отчет. Пожалуйста, попробуйте еще раз позже.",
 			"httpStatus": "Ошибка HTTP! статус: {0}"
 		}
+	},
+	"pwa": {
+		"app-ready-to-work-offline": "App ready to work offline",
+		"update-available": "Update Available",
+		"new-content-available-click-reload-to-update": "New content available, click reload to update.",
+		"reload": "Reload",
+		"close": "Close"
 	}
 }

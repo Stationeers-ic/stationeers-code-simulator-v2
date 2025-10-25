@@ -2,6 +2,7 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import tsconfigPaths from "vite-tsconfig-paths";
+
 // https://vite.dev/config/
 export default defineConfig({
 	plugins: [
@@ -21,7 +22,7 @@ export default defineConfig({
 			},
 
 			manifest: {
-				display: "fullscreen",
+				display: "standalone",
 				name: "Stationeers Code Simulator",
 				short_name: "Ic10",
 				description:
@@ -46,4 +47,16 @@ export default defineConfig({
 			},
 		}),
 	],
+	// Добавьте эту секцию для разделения бандла
+	build: {
+		rollupOptions: {
+			output: {
+				manualChunks(id) {
+					const pkgName = (id.match(/node_modules\/([^/]+)/) ?? [])[1];
+					if (pkgName) return `vendor-${pkgName}`;
+					return "vendor";
+				},
+			},
+		},
+	},
 });
