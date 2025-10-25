@@ -10,12 +10,27 @@ const startEnvConfig = {
 			id: 1,
 			code: "",
 		},
+		{
+			id: 2,
+			code: "",
+		},
 	],
 	devices: [
 		{
 			id: 1,
 			PrefabName: "StructureCircuitHousingCompact",
 			chip: 1,
+			ports: [
+				{
+					port: "default",
+					network: "base",
+				},
+			],
+		},
+		{
+			id: 2,
+			PrefabName: "StructureCircuitHousingCompact",
+			chip: 2,
 			ports: [
 				{
 					port: "default",
@@ -39,6 +54,10 @@ const startEnv = `{
       {
          "id": 1,
          "code": ""
+      },
+      {
+         "id": 2,
+         "code": ""
       }
    ],
    "devices": [
@@ -46,6 +65,17 @@ const startEnv = `{
          "id": 1,
          "PrefabName": "StructureCircuitHousingCompact",
          "chip": 1,
+         "ports": [
+            {
+               "port": "default",
+               "network": "base"
+            }
+         ]
+      },
+	  {
+         "id": 2,
+         "PrefabName": "StructureCircuitHousingCompact",
+         "chip": 2,
          "ports": [
             {
                "port": "default",
