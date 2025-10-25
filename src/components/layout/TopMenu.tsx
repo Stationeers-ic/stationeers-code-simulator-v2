@@ -1,5 +1,5 @@
 // components/ui/TopMenu.tsx
-import { Box, Button, HStack, Spinner } from "@chakra-ui/react";
+import { Box, Button, HStack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { LuPlay, LuRedo } from "react-icons/lu";
 import Docs from "@/components/layout/Docs";
@@ -10,7 +10,7 @@ import { useTerminalStore } from "@/stores/terminalStore";
 
 export function TopMenu() {
 	const { t } = useTranslation();
-	const { loading, initialized, step, initializeFromYaml } = useIc10Store();
+	const { initialized, step, initializeFromYaml } = useIc10Store();
 	const { initialEnv } = useInitialEnvStore();
 	const { clearTerminal } = useTerminalStore();
 	function init() {

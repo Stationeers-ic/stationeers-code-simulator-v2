@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LuBug, LuX } from "react-icons/lu";
 import { useIc10Store } from "@/stores/ic10Store";
+import { useInitialEnvStore } from "@/stores/initialEnvStore";
 import { useTerminalStore } from "@/stores/terminalStore";
 
 interface BugReportData {
@@ -32,7 +33,8 @@ const toaster = createToaster({
 export const BugReportButton = () => {
 	const { t } = useTranslation();
 	const { terminalOutput } = useTerminalStore();
-	const { getInitialEnv, getDebugEnv } = useIc10Store();
+	const { getDebugEnv } = useIc10Store();
+	const { getInitialEnv } = useInitialEnvStore();
 
 	const [isOpen, setIsOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -78,7 +80,7 @@ export const BugReportButton = () => {
 		});
 
 		if (!response.ok) {
-			throw new Error(`HTTP error! status: ${response.status}`);
+			throw new Error(t("bugReport.error.httpStatus"));
 		}
 	}, []);
 

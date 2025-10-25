@@ -5,12 +5,7 @@ import { useTranslation } from "react-i18next";
 import { fetchData } from "@/stores/data";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
 
-interface InitialEnvironmentEditorProps {
-	loading?: boolean;
-	onEditorWillMount: (monaco: Monaco) => void;
-}
-
-export const InitialEnvironmentEditor: React.FC<InitialEnvironmentEditorProps> = () => {
+export const InitialEnvironmentEditor = () => {
 	const schema = use<any>(
 		fetchData("https://raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Schemas/env.schema.json"),
 	);

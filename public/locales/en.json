@@ -36,7 +36,8 @@
 		},
 		"error": {
 			"title": "Error",
-			"description": "Failed to send report. Please try again later."
+			"description": "Failed to send report. Please try again later.",
+			"httpStatus": "HTTP error! status: {0}"
 		}
 	}
 }
