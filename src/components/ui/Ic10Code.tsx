@@ -5,6 +5,7 @@ import { type Chip, type ChipSchema, type EnvSchema, ValidateIc10Runner } from "
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useIc10Store } from "@/stores/ic10Store";
+import { useInitialEnvStore } from "@/stores/initialEnvStore";
 import { useTerminalStore } from "@/stores/terminalStore";
 
 type Ic10CodeProps = {
@@ -17,7 +18,7 @@ export function Ic10Code(props: Ic10CodeProps) {
 	const runner = chip?.housing?.runner;
 	const updateCounter = useIc10Store((state) => state.updateCounter);
 	const { addToTerminal, clearTerminal } = useTerminalStore();
-	const { initialEnv, setInitialEnv } = useIc10Store();
+	const { initialEnv, setInitialEnv } = useInitialEnvStore();
 
 	const [_line, setLine] = useState(() => {
 		const position = runner?.realContext?.currentLinePosition;

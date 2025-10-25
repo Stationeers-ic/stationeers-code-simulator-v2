@@ -12,18 +12,12 @@
 		"clear": "Clear",
 		"noOutput": "No output yet. Execute steps to see output..."
 	},
-	"yamlEditor": {
-		"yamlSyntaxError": "YAML Syntax Error",
-		"atPath": "at path",
-		"validating": "Validating...",
-		"isValid": "Is valid"
-	},
+	"yamlEditor": {},
 	"ic10Code": {
 		"error": "Error",
 		"missingRunner": "Chip {{chipId}} is missing runner. Make sure the chip is properly initialized."
 	},
 	"docs": {
-		"open": "Open documentation",
 		"title": "Docs",
 		"notFound": "Documentation not found",
 		"error": "Error loading documentation"
