@@ -2,7 +2,6 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import tsconfigPaths from "vite-tsconfig-paths";
-import { createHtmlPlugin } from "vite-plugin-html";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -47,17 +46,19 @@ export default defineConfig({
 				type: "module",
 			},
 		}),
-		createHtmlPlugin({
-			minify: true,
-			inject: {
-				data: {
-					injectScript:
-						process.env.NODE_ENV === "production"
-							? '<script defer data-domain="beta.ic10.dev" src="https://thor.traineratwot.site/js/script.hash.js"></script>'
-							: "",
-				},
+		// Кастомный плагин для добавления скрипта
+		{
+			name: "html-transform",
+			transformIndexHtml(html) {
+				if (process.env.NODE_ENV === "production") {
+					return html.replace(
+						"</body>",
+						'<script defer data-domain="beta.ic10.dev" src="https://thor.traineratwot.site/js/script.hash.js"></script></body>',
+					);
+				}
+				return html;
 			},
-		}),
+		},
 	],
 	build: {
 		rollupOptions: {
