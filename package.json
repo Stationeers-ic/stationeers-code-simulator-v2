@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
-		"build": "NODE_ENV=production rm -rf dist && bun run fix && tsc -b && vite build",
+		"build": "rm -rf dist && bun run fix && tsc -b && vite build",
 		"preview": "vite preview",
 		"fix": "bunx --bun biome check . --write --unsafe"
 	},

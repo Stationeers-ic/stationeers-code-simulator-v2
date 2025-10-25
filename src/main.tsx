@@ -7,6 +7,7 @@ import LoadLang from "./components/lang/LoadLang";
 import "@/assets/main.scss";
 import { loader } from "@monaco-editor/react";
 import registerLanguage from "@stationeers-ic/monaco-lang-ic10";
+import * as monaco from "monaco-editor";
 import ictm from "@/assets/ic10.tm.json";
 import { Toaster } from "@/components/chakra/toaster";
 import { BugReportButton } from "@/components/layout/BugReport";
@@ -19,7 +20,7 @@ declare global {
 	}
 }
 window.signal = signal;
-
+loader.config({ monaco });
 loader
 	.init()
 	.then((monaco) => {
