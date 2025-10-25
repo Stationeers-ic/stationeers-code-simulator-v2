@@ -85,6 +85,8 @@ interface InitialEnvState {
 	getEnvConfig: () => EnvConfig;
 	setEnvConfig: (config: Partial<EnvConfig>) => void;
 	resetEnvConfig: () => void;
+
+	setChipCode: (chipId: number, code: string) => void;
 }
 
 // Вспомогательная функция для создания JSON строки из конфига
@@ -247,6 +249,41 @@ export const useInitialEnvStore = create<InitialEnvState>()(
 						chips: startEnvConfig.chips,
 						devices: startEnvConfig.devices,
 						networks: startEnvConfig.networks,
+					}),
+
+				// Установка кода для конкретного чипа по ID
+				setChipCode: (chipId: number, code: string) =>
+					set((state) => {
+						// Проверяем, существует ли чип с таким ID
+						const chipIndex = state.chips.findIndex((chip) => chip.id === chipId);
+						if (chipIndex === -1) {
+							return state; // Чип не найден - возвращаем состояние без изменений
+						}
+
+						// Проверяем, изменился ли код
+						const currentChip = state.chips[chipIndex];
+						if (currentChip.code === code) {
+							return state; // Код не изменился - возвращаем состояние без изменений
+						}
+
+						// Создаем новый массив chips с обновленным чипом
+						const newChips = [...state.chips];
+						newChips[chipIndex] = {
+							...currentChip,
+							code,
+						};
+
+						const newConfig = {
+							version: state.version,
+							chips: newChips,
+							devices: state.devices,
+							networks: state.networks,
+						};
+
+						return {
+							chips: newChips,
+							initialEnv: configToString(newConfig),
+						};
 					}),
 			}),
 			{

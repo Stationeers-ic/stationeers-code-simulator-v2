@@ -2,21 +2,15 @@
 import { Box, Button, HStack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { LuPlay, LuRedo } from "react-icons/lu";
+import { useInitIc10 } from "@/components/hooks/initIc10";
 import Docs from "@/components/layout/Docs";
 import { LanguageSelector } from "@/components/layout/LanguageSelector";
 import { useIc10Store } from "@/stores/ic10Store";
-import { useInitialEnvStore } from "@/stores/initialEnvStore";
-import { useTerminalStore } from "@/stores/terminalStore";
 
 export function TopMenu() {
 	const { t } = useTranslation();
-	const { initialized, step, initializeFromYaml } = useIc10Store();
-	const { initialEnv } = useInitialEnvStore();
-	const { clearTerminal } = useTerminalStore();
-	function init() {
-		initializeFromYaml(initialEnv);
-		clearTerminal();
-	}
+	const { initialized, step } = useIc10Store();
+	const { init } = useInitIc10();
 
 	return (
 		<Box bg="gray.800" px={4} py={3} borderBottom="1px solid" borderColor="gray.700">
