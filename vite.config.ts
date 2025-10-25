@@ -2,6 +2,7 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import tsconfigPaths from "vite-tsconfig-paths";
+import { createHtmlPlugin } from "vite-plugin-html";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -46,8 +47,18 @@ export default defineConfig({
 				type: "module",
 			},
 		}),
+		createHtmlPlugin({
+			minify: true,
+			inject: {
+				data: {
+					injectScript:
+						process.env.NODE_ENV === "production"
+							? '<script defer data-domain="beta.ic10.dev" src="https://thor.traineratwot.site/js/script.hash.js"></script>'
+							: "",
+				},
+			},
+		}),
 	],
-	// Добавьте эту секцию для разделения бандла
 	build: {
 		rollupOptions: {
 			output: {
