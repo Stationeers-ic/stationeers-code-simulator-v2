@@ -25,6 +25,7 @@
 		"react-i18next": "^16.2.0",
 		"react-icons": "^5.5.0",
 		"react-markdown": "^10.1.0",
+		"vite-plugin-html": "^3.2.2",
 		"zustand": "^5.0.8"
 	},
 	"devDependencies": {
