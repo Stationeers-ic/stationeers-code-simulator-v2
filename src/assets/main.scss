@@ -1,7 +1,9 @@
-	.cm-activeLine.nextRunLine {
-		background-color: rgba(168, 35, 35, 0.1) !important;
-	}
+@layer main {
+    .currentLine {
+        background-color: rgba(255, 0, 0, 0.425) !important;
+    }
 
-	.nextRunLine {
-		background-color: rgba(197, 26, 26, 0.2);
-	}
+    .futureLine {
+        background-color: rgba(23, 138, 28, 0.425) !important;
+    }
+}

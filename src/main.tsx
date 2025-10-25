@@ -5,16 +5,37 @@ import App from "@/App.tsx";
 import { Provider } from "@/components/chakra/provider.tsx";
 import LoadLang from "./components/lang/LoadLang";
 import "@/assets/main.scss";
-import { BugReportButton } from "./components/ui/BugReport";
-import PWABadge from "./PWABadge";
+import { loader } from "@monaco-editor/react";
+import registerLanguage from "@stationeers-ic/monaco-lang-ic10";
+import ictm from "@/assets/ic10.tm.json";
+import { Toaster } from "@/components/chakra/toaster";
+import { BugReportButton } from "@/components/layout/BugReport";
+import PWABadge from "@/PWABadge";
+import signal from "@/Signal";
 
-createRoot(document.getElementById("root")!).render(
-	<Provider>
-		<StrictMode>
-			<LoadLang />
-			<App />
-			<BugReportButton />
-			<PWABadge />
-		</StrictMode>
-	</Provider>,
-);
+declare global {
+	interface Window {
+		signal: typeof signal;
+	}
+}
+window.signal = signal;
+
+loader
+	.init()
+	.then((monaco) => {
+		registerLanguage(monaco);
+		monaco.editor.defineTheme("ic10", ictm as any);
+	})
+	.then(() => {
+		createRoot(document.getElementById("root")!).render(
+			<Provider>
+				<StrictMode>
+					<Toaster />
+					<LoadLang />
+					<App />
+					<BugReportButton />
+					<PWABadge />
+				</StrictMode>
+			</Provider>,
+		);
+	});

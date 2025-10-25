@@ -1,7 +1,8 @@
 {
 	"menu": {
 		"step": "Шаг",
-		"initialize": "Инициализировать"
+		"initialize": "Инициализировать",
+		"reset": "Рестарт"
 	},
 	"app": {
 		"currentEnvironment": "Текущее состояние",
@@ -12,18 +13,12 @@
 		"clear": "Очистить",
 		"noOutput": "Пока нет результатов. Выполните шаги, чтобы увидеть выход ..."
 	},
-	"yamlEditor": {
-		"isValid": "Правильно",
-		"yamlSyntaxError": "Синтаксическая ошибка YAML",
-		"atPath": "на пути",
-		"validating": "Проверка..."
-	},
+	"yamlEditor": {},
 	"ic10Code": {
 		"missingRunner": "В чипе {{chipId}} отсутствует \"запускатор\". Убедитесь, что чип правильно инициализирован.",
 		"error": "Ошибка"
 	},
 	"docs": {
-		"open": "Открыть документацию",
 		"title": "Документация",
 		"error": "Ошибка при загрузке документации",
 		"notFound": "Документация не найдена"
@@ -42,7 +37,15 @@
 		},
 		"error": {
 			"title": "Ошибка",
-			"description": "Не удалось отправить отчет. Пожалуйста, попробуйте еще раз позже."
+			"description": "Не удалось отправить отчет. Пожалуйста, попробуйте еще раз позже.",
+			"httpStatus": "Ошибка HTTP! статус: {0}"
 		}
+	},
+	"pwa": {
+		"app-ready-to-work-offline": "App ready to work offline",
+		"update-available": "Update Available",
+		"new-content-available-click-reload-to-update": "New content available, click reload to update.",
+		"reload": "Reload",
+		"close": "Close"
 	}
 }

@@ -2,8 +2,13 @@
 /** biome-ignore-all lint/a11y/useButtonType: <pwa> */
 
 import { useRegisterSW } from "virtual:pwa-register/react";
+import { Box, Button, HStack, Text } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { toaster } from "@/components/chakra/toaster";
 
 function PWABadge() {
+	const { t } = useTranslation();
 	// check for updates every hour
 	const period = 60 * 60 * 1000;
 
@@ -25,36 +30,56 @@ function PWABadge() {
 		},
 	});
 
-	function close() {
-		setOfflineReady(false);
-		setNeedRefresh(false);
-	}
+	useEffect(() => {
+		if (offlineReady) {
+			toaster.create({
+				title: t("pwa.app-ready-to-work-offline"),
+				type: "success",
+				duration: 5000,
+			});
+			setOfflineReady(false);
+		}
+	}, [offlineReady, setOfflineReady]);
 
-	return (
-		<div className="PWABadge" role="alert" aria-labelledby="toast-message">
-			{(offlineReady || needRefresh) && (
-				<div className="PWABadge-toast">
-					<div className="PWABadge-message">
-						{offlineReady ? (
-							<span id="toast-message">App ready to work offline</span>
-						) : (
-							<span id="toast-message">New content available, click on reload button to update.</span>
-						)}
-					</div>
-					<div className="PWABadge-buttons">
-						{needRefresh && (
-							<button className="PWABadge-toast-button" onClick={() => updateServiceWorker(true)}>
-								Reload
-							</button>
-						)}
-						<button className="PWABadge-toast-button" onClick={() => close()}>
-							Close
-						</button>
-					</div>
-				</div>
-			)}
-		</div>
-	);
+	useEffect(() => {
+		if (needRefresh) {
+			console.debug(t("pwa.update-available"));
+			toaster.create({
+				title: t("pwa.update-available"),
+				description: (
+					<Box>
+						<Text mb={3}>{t("pwa.new-content-available-click-reload-to-update")}</Text>
+						<HStack gap={2}>
+							<Button
+								size="sm"
+								colorPalette="blue"
+								onClick={() => {
+									updateServiceWorker(true);
+									toaster.dismiss();
+								}}
+							>
+								{t("pwa.reload")}
+							</Button>
+							<Button
+								size="sm"
+								variant="outline"
+								onClick={() => {
+									setNeedRefresh(false);
+									toaster.dismiss();
+								}}
+							>
+								{t("pwa.close")}
+							</Button>
+						</HStack>
+					</Box>
+				),
+				type: "info",
+				duration: 100000, // не закрывается автоматически
+			});
+		}
+	}, [needRefresh, setNeedRefresh, updateServiceWorker]);
+
+	return null;
 }
 
 export default PWABadge;
