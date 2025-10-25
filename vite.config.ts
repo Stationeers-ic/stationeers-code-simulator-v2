@@ -74,10 +74,11 @@ export default defineConfig({
 							const ic10 = (id.match(/node_modules\/@stationeers-ic\/ic10\/(.+)$/) ?? [])[1];
 							// rearly changes
 							if (ic10.startsWith("dist/Devices")) return `vendor-@stationeers-ic_ic10_devices`;
-							// largest file
-							if (ic10 === "dist/Defines/devices.js") return `vendor-@stationeers-ic_ic10_defines_devices`;
+							// largest file rearly changes
+							if (ic10.startsWith("dist/Defines") && ic10 === "dist/Defines/devices.js")
+								return `vendor-@stationeers-ic_ic10_defines_devices`;
 							// rearly changes
-							if (ic10.startsWith("dist/Defines")) return `vendor-@stationeers-ic_ic10_defines`;
+							// if (ic10.startsWith("dist/Defines")) return `vendor-@stationeers-ic_ic10_defines`;
 
 							return "vendor-@stationeers-ic_ic10";
 						}
