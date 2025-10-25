@@ -72,34 +72,15 @@ export default defineConfig({
 						// also further split @stationeers-ic/ic10
 						if (scopePkgName === "@stationeers-ic/ic10") {
 							const ic10 = (id.match(/node_modules\/@stationeers-ic\/ic10\/(.+)$/) ?? [])[1];
-							// rearly changes
-							if (ic10.startsWith("dist/Devices")) return `vendor-@stationeers-ic_ic10_devices`;
 							// largest file rearly changes
 							if (ic10.startsWith("dist/Defines") && ic10 === "dist/Defines/devices.js")
-								return `vendor-@stationeers-ic_ic10_defines_devices`;
+								return `vendor-@stationeers-ic_ic10_defines`;
 							// rearly changes
 							// if (ic10.startsWith("dist/Defines")) return `vendor-@stationeers-ic_ic10_defines`;
 
 							return "vendor-@stationeers-ic_ic10";
 						}
 						return `vendor-${scopePkgName.replace("/", "_")}`;
-					}
-					// also further split monaco-editor
-					if (pkgName === "monaco-editor") {
-						const monacoPkg = (id.match(/node_modules\/monaco-editor\/esm\/vs\/(.+)$/) ?? [])[1];
-						if (monacoPkg.startsWith("language")) return "vendor-monaco-editor_language";
-						if (monacoPkg.startsWith("basic-languages")) return "vendor-monaco-editor_basic-languages";
-						if (monacoPkg.startsWith("platform")) return "vendor-monaco-editor_platform";
-						if (monacoPkg.startsWith("base/common")) return "vendor-monaco-editor_base2";
-						if (monacoPkg.startsWith("base")) return "vendor-monaco-editor_base1";
-
-						if (monacoPkg.startsWith("editor/contrib")) return "vendor-monaco-editor_editor_contrib";
-						if (monacoPkg.startsWith("editor/standalone")) return "vendor-monaco-editor_editor_standalone";
-						if (monacoPkg.startsWith("editor/browser")) return "vendor-monaco-editor_editor_browser";
-						if (monacoPkg.startsWith("editor/common")) return "vendor-monaco-editor_editor_common";
-						if (monacoPkg.startsWith("editor")) return "vendor-monaco-editor_editor";
-
-						return "vendor-monaco-editor";
 					}
 					if (pkgName) return `vendor-${pkgName}`;
 					return "vendor";
