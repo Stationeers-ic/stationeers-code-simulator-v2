@@ -6,7 +6,7 @@ import { Provider } from "@/components/chakra/provider.tsx";
 import LoadLang from "./components/lang/LoadLang";
 import "@/assets/main.scss";
 import { loader } from "@monaco-editor/react";
-import registerLanguage from "monaco-lang-ic10";
+import registerLanguage from "@stationeers-ic/monaco-lang-ic10";
 import ictm from "@/assets/ic10.tm.json";
 import { Toaster } from "@/components/chakra/toaster";
 import { BugReportButton } from "./components/layout/BugReport";
