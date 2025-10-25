@@ -11,7 +11,7 @@ import { useIc10Store } from "@/stores/ic10Store";
 function App() {
 	const { t } = useTranslation();
 	// Получаем состояние и действия из хранилища
-	const { currentEnv, chips } = useIc10Store();
+	const { currentEnv } = useIc10Store();
 
 	return (
 		<Box>
@@ -22,7 +22,7 @@ function App() {
 					<GridItem colSpan={2}>
 						<VStack align="stretch" height="100%">
 							<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
-								{chips ? <Chips chips={chips} /> : null}
+								<Chips />
 							</Box>
 						</VStack>
 					</GridItem>
@@ -43,7 +43,7 @@ function App() {
 										minimap: { enabled: false },
 										readOnly: true,
 									}}
-									theme="vs-dark"
+									theme="ic10"
 								/>
 							</Box>
 						</VStack>

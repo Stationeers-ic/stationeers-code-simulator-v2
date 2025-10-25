@@ -47,7 +47,7 @@ export const InitialEnvironmentEditor = () => {
 					options={{
 						minimap: { enabled: false },
 					}}
-					theme="vs-dark"
+					theme="ic10"
 					beforeMount={handleEditorWillMount}
 				/>
 			</Box>
