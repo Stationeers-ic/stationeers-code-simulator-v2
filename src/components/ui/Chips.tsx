@@ -1,4 +1,4 @@
-import { Box, Kbd, Tabs } from "@chakra-ui/react";
+import { Tabs } from "@chakra-ui/react";
 import type { Chip } from "ic10";
 import { LuTerminal } from "react-icons/lu";
 import { useIc10Store } from "@/stores/ic10Store";

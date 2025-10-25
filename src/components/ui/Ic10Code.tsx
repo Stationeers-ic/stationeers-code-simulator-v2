@@ -1,11 +1,11 @@
 // components/ui/Ic10Code.tsx
 import { Alert } from "@chakra-ui/react";
+import { Editor } from "@monaco-editor/react";
 import { type Chip, type ChipSchema, type EnvSchema, ValidateIc10Runner } from "ic10";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useIc10Store } from "@/stores/ic10Store";
 import { useTerminalStore } from "@/stores/terminalStore";
-import { Editor } from "@monaco-editor/react";
 
 type Ic10CodeProps = {
 	chip: Chip;

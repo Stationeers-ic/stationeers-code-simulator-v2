@@ -5,11 +5,11 @@ import App from "@/App.tsx";
 import { Provider } from "@/components/chakra/provider.tsx";
 import LoadLang from "./components/lang/LoadLang";
 import "@/assets/main.scss";
-import { BugReportButton } from "./components/ui/BugReport";
-import PWABadge from "./PWABadge";
 
 import { loader } from "@monaco-editor/react";
 import { conf, language } from "monaco-lang-ic10";
+import { BugReportButton } from "./components/ui/BugReport";
+import PWABadge from "./PWABadge";
 
 loader
 	.init()
