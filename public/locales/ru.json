@@ -41,10 +41,10 @@
         }
     },
     "pwa": {
-        "app-ready-to-work-offline": "App ready to work offline",
-        "update-available": "Update Available",
-        "new-content-available-click-reload-to-update": "New content available, click reload to update.",
-        "reload": "Reload",
-        "close": "Close"
+        "app-ready-to-work-offline": "Приложение готово к работе в автономном режиме",
+        "update-available": "Обновление доступно",
+        "new-content-available-click-reload-to-update": "Доступен новый контент, перезагрузка клика для обновления.",
+        "reload": "Перезагрузить",
+        "close": "Закрыть"
     }
 }
