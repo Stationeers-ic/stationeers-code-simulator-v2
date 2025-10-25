@@ -3,6 +3,7 @@
 import * as ic10 from "@stationeers-ic/ic10";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import signal from "@/Signal";
 import { useTerminalStore } from "./terminalStore";
 
 interface Ic10State {
@@ -80,6 +81,7 @@ export const useIc10Store = create<Ic10State>()(
 						});
 					});
 					set({ loading: false });
+					signal.emit("init", builder);
 				} catch (e) {
 					if (e instanceof ic10.Ic10Error) {
 						useTerminalStore.getState().addToTerminal(e.formated_message);
@@ -119,6 +121,7 @@ export const useIc10Store = create<Ic10State>()(
 							}
 						});
 					});
+					signal.emit("step", builder);
 				} catch (e) {
 					if (e instanceof ic10.Ic10Error) {
 						useTerminalStore.getState().addToTerminal(e.formated_message);

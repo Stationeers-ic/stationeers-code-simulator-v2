@@ -9,8 +9,16 @@ import { loader } from "@monaco-editor/react";
 import registerLanguage from "@stationeers-ic/monaco-lang-ic10";
 import ictm from "@/assets/ic10.tm.json";
 import { Toaster } from "@/components/chakra/toaster";
-import { BugReportButton } from "./components/layout/BugReport";
-import PWABadge from "./PWABadge";
+import { BugReportButton } from "@/components/layout/BugReport";
+import PWABadge from "@/PWABadge";
+import signal from "@/Signal";
+
+declare global {
+	interface Window {
+		signal: typeof signal;
+	}
+}
+window.signal = signal;
 
 loader
 	.init()

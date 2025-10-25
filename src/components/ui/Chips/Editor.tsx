@@ -3,6 +3,7 @@ import type { ChipSchema } from "@stationeers-ic/ic10";
 import * as monaco from "monaco-editor";
 import { useEffect, useRef } from "react";
 import { useInitIc10 } from "@/components/hooks/initIc10";
+import signal from "@/Signal";
 import { useIc10Store } from "@/stores/ic10Store";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
 
@@ -15,10 +16,9 @@ export function ChipEditor({ chip }: ChipEditorProps) {
 	const { setChipCode } = useInitialEnvStore();
 	const { init } = useInitIc10();
 
-	// Refs для хранения состояния
 	const decorationsRef = useRef<monaco.editor.IEditorDecorationsCollection | null>(null);
-	const intervalRef = useRef<number | null>(null);
 	const lastHighlightRef = useRef<{ current: number; future: number }>({ current: -1, future: -1 });
+	const unsubscribeRef = useRef<(() => void) | null>(null);
 
 	const onChange = (value?: string) => {
 		if (value) {
@@ -28,57 +28,68 @@ export function ChipEditor({ chip }: ChipEditorProps) {
 	};
 
 	const plugin = (editor: monaco.editor.IStandaloneCodeEditor) => {
-		// Создаём коллекцию декораций один раз
 		decorationsRef.current = editor.createDecorationsCollection([]);
 
 		const highlightLine = (currentLine: number, futureLine: number) => {
-			// Оптимизация: не обновляем, если линии не изменились
 			if (lastHighlightRef.current.current === currentLine && lastHighlightRef.current.future === futureLine) {
 				return;
 			}
+			try {
+				lastHighlightRef.current = { current: currentLine, future: futureLine };
 
-			lastHighlightRef.current = { current: currentLine, future: futureLine };
+				const adjustedCurrent = currentLine + 1;
+				const adjustedFuture = futureLine + 1;
 
-			const adjustedCurrent = currentLine + 1;
-			const adjustedFuture = futureLine + 1;
-
-			decorationsRef.current?.set([
-				{
-					range: new monaco.Range(adjustedCurrent, 1, adjustedCurrent, 1),
-					options: {
-						isWholeLine: true,
-						className: "currentLine",
+				decorationsRef.current?.set([
+					{
+						range: new monaco.Range(adjustedCurrent, 1, adjustedCurrent, 1),
+						options: {
+							isWholeLine: true,
+							className: "currentLine",
+						},
 					},
-				},
-				{
-					range: new monaco.Range(adjustedFuture, 1, adjustedFuture, 1),
-					options: {
-						isWholeLine: true,
-						className: "futureLine",
+					{
+						range: new monaco.Range(adjustedFuture, 1, adjustedFuture, 1),
+						options: {
+							isWholeLine: true,
+							className: "futureLine",
+						},
 					},
-				},
-			]);
+				]);
+			} catch (e) {
+				console.warn(e);
+			}
 		};
 
-		// Используем requestAnimationFrame вместо setInterval для лучшей производительности
 		const updateHighlight = () => {
 			const realContext = getRealContextByChipId(chip.id);
 			if (realContext) {
 				highlightLine(realContext.currentLinePosition, realContext.getNextLineIndex());
 			}
-			intervalRef.current = setTimeout(() => {
-				requestAnimationFrame(updateHighlight);
-			}, 30);
+		};
+		const updateHighClear = () => {
+			decorationsRef.current?.clear();
+			lastHighlightRef.current = { current: 0, future: 0 };
+		};
+		signal.on("step", updateHighlight);
+		signal.on("init", updateHighClear);
+		// Сохраняем функцию отписки в ref
+		unsubscribeRef.current = () => {
+			signal.off("step", updateHighlight);
+			signal.off("init", updateHighClear);
 		};
 
+		// Первоначальное обновление
 		updateHighlight();
 	};
 
 	// Очистка при размонтировании
 	useEffect(() => {
 		return () => {
-			if (intervalRef.current) {
-				clearTimeout(intervalRef.current);
+			// Отписываемся от события
+			if (unsubscribeRef.current) {
+				unsubscribeRef.current();
+				unsubscribeRef.current = null;
 			}
 			decorationsRef.current?.clear();
 		};

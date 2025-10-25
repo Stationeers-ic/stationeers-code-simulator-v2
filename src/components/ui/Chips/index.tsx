@@ -1,7 +1,7 @@
 import { Tabs } from "@chakra-ui/react";
+import ChipTabs from "@/components/ui/Chips/tabs";
+import ChipTabsContent from "@/components/ui/Chips/tabsContent";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
-import ChipTabs from "./tabs";
-import ChipTabsContent from "./tabsContent";
 
 export function Chips() {
 	const { chips } = useInitialEnvStore();

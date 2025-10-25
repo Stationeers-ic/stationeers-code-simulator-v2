@@ -1,10 +1,10 @@
 // components/ui/Docs.tsx
 import { Box, Button, CloseButton, Drawer, Portal, Spinner, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import ReactHighlightSyntax from "react-highlight-syntax";
 import { useTranslation } from "react-i18next";
 import { LuDock } from "react-icons/lu";
 import Markdown from "react-markdown";
+import CodeViewer from "@/components/ui/CodeViewer";
 import { useLanguageStore } from "@/stores/languageStore";
 
 function Docs() {
@@ -64,15 +64,14 @@ function Docs() {
 											code(props) {
 												const { children, className, node, ...rest } = props;
 												const match = /language-(\w+)/.exec(className || "");
-												return match ? (
-													<ReactHighlightSyntax theme={"Base16Darcula"} language={match[1] as any} copy={true}>
-														{String(children).replace(/\n$/, "")}
-													</ReactHighlightSyntax>
-												) : (
-													<code {...rest} className={className}>
-														{children}
-													</code>
-												);
+												if (match) {
+													console.log(match);
+													const language = match[1].toLowerCase();
+													const codeString = String(children).replace(/\n$/, "");
+													const lineCount = codeString.split("\n").length;
+													const height = lineCount * 19 + 19; // 19px per line
+													return <CodeViewer language={language} data={codeString} height={height} />;
+												}
 											},
 										}}
 									>
