@@ -8,12 +8,14 @@ type ChipEditorProps = {
 };
 
 import * as monaco from "monaco-editor";
+import { useIc10Store } from "@/stores/ic10Store";
 
 // Create a decorations collection (new preferred API)
 
 // Function to update dynamic highlight
 
 export function ChipEditor({ chip }: ChipEditorProps) {
+	const getRealContextByChipId = useIc10Store((state) => state.getRealContextByChipId);
 	const { setChipCode } = useInitialEnvStore();
 	const { init } = useInitIc10();
 	const onChange = (value?: string) => {
@@ -22,25 +24,29 @@ export function ChipEditor({ chip }: ChipEditorProps) {
 			init();
 		}
 	};
+	const realContext = getRealContextByChipId(1);
 
 	const plugin = (editor: monaco.editor.IStandaloneCodeEditor) => {
 		console.log(editor);
 		const decorations = editor.createDecorationsCollection([]);
-		function highlightLine(lineNumber: number) {
+		function highlightLine(lineNumber: number, className: string) {
 			decorations.set([
 				{
 					range: new monaco.Range(lineNumber, 1, lineNumber, 1),
 					options: {
 						isWholeLine: true,
-						className: "highlightedLine",
+						className: className,
 					},
 				},
 			]);
 		}
 
 		// Change dynamically on cursor move
-		editor.onDidChangeCursorPosition((event) => {
-			highlightLine(event.position.lineNumber);
+		editor.onDidChangeCursorPosition(() => {
+			if (realContext) {
+				highlightLine(realContext.currentLinePosition, "currentLine");
+				highlightLine(realContext.getNextLineIndex(), "futereLine");
+			}
 		});
 	};
 

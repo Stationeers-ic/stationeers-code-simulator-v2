@@ -26,6 +26,9 @@ interface Ic10State {
 	getCurrentEnv: () => string | undefined;
 	getDebugEnv: () => string | undefined;
 
+	// Новые функции
+	getRealContextByChipId: (chipId: number) => ic10.RealContext | null;
+
 	updateCounter: number;
 	forceUpdate: () => void;
 }
@@ -130,9 +133,28 @@ export const useIc10Store = create<Ic10State>()(
 				const { builder } = get();
 				return builder?.toJson();
 			},
+
 			getDebugEnv: () => {
 				const { builder } = get();
 				return builder?.toJson();
+			},
+
+			// Новая функция для получения realContext по ID чипа
+			getRealContextByChipId: (chipId: number) => {
+				const { builder } = get();
+
+				if (!builder) {
+					return null;
+				}
+
+				// Ищем раннер с нужным chipId
+				for (const runner of builder.Runners.values()) {
+					if (runner.realContext.housing?.id === chipId) {
+						return runner.realContext;
+					}
+				}
+
+				return null;
 			},
 		}),
 		{
