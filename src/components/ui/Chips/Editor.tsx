@@ -7,6 +7,12 @@ type ChipEditorProps = {
 	chip: ChipSchema;
 };
 
+import * as monaco from "monaco-editor";
+
+// Create a decorations collection (new preferred API)
+
+// Function to update dynamic highlight
+
 export function ChipEditor({ chip }: ChipEditorProps) {
 	const { setChipCode } = useInitialEnvStore();
 	const { init } = useInitIc10();
@@ -15,6 +21,27 @@ export function ChipEditor({ chip }: ChipEditorProps) {
 			setChipCode(chip.id, value);
 			init();
 		}
+	};
+
+	const plugin = (editor: monaco.editor.IStandaloneCodeEditor) => {
+		console.log(editor);
+		const decorations = editor.createDecorationsCollection([]);
+		function highlightLine(lineNumber: number) {
+			decorations.set([
+				{
+					range: new monaco.Range(lineNumber, 1, lineNumber, 1),
+					options: {
+						isWholeLine: true,
+						className: "highlightedLine",
+					},
+				},
+			]);
+		}
+
+		// Change dynamically on cursor move
+		editor.onDidChangeCursorPosition((event) => {
+			highlightLine(event.position.lineNumber);
+		});
 	};
 
 	return (
@@ -32,6 +59,7 @@ export function ChipEditor({ chip }: ChipEditorProps) {
 					return `${newLine}`;
 				},
 			}}
+			onMount={plugin}
 		/>
 	);
 }

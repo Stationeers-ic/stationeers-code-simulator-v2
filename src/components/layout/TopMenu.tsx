@@ -22,7 +22,7 @@ export function TopMenu() {
 					</Button>
 					<Button size="sm" onClick={init} colorScheme="green">
 						<LuRedo />
-						{t("menu.initialize")}
+						{initialized ? t("menu.reset") : t("menu.initialize")}
 					</Button>
 					<Docs />
 				</HStack>
