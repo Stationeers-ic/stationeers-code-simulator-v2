@@ -34,7 +34,7 @@ export const InitialEnvironmentEditor = () => {
 			<HStack justify="space-between">
 				<Text fontWeight="bold">{t("app.initialEnvironment")}</Text>
 				<Box width="47px" height={35} />
-				<Button onClick={resetInitialEnv}>reset</Button>
+				<Button onClick={resetInitialEnv}>{t('app.reset')}</Button>
 			</HStack>
 			<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md" minH={"500px"}>
 				<Editor

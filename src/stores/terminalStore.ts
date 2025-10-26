@@ -75,12 +75,12 @@ export const useTerminalStore = create<TerminalState>()((set, get) => ({
 
 	clearTerminal: () =>{ 
 		set({ 
-		entries: [], 
-		errorIds: new Set(), 
-		messages: new Set() 
-	})
-	signal.emit("updateTerminal")
-},
+			entries: [], 
+			errorIds: new Set(), 
+			messages: new Set() 
+		})
+		signal.emit("updateTerminal")
+	},
 
 	getTerminalOutput: () => {
 		// Возвращаем отсортированные по времени записи
