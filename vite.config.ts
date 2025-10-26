@@ -61,10 +61,27 @@ export default defineConfig({
 		},
 	],
 	build: {
+		chunkSizeWarningLimit: 1024,
 		rollupOptions: {
 			output: {
 				manualChunks(id) {
 					const pkgName = (id.match(/node_modules\/([^/]+)/) ?? [])[1];
+					// also split organizetion packages
+					if (pkgName?.startsWith("@")) {
+						const scopePkgName = (id.match(/node_modules\/(@[^/]+\/[^/]+)/) ?? [])[1];
+						// also further split @stationeers-ic/ic10
+						if (scopePkgName === "@stationeers-ic/ic10") {
+							const ic10 = (id.match(/node_modules\/@stationeers-ic\/ic10\/(.+)$/) ?? [])[1];
+							// largest file rearly changes
+							if (ic10.startsWith("dist/Defines") && ic10 === "dist/Defines/devices.js")
+								return `vendor-@stationeers-ic_ic10_defines`;
+							// rearly changes
+							// if (ic10.startsWith("dist/Defines")) return `vendor-@stationeers-ic_ic10_defines`;
+
+							return "vendor-@stationeers-ic_ic10";
+						}
+						return `vendor-${scopePkgName.replace("/", "_")}`;
+					}
 					if (pkgName) return `vendor-${pkgName}`;
 					return "vendor";
 				},
