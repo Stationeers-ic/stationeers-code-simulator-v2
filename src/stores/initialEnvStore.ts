@@ -20,6 +20,12 @@ const startEnvConfig = {
 			id: 1,
 			PrefabName: "StructureCircuitHousingCompact",
 			chip: 1,
+			pins: [
+				{
+					pin: "d1",
+					device: 2,
+				},
+			],
 			ports: [
 				{
 					port: "default",
@@ -29,7 +35,7 @@ const startEnvConfig = {
 		},
 		{
 			id: 2,
-			PrefabName: "StructureCircuitHousingCompact",
+			PrefabName: "StructureAirConditioner",
 			chip: 2,
 			ports: [
 				{
@@ -65,6 +71,12 @@ const startEnv = `{
          "id": 1,
          "PrefabName": "StructureCircuitHousingCompact",
          "chip": 1,
+         "pins": [
+            {
+                "pin": "d1",
+                "device": 2,
+            },
+         ],
          "ports": [
             {
                "port": "default",
@@ -72,9 +84,9 @@ const startEnv = `{
             }
          ]
       },
-	  {
+      {
          "id": 2,
-         "PrefabName": "StructureCircuitHousingCompact",
+         "PrefabName": "StructureAirConditioner",
          "chip": 2,
          "ports": [
             {

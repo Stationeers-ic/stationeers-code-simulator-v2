@@ -6,6 +6,7 @@ import { LuDock } from "react-icons/lu";
 import Markdown from "react-markdown";
 import CodeViewer from "@/components/ui/CodeViewer";
 import { useLanguageStore } from "@/stores/languageStore";
+import "@/assets/github-markdown.scss";
 
 function Docs() {
 	const { t } = useTranslation();
@@ -53,7 +54,7 @@ function Docs() {
 							<Drawer.Title>{t("docs.title")}</Drawer.Title>
 						</Drawer.Header>
 						<Drawer.Body>
-							<Box overflow="true" maxH={"100%"}>
+							<Box overflow="true" maxH={"100%"} className="markdown-body">
 								{loading ? (
 									<Spinner size="lg" />
 								) : error ? (
@@ -72,6 +73,7 @@ function Docs() {
 													const height = lineCount * 19 + 19; // 19px per line
 													return <CodeViewer language={language} data={codeString} height={height} />;
 												}
+												return <code {...props}>{children}</code>;
 											},
 										}}
 									>

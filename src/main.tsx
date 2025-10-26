@@ -1,18 +1,17 @@
-// main.tsx
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import App from "@/App.tsx";
-import { Provider } from "@/components/chakra/provider.tsx";
-import LoadLang from "./components/lang/LoadLang";
-import "@/assets/main.scss";
 import { loader } from "@monaco-editor/react";
 import registerLanguage from "@stationeers-ic/monaco-lang-ic10";
 import * as monaco from "monaco-editor";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "@/App.tsx";
 import ictm from "@/assets/ic10.tm.json";
+import { Provider } from "@/components/chakra/provider.tsx";
 import { Toaster } from "@/components/chakra/toaster";
 import { BugReportButton } from "@/components/layout/BugReport";
 import PWABadge from "@/PWABadge";
 import signal from "@/Signal";
+import LoadLang from "./components/lang/LoadLang";
+import "@/assets/main.scss";
 
 declare global {
 	interface Window {

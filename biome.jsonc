@@ -10,6 +10,7 @@
 		"ignoreUnknown": true
 	},
 	"formatter": {
+		"includes": ["./src"],
 		"lineEnding": "lf",
 		"useEditorconfig": false,
 		"enabled": true,

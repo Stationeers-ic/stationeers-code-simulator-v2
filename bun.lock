@@ -509,7 +509,7 @@
 
     "@stationeers-ic/exact-ic10-math": ["@stationeers-ic/exact-ic10-math@1.0.2", "", {}, "sha512-RCav4HPPQZb7ismVVMYfozEeUveet3Z6/h9rx3jFaQsxzi+eBNlw16znGIIt7u9M7GtuBiwNWHxV/7n+0cloMg=="],
 
-    "@stationeers-ic/ic10": ["@stationeers-ic/ic10@0.1.1", "", { "dependencies": { "@stationeers-ic/exact-ic10-math": "^1.0.1", "eventemitter3": "^5.0.1", "i18next": "^25.6.0", "uuid": "^13.0.0", "valibot": "^1.1.0" }, "peerDependencies": { "typescript": "^5.9.3" } }, "sha512-as8cfnkc7jp6TFLn4Yrn88slGxeHdLfA+Fkm+iLd9VP3sAXQgpVx45N9dDbK04UFJaFmBJUsblhEZgbtOijhXg=="],
+    "@stationeers-ic/ic10": ["@stationeers-ic/ic10@0.1.2", "", { "dependencies": { "@stationeers-ic/exact-ic10-math": "^1.0.2", "eventemitter3": "^5.0.1", "i18next": "^25.6.0", "uuid": "^13.0.0", "valibot": "^1.1.0" }, "peerDependencies": { "typescript": "^5.9.3" } }, "sha512-TdxvNI0/5zqqXPxywb+iw81GM7vgrEAV91+1RXEK8kxKFl7mTFM7yqvXaEB85/R/gBbnv7/IKNOSY9s/fQv5HQ=="],
 
     "@stationeers-ic/monaco-lang-ic10": ["@stationeers-ic/monaco-lang-ic10@0.1.3", "", { "dependencies": { "monaco-editor": "^0.54.0", "monaco-editor-core": "^0.54.0" }, "peerDependencies": { "typescript": "^5" } }, "sha512-QgJ0QPiHPx0gWM+OLtHNBL3vGl8XPhsxv85cuvwxXy6Bnj35BxP65MAgKR+fzcWnK4dDeQcIAWgI8GDY5P3D2w=="],
 
