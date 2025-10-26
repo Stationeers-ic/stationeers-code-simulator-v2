@@ -76,7 +76,7 @@ export const useIc10Store = create<Ic10State>()(
 							if (error) {
 								useTerminalStore
 									.getState()
-									.addToTerminal(`[chip: ${runner.realContext.housing.id}] ${error.formated_message}`);
+									.addMessage(`[chip: ${runner.realContext.housing.id}] ${error.formated_message}`);
 							}
 						});
 					});
@@ -84,11 +84,11 @@ export const useIc10Store = create<Ic10State>()(
 					signal.emit("init", builder);
 				} catch (e) {
 					if (e instanceof ic10.Ic10Error) {
-						useTerminalStore.getState().addToTerminal(e.formated_message);
+						useTerminalStore.getState().addError(e);
 					} else if (e instanceof Error) {
-						useTerminalStore.getState().addToTerminal(e.message);
+						useTerminalStore.getState().addMessage(e.message);
 					} else {
-						useTerminalStore.getState().addToTerminal("Error");
+						useTerminalStore.getState().addMessage("Error");
 					}
 					set({ loading: false, initialized: false });
 				}
@@ -99,7 +99,7 @@ export const useIc10Store = create<Ic10State>()(
 				const { builder, initialized, setCurrentEnv, setInitialized, forceUpdate } = get();
 
 				if (!builder || !initialized) {
-					useTerminalStore.getState().addToTerminal("Not initialized");
+					useTerminalStore.getState().addMessage("Not initialized");
 					return;
 				}
 
@@ -117,14 +117,14 @@ export const useIc10Store = create<Ic10State>()(
 							if (error) {
 								useTerminalStore
 									.getState()
-									.addToTerminal(`[chip: ${runner.realContext.housing.id}] ${error.formated_message}`);
+									.addMessage(`[chip: ${runner.realContext.housing.id}] ${error.formated_message}`);
 							}
 						});
 					});
 					signal.emit("step", builder);
 				} catch (e) {
 					if (e instanceof ic10.Ic10Error) {
-						useTerminalStore.getState().addToTerminal(e.formated_message);
+						useTerminalStore.getState().addError(e);
 					}
 					console.warn(e);
 					setInitialized(false);

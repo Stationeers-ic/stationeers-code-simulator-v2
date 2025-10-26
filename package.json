@@ -14,7 +14,7 @@
 		"@emotion/react": "^11.14.0",
 		"@monaco-editor/react": "^4.7.0",
 		"@redux-devtools/extension": "^3.3.0",
-		"@stationeers-ic/ic10": "^0.1.2",
+		"@stationeers-ic/ic10": "../ic10",
 		"@stationeers-ic/monaco-lang-ic10": "^0.1.3",
 		"eventemitter3": "^5.0.1",
 		"i18next": "^25.6.0",
