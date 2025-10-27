@@ -32,7 +32,7 @@ const toaster = createToaster({
 
 export const BugReportButton = () => {
 	const { t } = useTranslation();
-	const { terminalOutput } = useTerminalStore();
+	const { getTerminalOutput } = useTerminalStore();
 	const { getDebugEnv } = useIc10Store();
 	const { getInitialEnv } = useInitialEnvStore();
 
@@ -94,7 +94,7 @@ export const BugReportButton = () => {
 					...formData,
 					debug_env: getDebugEnv() ?? "",
 					init_env: getInitialEnv() ?? "",
-					terminal: terminalOutput.join("\n") ?? "",
+					terminal: getTerminalOutput().join("\n") ?? "",
 				};
 
 				await submitBugReport(dataToSubmit);
@@ -113,7 +113,6 @@ export const BugReportButton = () => {
 			formData,
 			getDebugEnv,
 			getInitialEnv,
-			terminalOutput,
 			submitBugReport,
 			showSuccessToast,
 			showErrorToast,

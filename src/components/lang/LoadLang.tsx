@@ -1,6 +1,7 @@
 // components/lang/LoadLang.tsx
 
 import { i18n as ic10Lang } from "@stationeers-ic/ic10";
+import { LocaleDataManager } from "@stationeers-ic/monaco-lang-ic10";
 import i18n from "i18next";
 import HttpBackend from "i18next-http-backend";
 import { useEffect, useState } from "react";
@@ -22,6 +23,7 @@ i18n
 			loadPath: "/locales/{{lng}}.json",
 		},
 	});
+
 ic10Lang.use(HttpBackend).init({
 	lng: "en",
 	fallbackLng: "en",
@@ -43,7 +45,8 @@ export function LoadLang() {
 			try {
 				setIsLoading(true);
 				const lang = currentLanguage || "en";
-
+				LocaleDataManager.loadLocale("ru", (await import("@stationeers-ic/monaco-lang-ic10")).localeRU)
+				LocaleDataManager.setDefaultLocale(lang);
 				// Загружаем оба языка параллельно
 				await Promise.all([i18n.changeLanguage(lang), ic10Lang.changeLanguage(lang)]);
 			} catch (error) {
@@ -66,6 +69,7 @@ export function LoadLang() {
 			if (currentLanguage && i18n.language !== currentLanguage) {
 				try {
 					setIsChangingLanguage(true);
+					LocaleDataManager.setDefaultLocale(currentLanguage);
 					// Переключаем оба языка параллельно
 					await Promise.all([i18n.changeLanguage(currentLanguage), ic10Lang.changeLanguage(currentLanguage)]);
 				} catch (error) {
