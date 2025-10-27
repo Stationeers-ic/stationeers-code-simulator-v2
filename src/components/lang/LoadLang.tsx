@@ -31,7 +31,7 @@ ic10Lang.use(HttpBackend).init({
 		escapeValue: false,
 	},
 	backend: {
-		loadPath: "https://raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Languages/{{lng}}.json",
+		loadPath: "//raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Languages/{{lng}}.json",
 	},
 });
 
@@ -42,7 +42,7 @@ MonacoIc10Lang.use(HttpBackend).init({
 		escapeValue: false,
 	},
 	backend: {
-		loadPath: "https://raw.githubusercontent.com/Stationeers-ic/monaco-lang-ic10/refs/heads/main/src/data/locale/{{lng}}.json",
+		loadPath: "//raw.githubusercontent.com/Stationeers-ic/monaco-lang-ic10/refs/heads/main/src/data/locale/{{lng}}.json",
 	},
 });
 export function LoadLang() {
