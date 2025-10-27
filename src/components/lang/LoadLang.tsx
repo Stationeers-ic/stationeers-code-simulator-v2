@@ -1,7 +1,7 @@
 // components/lang/LoadLang.tsx
 
 import { i18n as ic10Lang } from "@stationeers-ic/ic10";
-import { LocaleDataManager } from "@stationeers-ic/monaco-lang-ic10";
+import { i18n as MonacoIc10Lang  } from "@stationeers-ic/monaco-lang-ic10";
 import i18n from "i18next";
 import HttpBackend from "i18next-http-backend";
 import { useEffect, useState } from "react";
@@ -31,7 +31,18 @@ ic10Lang.use(HttpBackend).init({
 		escapeValue: false,
 	},
 	backend: {
-		loadPath: "https://raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Languages/{{lng}}.json",
+		loadPath: "//raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Languages/{{lng}}.json",
+	},
+});
+
+MonacoIc10Lang.use(HttpBackend).init({
+	lng: "en",
+	fallbackLng: "en",
+	interpolation: {
+		escapeValue: false,
+	},
+	backend: {
+		loadPath: "//raw.githubusercontent.com/Stationeers-ic/monaco-lang-ic10/refs/heads/main/src/data/locale/{{lng}}.json",
 	},
 });
 export function LoadLang() {
@@ -45,14 +56,12 @@ export function LoadLang() {
 			try {
 				setIsLoading(true);
 				const lang = currentLanguage || "en";
-				LocaleDataManager.loadLocale("ru", (await import("@stationeers-ic/monaco-lang-ic10")).localeRU)
-				LocaleDataManager.setDefaultLocale(lang);
 				// Загружаем оба языка параллельно
-				await Promise.all([i18n.changeLanguage(lang), ic10Lang.changeLanguage(lang)]);
+				await Promise.all([i18n.changeLanguage(lang), ic10Lang.changeLanguage(lang), MonacoIc10Lang.changeLanguage(lang)]);
 			} catch (error) {
 				console.error("Failed to initialize languages:", error);
 				// Fallback на английский
-				await Promise.all([i18n.changeLanguage("en"), ic10Lang.changeLanguage("en")]);
+				await Promise.all([i18n.changeLanguage("en"), ic10Lang.changeLanguage("en"), MonacoIc10Lang.changeLanguage("en")]);
 			} finally {
 				setIsLoading(false);
 			}
@@ -69,9 +78,8 @@ export function LoadLang() {
 			if (currentLanguage && i18n.language !== currentLanguage) {
 				try {
 					setIsChangingLanguage(true);
-					LocaleDataManager.setDefaultLocale(currentLanguage);
 					// Переключаем оба языка параллельно
-					await Promise.all([i18n.changeLanguage(currentLanguage), ic10Lang.changeLanguage(currentLanguage)]);
+					await Promise.all([i18n.changeLanguage(currentLanguage), ic10Lang.changeLanguage(currentLanguage), MonacoIc10Lang.changeLanguage(currentLanguage)]);
 				} catch (error) {
 					console.error("Failed to change language:", error);
 				} finally {
