@@ -4,6 +4,7 @@ import EventEmitter from "eventemitter3";
 export interface Signals {
 	step(builer: Builer): void;
 	init(builer: Builer): void;
+	updateTerminal(): void;
 }
 
 class Signal extends EventEmitter<Signals> {

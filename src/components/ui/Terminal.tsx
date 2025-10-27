@@ -1,12 +1,25 @@
 // components/ui/Terminal.tsx
 import { Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useTerminalStore } from "@/stores/terminalStore";
+import signal from "@/Signal";
+import { type TerminalEntry, useTerminalStore } from "@/stores/terminalStore";
 
 export function Terminal() {
 	const { t } = useTranslation();
 	const terminalHeight = "200px";
-	const { terminalOutput, clearTerminal } = useTerminalStore();
+	const { clearTerminal, getTerminalOutput } = useTerminalStore();
+	const [terminalOutput, setTerminal] = useState<TerminalEntry[]>([])
+	useEffect(() => {
+		const upd = () => {
+			setTerminal(getTerminalOutput())
+		}
+		signal.on("updateTerminal", upd)
+		return () => {
+			signal.off("updateTerminal", upd)
+		}
+	}, [])
+
 	return (
 		<VStack align="stretch">
 			<HStack justify="space-between">
@@ -26,12 +39,12 @@ export function Terminal() {
 				p={3}
 				overflow="auto"
 			>
-				{terminalOutput.length === 0 ? (
+				{terminalOutput?.length === 0 ? (
 					<Text color="gray.400">{t("terminal.noOutput")}</Text>
 				) : (
 					terminalOutput.map((line, index) => (
 						<Text key={index} fontSize="sm">
-							{line}
+							{line.content}
 						</Text>
 					))
 				)}

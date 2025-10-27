@@ -1,6 +1,4 @@
 // stores/languageStore.ts
-
-import i18n from "i18next";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -10,7 +8,7 @@ interface LanguageState {
 }
 
 // Функция для определения языка браузера с учетом доступных переводов
-const getBrowserLanguage = (): string => {
+export const getBrowserLanguage = (): string => {
 	if (typeof window === "undefined") return "en";
 
 	const supportedLanguages = ["en", "ru", "es", "fr", "de", "zh"];
@@ -28,29 +26,39 @@ const getBrowserLanguage = (): string => {
 	return "en";
 };
 
+// Получаем начальный язык (из localStorage или браузера)
+export const getInitialLanguage = (): string => {
+	if (typeof window === "undefined") return "en";
+	
+	try {
+		const stored = localStorage.getItem("language-storage");
+		if (stored) {
+			const parsed = JSON.parse(stored);
+			return parsed.state?.currentLanguage || getBrowserLanguage();
+		}
+	} catch (error) {
+		console.error("Error reading from localStorage:", error);
+	}
+	
+	const lang = getBrowserLanguage();
+	localStorage.setItem("language-storage", JSON.stringify({
+		state: {
+			currentLanguage: lang,
+		}
+	}))
+	return lang;
+};
+
 export const useLanguageStore = create<LanguageState>()(
 	persist(
 		(set) => ({
-			// Используем автоопределение как начальное значение
-			currentLanguage: getBrowserLanguage(),
+			currentLanguage: getInitialLanguage(),
 			setLanguage: (language: string) => {
-				i18n.changeLanguage(language);
 				set({ currentLanguage: language });
 			},
 		}),
 		{
 			name: "language-storage",
-			// Добавляем миграцию для существующих пользователей
-			migrate: (persistedState: any) => {
-				if (!persistedState) return undefined;
-
-				// Если в хранилище уже есть язык, используем его
-				// Если нет - используем автоопределение
-				return {
-					...persistedState,
-					currentLanguage: persistedState.currentLanguage || getBrowserLanguage(),
-				};
-			},
 		},
 	),
 );

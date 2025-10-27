@@ -1,50 +1,51 @@
 {
-    "app": {
-        "currentEnvironment": "Current Environment",
-        "initialEnvironment": "Initial Environment"
+  "app": {
+    "currentEnvironment": "Current Environment",
+    "initialEnvironment": "Initial Environment",
+    "reset": "Reset"
+  },
+  "menu": {
+    "step": "Step",
+    "initialize": "Initialize",
+    "reset": "Reset"
+  },
+  "terminal": {
+    "title": "Terminal Output",
+    "clear": "Clear",
+    "noOutput": "No output yet. Execute steps to see output…"
+  },
+  "ic10Code": {
+    "error": "Error",
+    "missingRunner": "Chip {{chipId}} is missing runner. Make sure the chip is properly initialized."
+  },
+  "docs": {
+    "title": "Docs",
+    "notFound": "Documentation not found",
+    "error": "Error loading documentation"
+  },
+  "bugReport": {
+    "title": "Report a bug",
+    "close": "Close",
+    "email": "Email",
+    "message": "Message",
+    "messagePlaceholder": "Describe the problem…",
+    "submit": "Submit",
+    "reportBug": "Report a bug",
+    "success": {
+      "title": "Successfully sent",
+      "description": "Thank you for your bug report!"
     },
-    "menu": {
-        "step": "Step",
-        "initialize": "Initialize",
-        "reset": "Reset"
-    },
-    "terminal": {
-        "title": "Terminal Output",
-        "clear": "Clear",
-        "noOutput": "No output yet. Execute steps to see output…"
-    },
-    "ic10Code": {
-        "error": "Error",
-        "missingRunner": "Chip {{chipId}} is missing runner. Make sure the chip is properly initialized."
-    },
-    "docs": {
-        "title": "Docs",
-        "notFound": "Documentation not found",
-        "error": "Error loading documentation"
-    },
-    "bugReport": {
-        "title": "Report a bug",
-        "close": "Close",
-        "email": "Email",
-        "message": "Message",
-        "messagePlaceholder": "Describe the problem…",
-        "submit": "Submit",
-        "reportBug": "Report a bug",
-        "success": {
-            "title": "Successfully sent",
-            "description": "Thank you for your bug report!"
-        },
-        "error": {
-            "title": "Error",
-            "description": "Failed to send report. Please try again later.",
-            "httpStatus": "HTTP error! status: {0}"
-        }
-    },
-    "pwa": {
-        "app-ready-to-work-offline": "App ready to work offline",
-        "close": "Close",
-        "new-content-available-click-reload-to-update": "New content available, click reload to update.",
-        "reload": "Reload",
-        "update-available": "Update Available"
+    "error": {
+      "title": "Error",
+      "description": "Failed to send report. Please try again later.",
+      "httpStatus": "HTTP error! status: {0}"
     }
+  },
+  "pwa": {
+    "app-ready-to-work-offline": "App ready to work offline",
+    "close": "Close",
+    "new-content-available-click-reload-to-update": "New content available, click reload to update.",
+    "reload": "Reload",
+    "update-available": "Update Available"
+  }
 }
