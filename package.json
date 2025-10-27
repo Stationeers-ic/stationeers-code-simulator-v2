@@ -15,7 +15,7 @@
 		"@monaco-editor/react": "^4.7.0",
 		"@redux-devtools/extension": "^3.3.0",
 		"@stationeers-ic/ic10": "0.2.0",
-		"@stationeers-ic/monaco-lang-ic10": "^0.2.0",
+		"@stationeers-ic/monaco-lang-ic10": "^0.2.2",
 		"eventemitter3": "^5.0.1",
 		"i18next": "^25.6.0",
 		"i18next-http-backend": "^3.0.2",
