@@ -2,7 +2,7 @@ import { Box, HStack } from "@chakra-ui/react";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { useTranslation } from "react-i18next";
-import { LuSave, LuSaveAll, LuSettings, LuStar } from "react-icons/lu";
+import { LuSaveAll, LuSettings, LuStar } from "react-icons/lu";
 import Docs from "@/components/layout/Docs";
 import { LanguageSelector } from "@/components/layout/LanguageSelector";
 import MenuLink from "@/components/ui/MenuLink";
