@@ -7,7 +7,6 @@ import { type TerminalEntry, useTerminalStore } from "@/stores/terminalStore";
 
 export function Terminal() {
 	const { t } = useTranslation();
-	const terminalHeight = "200px";
 	const { clearTerminal, getTerminalOutput } = useTerminalStore();
 	const [terminalOutput, setTerminal] = useState<TerminalEntry[]>([]);
 	useEffect(() => {
@@ -29,7 +28,6 @@ export function Terminal() {
 				</Button>
 			</HStack>
 			<Box
-				minH={terminalHeight}
 				border="1px solid"
 				borderColor="gray.200"
 				borderRadius="md"

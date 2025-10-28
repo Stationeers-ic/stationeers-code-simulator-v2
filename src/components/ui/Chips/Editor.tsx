@@ -97,7 +97,6 @@ export function ChipEditor({ chip }: ChipEditorProps) {
 
 	return (
 		<Editor
-			height={"100%"}
 			theme="ic10"
 			key={`editor-${chip.id}`}
 			value={chip.code}

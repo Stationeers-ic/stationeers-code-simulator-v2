@@ -18,8 +18,8 @@ export function Index() {
 	const { currentEnv } = useIc10Store();
 
 	return (
-		<VStack align="stretch" height="100%" className="test2">
-			<Grid templateColumns="repeat(4, 1fr)" gap={6} mb={6} height="100%">
+		<VStack align="stretch" className="test2">
+			<Grid templateColumns="repeat(4, 1fr)" gap={6} mb={6}>
 				{/* IC10 Code Editor */}
 				<GridItem colSpan={2}>
 					<VStack align="stretch">
@@ -29,14 +29,13 @@ export function Index() {
 					</VStack>
 				</GridItem>
 				<GridItem colSpan={1}>
-					<VStack align="stretch" height="100%">
-						<HStack justify="space-between" minH="32px">
+					<VStack align="stretch">
+						<HStack justify="space-between">
 							<Text fontWeight="bold">{t("app.currentEnvironment")}</Text>
 							<Box width="47px" height={35} />
 						</HStack>
 						<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
 							<Editor
-								height={"100%"}
 								value={currentEnv}
 								language="json"
 								options={{

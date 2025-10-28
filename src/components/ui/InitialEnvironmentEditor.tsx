@@ -30,7 +30,7 @@ export const InitialEnvironmentEditor = () => {
 	};
 
 	return (
-		<VStack align="stretch" height="100%">
+		<VStack align="stretch">
 			<HStack justify="space-between">
 				<Text fontWeight="bold">{t("app.initialEnvironment")}</Text>
 				<Box width="47px" height={35} />
@@ -38,7 +38,6 @@ export const InitialEnvironmentEditor = () => {
 			</HStack>
 			<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
 				<Editor
-					height={"100%"}
 					value={initialEnv}
 					onChange={(value) => {
 						value ? setInitialEnv(value) : null;

@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react";
+import { Button, HStack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { LuPlay, LuRedo } from "react-icons/lu";
 import { useInitIc10 } from "@/components/hooks/initIc10";
@@ -10,7 +10,7 @@ export default function ChipActions() {
 	const { init } = useInitIc10();
 
 	return (
-		<>
+		<HStack>
 			<Button size="sm" onClick={step} disabled={!initialized} colorScheme="blue">
 				<LuPlay />
 				{t("menu.step")}
@@ -19,6 +19,6 @@ export default function ChipActions() {
 				<LuRedo />
 				{initialized ? t("menu.reset") : t("menu.initialize")}
 			</Button>
-		</>
+		</HStack>
 	);
 }
