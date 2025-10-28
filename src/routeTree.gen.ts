@@ -8,88 +8,86 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as SavesRouteImport } from './routes/saves'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as IndexRouteImport } from "./routes/index";
+import { Route as SavesRouteImport } from "./routes/saves";
+import { Route as SettingsRouteImport } from "./routes/settings";
 
 const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
+	id: "/settings",
+	path: "/settings",
+	getParentRoute: () => rootRouteImport,
+} as any);
 const SavesRoute = SavesRouteImport.update({
-  id: '/saves',
-  path: '/saves',
-  getParentRoute: () => rootRouteImport,
-} as any)
+	id: "/saves",
+	path: "/saves",
+	getParentRoute: () => rootRouteImport,
+} as any);
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
+	id: "/",
+	path: "/",
+	getParentRoute: () => rootRouteImport,
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/saves': typeof SavesRoute
-  '/settings': typeof SettingsRoute
+	"/": typeof IndexRoute;
+	"/saves": typeof SavesRoute;
+	"/settings": typeof SettingsRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/saves': typeof SavesRoute
-  '/settings': typeof SettingsRoute
+	"/": typeof IndexRoute;
+	"/saves": typeof SavesRoute;
+	"/settings": typeof SettingsRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/saves': typeof SavesRoute
-  '/settings': typeof SettingsRoute
+	__root__: typeof rootRouteImport;
+	"/": typeof IndexRoute;
+	"/saves": typeof SavesRoute;
+	"/settings": typeof SettingsRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/saves' | '/settings'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/saves' | '/settings'
-  id: '__root__' | '/' | '/saves' | '/settings'
-  fileRoutesById: FileRoutesById
+	fileRoutesByFullPath: FileRoutesByFullPath;
+	fullPaths: "/" | "/saves" | "/settings";
+	fileRoutesByTo: FileRoutesByTo;
+	to: "/" | "/saves" | "/settings";
+	id: "__root__" | "/" | "/saves" | "/settings";
+	fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  SavesRoute: typeof SavesRoute
-  SettingsRoute: typeof SettingsRoute
+	IndexRoute: typeof IndexRoute;
+	SavesRoute: typeof SavesRoute;
+	SettingsRoute: typeof SettingsRoute;
 }
 
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/saves': {
-      id: '/saves'
-      path: '/saves'
-      fullPath: '/saves'
-      preLoaderRoute: typeof SavesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-  }
+declare module "@tanstack/react-router" {
+	interface FileRoutesByPath {
+		"/settings": {
+			id: "/settings";
+			path: "/settings";
+			fullPath: "/settings";
+			preLoaderRoute: typeof SettingsRouteImport;
+			parentRoute: typeof rootRouteImport;
+		};
+		"/saves": {
+			id: "/saves";
+			path: "/saves";
+			fullPath: "/saves";
+			preLoaderRoute: typeof SavesRouteImport;
+			parentRoute: typeof rootRouteImport;
+		};
+		"/": {
+			id: "/";
+			path: "/";
+			fullPath: "/";
+			preLoaderRoute: typeof IndexRouteImport;
+			parentRoute: typeof rootRouteImport;
+		};
+	}
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  SavesRoute: SavesRoute,
-  SettingsRoute: SettingsRoute,
-}
-export const routeTree = rootRouteImport
-  ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+	IndexRoute: IndexRoute,
+	SavesRoute: SavesRoute,
+	SettingsRoute: SettingsRoute,
+};
+export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>();
