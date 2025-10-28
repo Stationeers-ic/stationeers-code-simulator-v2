@@ -19,17 +19,17 @@ export function Index() {
 
 	return (
 		<VStack align="stretch" className="test2">
-			<Grid templateColumns="repeat(4, 1fr)" gap={6} mb={6}>
+			<Grid templateColumns="repeat(4, 1fr)" gap={6} mb={6} h="500px">
 				{/* IC10 Code Editor */}
 				<GridItem colSpan={2}>
-					<VStack align="stretch">
+					<VStack align="stretch" height={"100%"}>
 						<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
 							<Chips />
 						</Box>
 					</VStack>
 				</GridItem>
 				<GridItem colSpan={1}>
-					<VStack align="stretch">
+					<VStack align="stretch" height={"100%"}>
 						<HStack justify="space-between">
 							<Text fontWeight="bold">{t("app.currentEnvironment")}</Text>
 							<Box width="47px" height={35} />

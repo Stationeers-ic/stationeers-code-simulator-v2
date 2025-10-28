@@ -30,7 +30,7 @@ export const InitialEnvironmentEditor = () => {
 	};
 
 	return (
-		<VStack align="stretch">
+		<VStack align="stretch" height={"100%"}>
 			<HStack justify="space-between">
 				<Text fontWeight="bold">{t("app.initialEnvironment")}</Text>
 				<Box width="47px" height={35} />
