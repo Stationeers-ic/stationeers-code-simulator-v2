@@ -1,4 +1,4 @@
-import { Tabs, VStack, Box } from "@chakra-ui/react";
+import { Tabs, VStack } from "@chakra-ui/react";
 import ChipTabs from "@/components/ui/Chips/tabs";
 import ChipTabsContent from "@/components/ui/Chips/tabsContent";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
