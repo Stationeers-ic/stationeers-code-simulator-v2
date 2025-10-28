@@ -86,6 +86,4 @@ export class LocalStorageCodeStorage extends CodeStorage {
 	}
 }
 
-export default {
-	LocalStorageCodeStorage,
-};
+export default [LocalStorageCodeStorage.getInstance()] as const;
