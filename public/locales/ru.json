@@ -2,7 +2,10 @@
     "menu": {
         "step": "Шаг",
         "initialize": "Инициализировать",
-        "reset": "Рестарт"
+        "reset": "Рестарт",
+        "saves": "Сохранения",
+        "settings": "Настройки",
+        "main": "Главная"
     },
     "app": {
         "currentEnvironment": "Текущее состояние",
