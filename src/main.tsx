@@ -2,16 +2,21 @@ import { loader } from "@monaco-editor/react";
 import registerLanguage from "@stationeers-ic/monaco-lang-ic10";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import App from "@/App.tsx";
 import ictm from "@/assets/ic10.tm.json";
 import { Provider } from "@/components/chakra/provider.tsx";
 import { Toaster } from "@/components/chakra/toaster";
 import LoadLang from "@/components/lang/LoadLang";
-import { BugReportButton } from "@/components/layout/BugReport";
 import PWABadge from "@/PWABadge";
 import signal from "@/Signal";
 import "@/assets/main.scss";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { getInitialLanguage } from "@/stores/languageStore";
+
+// Import the generated route tree
+import { routeTree } from "./routeTree.gen";
+
+// Create a new router instance
+const router = createRouter({ routeTree });
 
 declare global {
 	interface Window {
@@ -19,19 +24,24 @@ declare global {
 	}
 }
 
+declare module "@tanstack/react-router" {
+	interface Register {
+		router: typeof router;
+	}
+}
+
 const lang = getInitialLanguage();
-console.log("Load lang :", lang)
+console.log("Load lang :", lang);
 window.signal = signal;
-loader.config({ 
+loader.config({
 	// monaco:monaco,
 	// paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.54.0/min/vs' },
-    'vs/nls': {
-        availableLanguages: { 
-			'*': lang,
-		 }
-    }
-	
- });
+	"vs/nls": {
+		availableLanguages: {
+			"*": lang,
+		},
+	},
+});
 loader
 	.init()
 	.then((monaco) => {
@@ -44,9 +54,9 @@ loader
 				<StrictMode>
 					<Toaster />
 					<LoadLang />
-					<App />
-					<BugReportButton />
 					<PWABadge />
+
+					<RouterProvider router={router} />
 				</StrictMode>
 			</Provider>,
 		);

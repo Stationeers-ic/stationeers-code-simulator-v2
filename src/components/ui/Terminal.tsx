@@ -9,16 +9,16 @@ export function Terminal() {
 	const { t } = useTranslation();
 	const terminalHeight = "200px";
 	const { clearTerminal, getTerminalOutput } = useTerminalStore();
-	const [terminalOutput, setTerminal] = useState<TerminalEntry[]>([])
+	const [terminalOutput, setTerminal] = useState<TerminalEntry[]>([]);
 	useEffect(() => {
 		const upd = () => {
-			setTerminal(getTerminalOutput())
-		}
-		signal.on("updateTerminal", upd)
+			setTerminal(getTerminalOutput());
+		};
+		signal.on("updateTerminal", upd);
 		return () => {
-			signal.off("updateTerminal", upd)
-		}
-	}, [])
+			signal.off("updateTerminal", upd);
+		};
+	}, []);
 
 	return (
 		<VStack align="stretch">
@@ -29,7 +29,7 @@ export function Terminal() {
 				</Button>
 			</HStack>
 			<Box
-				height={terminalHeight}
+				minH={terminalHeight}
 				border="1px solid"
 				borderColor="gray.200"
 				borderRadius="md"

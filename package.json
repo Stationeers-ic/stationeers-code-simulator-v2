@@ -4,10 +4,12 @@
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
-		"dev": "vite",
+		"dev": "bun run watch-routes & vite",
 		"build": "rm -rf dist && bun run fix && tsc -b && vite build",
 		"preview": "vite preview",
-		"fix": "bunx --bun biome check . --write --unsafe"
+		"fix": "bunx --bun biome check . --write --unsafe",
+		"generate-routes": "tsr generate",
+		"watch-routes": "tsr watch"
 	},
 	"dependencies": {
 		"@chakra-ui/react": "^3.28.0",
@@ -16,6 +18,8 @@
 		"@redux-devtools/extension": "^3.3.0",
 		"@stationeers-ic/ic10": "0.2.0",
 		"@stationeers-ic/monaco-lang-ic10": "^0.2.3",
+		"@tanstack/react-router": "^1.133.32",
+		"@tanstack/react-router-devtools": "^1.133.34",
 		"eventemitter3": "^5.0.1",
 		"i18next": "^25.6.0",
 		"i18next-http-backend": "^3.0.2",
@@ -30,6 +34,8 @@
 	"devDependencies": {
 		"@biomejs/biome": "2.3.1",
 		"@chakra-ui/cli": "^3.28.0",
+		"@tanstack/router-cli": "^1.133.29",
+		"@tanstack/router-plugin": "^1.133.32",
 		"@types/node": "^24.9.1",
 		"@types/react": "^19.2.2",
 		"@types/react-dom": "^19.2.2",

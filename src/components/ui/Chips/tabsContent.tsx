@@ -9,7 +9,7 @@ export function ChipTabsContent({ chips }: TabsProps) {
 	return (
 		<>
 			{chips.map((chip) => (
-				<Tabs.Content key={chip.id} value={chip.id.toString()} minH={"500px"}>
+				<Tabs.Content key={chip.id} value={chip.id.toString()} h={"500px"}>
 					<ChipEditor chip={chip} />
 				</Tabs.Content>
 			))}

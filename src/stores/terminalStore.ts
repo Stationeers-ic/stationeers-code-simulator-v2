@@ -7,7 +7,7 @@ import signal from "@/Signal";
 export interface TerminalEntry {
 	id: string;
 	timestamp: Date;
-	type: 'error' | 'message';
+	type: "error" | "message";
 	content: string;
 	errorId?: number;
 }
@@ -16,7 +16,7 @@ export interface TerminalState {
 	entries: TerminalEntry[];
 	errorIds: Set<number>;
 	messages: Set<string>;
-	
+
 	addError: (error: Ic10Error) => void;
 	addMessage: (message: string) => void;
 	clearTerminal: () => void;
@@ -30,7 +30,7 @@ export const useTerminalStore = create<TerminalState>()((set, get) => ({
 
 	addError: (error: Ic10Error) => {
 		const { errorIds, entries } = get();
-		
+
 		// Проверяем уникальность по error.id
 		if (errorIds.has(error.id)) {
 			return;
@@ -39,7 +39,7 @@ export const useTerminalStore = create<TerminalState>()((set, get) => ({
 		const newEntry: TerminalEntry = {
 			id: `error-${error.id}-${Date.now()}`,
 			timestamp: new Date(),
-			type: 'error',
+			type: "error",
 			content: error.formated_message,
 			errorId: error.id,
 		};
@@ -48,12 +48,12 @@ export const useTerminalStore = create<TerminalState>()((set, get) => ({
 			entries: [...entries, newEntry],
 			errorIds: new Set([...errorIds, error.id]),
 		});
-		signal.emit("updateTerminal")
+		signal.emit("updateTerminal");
 	},
 
 	addMessage: (message: string) => {
 		const { messages, entries } = get();
-		
+
 		// Проверяем уникальность по тексту
 		if (messages.has(message)) {
 			return;
@@ -62,7 +62,7 @@ export const useTerminalStore = create<TerminalState>()((set, get) => ({
 		const newEntry: TerminalEntry = {
 			id: `message-${Date.now()}`,
 			timestamp: new Date(),
-			type: 'message',
+			type: "message",
 			content: `> ${message}`,
 		};
 
@@ -70,22 +70,20 @@ export const useTerminalStore = create<TerminalState>()((set, get) => ({
 			entries: [...entries, newEntry],
 			messages: new Set([...messages, message]),
 		});
-		signal.emit("updateTerminal")
+		signal.emit("updateTerminal");
 	},
 
-	clearTerminal: () =>{ 
-		set({ 
-			entries: [], 
-			errorIds: new Set(), 
-			messages: new Set() 
-		})
-		signal.emit("updateTerminal")
+	clearTerminal: () => {
+		set({
+			entries: [],
+			errorIds: new Set(),
+			messages: new Set(),
+		});
+		signal.emit("updateTerminal");
 	},
 
 	getTerminalOutput: () => {
 		// Возвращаем отсортированные по времени записи
-		return get().entries.sort((a, b) => 
-			a.timestamp.getTime() - b.timestamp.getTime()
-		);
+		return get().entries.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
 	},
 }));

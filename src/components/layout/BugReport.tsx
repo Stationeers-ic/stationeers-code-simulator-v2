@@ -109,17 +109,7 @@ export const BugReportButton = () => {
 				setIsLoading(false);
 			}
 		},
-		[
-			formData,
-			getDebugEnv,
-			getInitialEnv,
-			submitBugReport,
-			showSuccessToast,
-			showErrorToast,
-			resetForm,
-			closeForm,
-			t,
-		],
+		[formData, getDebugEnv, getInitialEnv, submitBugReport, showSuccessToast, showErrorToast, resetForm, closeForm, t],
 	);
 
 	const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

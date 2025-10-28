@@ -29,7 +29,7 @@ export const getBrowserLanguage = (): string => {
 // Получаем начальный язык (из localStorage или браузера)
 export const getInitialLanguage = (): string => {
 	if (typeof window === "undefined") return "en";
-	
+
 	try {
 		const stored = localStorage.getItem("language-storage");
 		if (stored) {
@@ -39,13 +39,16 @@ export const getInitialLanguage = (): string => {
 	} catch (error) {
 		console.error("Error reading from localStorage:", error);
 	}
-	
+
 	const lang = getBrowserLanguage();
-	localStorage.setItem("language-storage", JSON.stringify({
-		state: {
-			currentLanguage: lang,
-		}
-	}))
+	localStorage.setItem(
+		"language-storage",
+		JSON.stringify({
+			state: {
+				currentLanguage: lang,
+			},
+		}),
+	);
 	return lang;
 };
 

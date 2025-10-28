@@ -6,6 +6,7 @@ import { useInitIc10 } from "@/components/hooks/initIc10";
 import signal from "@/Signal";
 import { useIc10Store } from "@/stores/ic10Store";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
+import { Box } from "@chakra-ui/react";
 
 type ChipEditorProps = {
 	chip: ChipSchema;
@@ -97,7 +98,7 @@ export function ChipEditor({ chip }: ChipEditorProps) {
 
 	return (
 		<Editor
-			height={"500px"}
+			height={"100%"}
 			theme="ic10"
 			key={`editor-${chip.id}`}
 			value={chip.code}

@@ -10,7 +10,7 @@
 		"ignoreUnknown": true
 	},
 	"formatter": {
-		"includes": ["./src"],
+		"includes": ["**", "./vite.config.ts", "!!./src/routeTree.gen.ts"],
 		"lineEnding": "lf",
 		"useEditorconfig": false,
 		"enabled": true,

@@ -39,7 +39,7 @@ function Docs() {
 		<Drawer.Root size="xl">
 			<Drawer.Backdrop />
 			<Drawer.Trigger asChild>
-				<Button>
+				<Button size="sm">
 					<LuDock />
 					{t("docs.title")}
 				</Button>
