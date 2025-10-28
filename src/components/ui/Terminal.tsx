@@ -28,6 +28,7 @@ export function Terminal() {
 				</Button>
 			</HStack>
 			<Box
+				minH={"200px"}
 				border="1px solid"
 				borderColor="gray.200"
 				borderRadius="md"
