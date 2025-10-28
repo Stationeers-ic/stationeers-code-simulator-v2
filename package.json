@@ -4,12 +4,12 @@
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
-		"dev": "bun run watch-routes & vite",
+		"dev": "vite",
 		"build": "rm -rf dist && bun run fix && tsc -b && vite build",
 		"preview": "vite preview",
 		"fix": "bunx --bun biome check . --write --unsafe",
 		"generate-routes": "tsr generate",
-		"watch-routes": "tsr watch"
+		"watch-routes": "bunx tsr watch"
 	},
 	"dependencies": {
 		"@chakra-ui/react": "^3.28.0",
