@@ -1,54 +1,116 @@
 {
-    "app": {
-        "currentEnvironment": "Current Environment",
-        "initialEnvironment": "Initial Environment",
-        "reset": "Reset"
+  "app": {
+    "currentEnvironment": "Current Environment",
+    "initialEnvironment": "Initial Environment",
+    "reset": "Reset"
+  },
+  "menu": {
+    "step": "Step",
+    "initialize": "Initialize",
+    "reset": "Reset",
+    "saves": "Saves",
+    "settings": "Settings",
+    "main": "Main",
+    "projects": "Projects",
+    "editor": "Editor"
+  },
+  "terminal": {
+    "title": "Terminal Output",
+    "clear": "Clear",
+    "noOutput": "No output yet. Execute steps to see output…"
+  },
+  "ic10Code": {
+    "error": "Error",
+    "missingRunner": "Chip {{chipId}} is missing runner. Make sure the chip is properly initialized."
+  },
+  "docs": {
+    "title": "Docs",
+    "notFound": "Documentation not found",
+    "error": "Error loading documentation"
+  },
+  "bugReport": {
+    "title": "Report a bug",
+    "close": "Close",
+    "email": "Email",
+    "message": "Message",
+    "messagePlaceholder": "Describe the problem…",
+    "submit": "Submit",
+    "reportBug": "Report a bug",
+    "success": {
+      "title": "Successfully sent",
+      "description": "Thank you for your bug report!"
     },
-    "menu": {
-        "step": "Step",
-        "initialize": "Initialize",
-        "reset": "Reset",
-        "saves": "Saves",
-        "settings": "Settings",
-        "main": "Main"
-    },
-    "terminal": {
-        "title": "Terminal Output",
-        "clear": "Clear",
-        "noOutput": "No output yet. Execute steps to see output…"
-    },
-    "ic10Code": {
-        "error": "Error",
-        "missingRunner": "Chip {{chipId}} is missing runner. Make sure the chip is properly initialized."
-    },
-    "docs": {
-        "title": "Docs",
-        "notFound": "Documentation not found",
-        "error": "Error loading documentation"
-    },
-    "bugReport": {
-        "title": "Report a bug",
-        "close": "Close",
-        "email": "Email",
-        "message": "Message",
-        "messagePlaceholder": "Describe the problem…",
-        "submit": "Submit",
-        "reportBug": "Report a bug",
-        "success": {
-            "title": "Successfully sent",
-            "description": "Thank you for your bug report!"
-        },
-        "error": {
-            "title": "Error",
-            "description": "Failed to send report. Please try again later.",
-            "httpStatus": "HTTP error! status: {0}"
-        }
-    },
-    "pwa": {
-        "app-ready-to-work-offline": "App ready to work offline",
-        "close": "Close",
-        "new-content-available-click-reload-to-update": "New content available, click reload to update.",
-        "reload": "Reload",
-        "update-available": "Update Available"
+    "error": {
+      "title": "Error",
+      "description": "Failed to send report. Please try again later.",
+      "httpStatus": "HTTP error! status: {0}"
     }
+  },
+  "pwa": {
+    "app-ready-to-work-offline": "App ready to work offline",
+    "close": "Close",
+    "new-content-available-click-reload-to-update": "New content available, click reload to update.",
+    "reload": "Reload",
+    "update-available": "Update Available"
+  },
+  "project": {
+    "dialog": {
+      "header": "Create Project in '{{repository}}'"
+    },
+    "repository": {
+      "name": {
+        "localStorage": "Local Storage",
+        "gist": "Gist"
+      }
+    },
+    "header": {
+      "repositories": "Repositories",
+      "projects": "Projects",
+      "preview": "Preview"
+    }
+  },
+  "projectForm": {
+    "fields": {
+      "name": {
+        "label": "Project Name",
+        "placeholder": "Enter project name"
+      },
+      "author": {
+        "label": "Author",
+        "placeholder": "Enter author name"
+      },
+      "version": {
+        "label": "Version",
+        "placeholder": "1.0.0"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Enter project description"
+      },
+      "tags": {
+        "label": "Tags",
+        "placeholder": "Add a tag",
+        "addButton": "Add"
+      },
+      "envFile": {
+        "label": "Upload Environment File"
+      },
+      "envVariables": {
+        "label": "Environment Variables",
+        "placeholder": "KEY=value\nANOTHER_KEY=another_value"
+      }
+    },
+    "errors": {
+      "nameRequired": "Name is required",
+      "versionInvalid": "Must be SemVer eg: (1.0.0)"
+    },
+    "fileUpload": {
+      "success": "File uploaded",
+      "description": "{{fileName}} has been loaded"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "submit": "Create Project"
+    }
+  }
 }

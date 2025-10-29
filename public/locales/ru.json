@@ -50,5 +50,51 @@
         "new-content-available-click-reload-to-update": "Доступен новый контент, перезагрузка клика для обновления.",
         "reload": "Перезагрузить",
         "close": "Закрыть"
+    },
+    {
+        "projectForm": {
+            "fields": {
+                "name": {
+                    "label": "Название проекта",
+                    "placeholder": "Введите название проекта"
+                },
+                "author": {
+                    "label": "Автор",
+                    "placeholder": "Введите имя автора"
+                },
+                "version": {
+                    "label": "Версия",
+                    "placeholder": "1.0.0"
+                },
+                "description": {
+                    "label": "Описание",
+                    "placeholder": "Введите описание проекта"
+                },
+                "tags": {
+                    "label": "Теги",
+                    "placeholder": "Добавить тег",
+                    "addButton": "Добавить"
+                },
+                "envFile": {
+                    "label": "Загрузить файл окружения"
+                },
+                "envVariables": {
+                    "label": "Переменные окружения",
+                    "placeholder": "КЛЮЧ=значение\nДРУГОЙ_КЛЮЧ=другое_значение"
+                }
+            },
+            "errors": {
+                "nameRequired": "Название обязательно",
+                "versionInvalid": "Должна быть версия SemVer, например: (1.0.0)"
+            },
+            "fileUpload": {
+                "success": "Файл загружен",
+                "description": "{{fileName}} был загружен"
+            },
+            "actions": {
+                "cancel": "Отмена",
+                "submit": "Создать проект"
+            }
+        }
     }
 }
