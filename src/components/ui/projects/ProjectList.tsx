@@ -1,4 +1,5 @@
 import { ButtonGroup, EmptyState, SegmentGroup } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 import CreateProjectDialog from "@/components/ui/projects/CreateProjectDialog";
 import type { RepositoryKey } from "@/stores/projects";
 
@@ -10,6 +11,7 @@ interface ProjectListProps {
 }
 
 export function ProjectList({ selectedRepository, projects, selectedProject, onSelectProject }: ProjectListProps) {
+	const { t } = useTranslation();
 	const hasProjects =
 		selectedRepository &&
 		typeof projects[selectedRepository] !== "undefined" &&
@@ -20,7 +22,7 @@ export function ProjectList({ selectedRepository, projects, selectedProject, onS
 			<EmptyState.Root>
 				<EmptyState.Content>
 					<EmptyState.Indicator>
-						{selectedRepository ? "Проектов не найдено" : "Выберите репозиторий"}
+						{selectedRepository ? t("project.notFound") : t("project.repository.needSelect")}
 					</EmptyState.Indicator>
 					<EmptyState.Title />
 					<EmptyState.Description />

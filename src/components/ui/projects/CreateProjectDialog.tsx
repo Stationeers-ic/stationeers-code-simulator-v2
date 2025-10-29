@@ -13,34 +13,55 @@ interface CreateProjectDialogProps {
 export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 	const { t } = useTranslation();
 	const { getSelectedRepository, setSelectedProject } = useProjectStore();
+
 	const onSubmit = async (data: ProjectFormData): Promise<void> => {
 		try {
+			// Парсинг и валидация окружения
 			const env = v.safeParse(EnvSchema, JSON.parse(data.env || "{}"));
-			if (env.success) {
-				try {
-					await getSelectedRepository()?.save(env.output);
-					setSelectedProject(repository, data.name);
-					toaster.create({
-						title: t(""),
-						description: t(""),
-						type: "success",
-						duration: 3000,
-					});
-				} catch (e) {
-					toaster;
-					// toast: ошибка сохранения проверьте настройки репозитория
-				}
-			} else {
-				// toast вывести ошибки
+
+			if (!env.success) {
+				toaster.create({
+					title: t("project.create.env_error.title"),
+					description: t("project.create.env_error.description"),
+					type: "error",
+					duration: 5000,
+				});
+				return;
+			}
+
+			try {
+				// Сохранение проекта
+				await getSelectedRepository()?.save(env.output);
+				setSelectedProject(repository, data.name);
+
+				toaster.create({
+					title: t("project.create.success.title"),
+					description: t("project.create.success.description"),
+					type: "success",
+					duration: 3000,
+				});
+			} catch (saveError) {
+				toaster.create({
+					title: t("project.create.save_error.title"),
+					description: t("project.create.save_error.description"),
+					type: "error",
+					duration: 5000,
+				});
 			}
 		} catch (e) {
-			//toast: извените что то пошло не так
+			toaster.create({
+				title: t("project.create.unknown_error.title"),
+				description: t("project.create.unknown_error.description"),
+				type: "error",
+				duration: 5000,
+			});
 		}
 	};
+
 	return (
 		<Dialog.Root size="xl" closeOnInteractOutside={false}>
 			<Dialog.Trigger asChild>
-				<Button>Create project</Button>
+				<Button>{t("project.create.button")}</Button>
 			</Dialog.Trigger>
 
 			<Dialog.Backdrop />
@@ -54,6 +75,7 @@ export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 					<Dialog.Body>
 						<ProjectForm onSubmit={onSubmit} />
 					</Dialog.Body>
+
 					<Dialog.CloseTrigger asChild>
 						<CloseButton size="sm" />
 					</Dialog.CloseTrigger>
@@ -62,4 +84,5 @@ export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 		</Dialog.Root>
 	);
 }
+
 export default CreateProjectDialog;

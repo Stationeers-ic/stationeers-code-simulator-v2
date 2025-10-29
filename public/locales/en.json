@@ -55,19 +55,41 @@
   },
   "project": {
     "dialog": {
-      "header": "Create Project in '{{repository}}'"
+      "header": "Create Project in '$t(project.repository.name.{{repository}})'"
     },
     "repository": {
       "name": {
-        "localStorage": "Local Storage",
-        "gist": "Gist"
-      }
+        "localStorage": "Browser",
+        "gist": "gist.github.com"
+      },
+      "needSelect": "Please select a repository"
     },
     "header": {
       "repositories": "Repositories",
       "projects": "Projects",
       "preview": "Preview"
-    }
+    },
+    "create": {
+      "button": "Create project",
+      "env_error": {
+        "description": "Check that your environment settings are correct",
+        "title": "Validation error"
+      },
+      "save_error": {
+        "description": "Check your repository settings",
+        "title": "Save error"
+      },
+      "success": {
+        "description": "The project has been successfully created",
+        "title": "Success"
+      },
+      "unknown_error": {
+        "description": "Something went wrong",
+        "title": "Error"
+      }
+    },
+    "notFound": "Project not found",
+    "needSelect": "Please select a project"
   },
   "projectForm": {
     "fields": {
@@ -97,7 +119,7 @@
       },
       "envVariables": {
         "label": "Environment Variables",
-        "placeholder": "KEY=value\nANOTHER_KEY=another_value"
+        "placeholder": "{}"
       }
     },
     "errors": {
