@@ -11,7 +11,6 @@ import signal from "@/Signal";
 import "@/assets/main.scss";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { getInitialLanguage } from "@/stores/languageStore";
-
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
 
@@ -55,7 +54,6 @@ loader
 					<Toaster />
 					<LoadLang />
 					<PWABadge />
-
 					<RouterProvider router={router} />
 				</StrictMode>
 			</Provider>,

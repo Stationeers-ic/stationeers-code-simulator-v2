@@ -1,7 +1,7 @@
 import type { EnvSchema } from "@stationeers-ic/ic10";
-import { CodeStorage } from "./CodeStorage.class";
+import { Repo } from "./Repo.class";
 
-export class LocalStorageCodeStorage extends CodeStorage {
+export class LocalStorageCodeStorage extends Repo {
 	private static instance: LocalStorageCodeStorage;
 
 	private readonly storageKey = "code_storage_items";

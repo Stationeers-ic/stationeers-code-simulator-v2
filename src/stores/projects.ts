@@ -1,9 +1,10 @@
 import type { EnvSchema } from "@stationeers-ic/ic10";
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-
-export interface RepositoryConfig {
+import repoList from "@/core/repositories";
+import type { Repo } from "@/core/repositories/Repo.class";
+export type RepositoryConfig = {
 	localStorage: {
 		enable: boolean;
 	};
@@ -11,7 +12,7 @@ export interface RepositoryConfig {
 		enable: boolean;
 		token: string;
 	};
-}
+};
 export type RepositoryKey = keyof RepositoryConfig;
 export type ProjectLists = Record<RepositoryKey, Record<string, EnvSchema>>;
 
@@ -37,101 +38,120 @@ export interface ProjectStore {
 	updateGistProject: (id: string, project: EnvSchema) => void;
 
 	// Выбор методов
+	getSelectedRepository: () => Repo | undefined;
 	setSelectedRepository: (repository: RepositoryKey | null) => void;
 	setSelectedProject: (repository: RepositoryKey | null, project: string | null) => void;
 }
 
 export const useProjectStore = create<ProjectStore>()(
-	devtools(
-		immer((set) => ({
-			selectedRepository: null,
-			selectedProject: null,
-			repositories: {
-				localStorage: {
-					enable: true,
+	persist(
+		devtools(
+			immer((set, get) => ({
+				selectedRepository: null,
+				selectedProject: null,
+				repositories: {
+					localStorage: {
+						enable: true,
+					},
+					gist: {
+						enable: true,
+						token: "",
+					},
 				},
-				gist: {
-					enable: true,
-					token: "",
+				projects: {
+					localStorage: {},
+					gist: {},
 				},
-			},
-			projects: {
-				localStorage: {},
-				gist: {},
-			},
 
-			// Репозиторий методы
-			setLocalStorageEnable: (enable) =>
-				set((state) => {
-					state.repositories.localStorage.enable = enable;
-				}),
+				getSelectedRepository: () => {
+					const repo = get().selectedRepository;
+					if (repo && typeof repoList[repo] !== "undefined") {
+						return repoList[repo];
+					}
+					return undefined;
+				},
 
-			setGistEnable: (enable) =>
-				set((state) => {
-					state.repositories.gist.enable = enable;
-				}),
+				// Репозиторий методы
+				setLocalStorageEnable: (enable) =>
+					set((state) => {
+						state.repositories.localStorage.enable = enable;
+					}),
 
-			setGistToken: (token) =>
-				set((state) => {
-					state.repositories.gist.token = token;
-				}),
+				setGistEnable: (enable) =>
+					set((state) => {
+						state.repositories.gist.enable = enable;
+					}),
 
-			// Проекты методы
-			setLocalStorageProjects: (projects) =>
-				set((state) => {
-					state.projects.localStorage = projects;
-				}),
+				setGistToken: (token) =>
+					set((state) => {
+						state.repositories.gist.token = token;
+					}),
 
-			setGistProjects: (projects) =>
-				set((state) => {
-					state.projects.gist = projects;
-				}),
+				// Проекты методы
+				setLocalStorageProjects: (projects) =>
+					set((state) => {
+						state.projects.localStorage = projects;
+					}),
 
-			addLocalStorageProject: (id, project) =>
-				set((state) => {
-					state.projects.localStorage[id] = project;
-				}),
+				setGistProjects: (projects) =>
+					set((state) => {
+						state.projects.gist = projects;
+					}),
 
-			addGistProject: (id, project) =>
-				set((state) => {
-					state.projects.gist[id] = project;
-				}),
-
-			removeLocalStorageProject: (id) =>
-				set((state) => {
-					delete state.projects.localStorage[id];
-				}),
-
-			removeGistProject: (id) =>
-				set((state) => {
-					delete state.projects.gist[id];
-				}),
-
-			updateLocalStorageProject: (id, project) =>
-				set((state) => {
-					if (state.projects.localStorage[id]) {
+				addLocalStorageProject: (id, project) =>
+					set((state) => {
 						state.projects.localStorage[id] = project;
-					}
-				}),
+					}),
 
-			updateGistProject: (id, project) =>
-				set((state) => {
-					if (state.projects.gist[id]) {
+				addGistProject: (id, project) =>
+					set((state) => {
 						state.projects.gist[id] = project;
-					}
-				}),
+					}),
 
-			// Выбор методов
-			setSelectedRepository: (repository) =>
-				set((state) => {
-					state.selectedRepository = repository;
-				}),
+				removeLocalStorageProject: (id) =>
+					set((state) => {
+						delete state.projects.localStorage[id];
+					}),
 
-			setSelectedProject: (repository, project) =>
-				set((state) => {
-					state.selectedRepository = repository;
-					state.selectedProject = project;
-				}),
-		})),
+				removeGistProject: (id) =>
+					set((state) => {
+						delete state.projects.gist[id];
+					}),
+
+				updateLocalStorageProject: (id, project) =>
+					set((state) => {
+						if (state.projects.localStorage[id]) {
+							state.projects.localStorage[id] = project;
+						}
+					}),
+
+				updateGistProject: (id, project) =>
+					set((state) => {
+						if (state.projects.gist[id]) {
+							state.projects.gist[id] = project;
+						}
+					}),
+
+				// Выбор методов
+				setSelectedRepository: (repository) =>
+					set((state) => {
+						state.selectedRepository = repository;
+					}),
+
+				setSelectedProject: (repository, project) =>
+					set((state) => {
+						state.selectedRepository = repository;
+						state.selectedProject = project;
+					}),
+			})),
+		),
+		{
+			name: "project-store",
+			partialize: (state) => ({
+				selectedRepository: state.selectedRepository,
+				selectedProject: state.selectedProject,
+				repositories: state.repositories,
+			}),
+		},
 	),
 );

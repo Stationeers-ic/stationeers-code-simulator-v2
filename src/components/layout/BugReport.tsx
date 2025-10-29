@@ -1,11 +1,12 @@
 // components/ui/BugReportButton.tsx
-import { Box, Button, createToaster, IconButton, Input, Portal, Textarea, VStack } from "@chakra-ui/react";
+import { Box, Button, IconButton, Input, Portal, Textarea, VStack } from "@chakra-ui/react";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LuBug, LuX } from "react-icons/lu";
 import { useIc10Store } from "@/stores/ic10Store";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
 import { useTerminalStore } from "@/stores/terminalStore";
+import { toaster } from "../chakra/toaster";
 
 interface BugReportData {
 	email: string;
@@ -24,11 +25,6 @@ const INITIAL_FORM_STATE: BugReportData = {
 	debug_env: "",
 	terminal: "",
 };
-
-const toaster = createToaster({
-	placement: "top-end",
-	pauseOnPageIdle: true,
-});
 
 export const BugReportButton = () => {
 	const { t } = useTranslation();

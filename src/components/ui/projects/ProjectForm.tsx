@@ -13,13 +13,13 @@ import {
 	Textarea,
 	VStack,
 } from "@chakra-ui/react";
+import type { EnvSchema } from "@stationeers-ic/ic10";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { LuFileUp } from "react-icons/lu";
 import Field from "@/components/ui/field";
 import { JsonSchemaEditor } from "@/components/ui/JsonSchemaEditor";
 import { useEnvSchema } from "@/hooks/useJsonSchema";
-import { LuFileUp } from "react-icons/lu";
-import type { EnvSchema } from "@stationeers-ic/ic10";
 
 export interface ProjectFormData {
 	name: string;
@@ -32,7 +32,6 @@ export interface ProjectFormData {
 
 export interface ProjectFormProps {
 	onSubmit: (data: ProjectFormData) => void;
-	onCancel: () => void;
 }
 
 const semVerPattern =
@@ -43,7 +42,7 @@ const toaster = createToaster({
 	pauseOnPageIdle: true,
 });
 
-export const ProjectForm = ({ onSubmit, onCancel }: ProjectFormProps) => {
+export const ProjectForm = ({ onSubmit }: ProjectFormProps) => {
 	const { schema, schemaUri } = useEnvSchema();
 	const { t } = useTranslation();
 
