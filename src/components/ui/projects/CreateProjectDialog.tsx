@@ -48,6 +48,7 @@ export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 					type: "error",
 					duration: 5000,
 				});
+				console.error(saveError);
 			}
 		} catch (e) {
 			toaster.create({
@@ -56,6 +57,7 @@ export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 				type: "error",
 				duration: 5000,
 			});
+			console.error(e);
 		}
 	};
 

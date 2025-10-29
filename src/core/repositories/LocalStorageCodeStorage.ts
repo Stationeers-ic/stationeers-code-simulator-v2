@@ -1,7 +1,7 @@
 import type { EnvSchema } from "@stationeers-ic/ic10";
 import type { RepositoryKey } from "@/stores/projects";
 import { Repo, RepoItem } from "./Repo.class";
-
+import JSON5 from "json5";
 export class LocalStorageCodeStorage extends Repo {
 	get repoName(): RepositoryKey {
 		return "localStorage";
@@ -17,6 +17,7 @@ export class LocalStorageCodeStorage extends Repo {
 
 	private constructor() {
 		super();
+		this.sync();
 	}
 
 	private getStorageKey(name: string): string {
@@ -27,6 +28,7 @@ export class LocalStorageCodeStorage extends Repo {
 		const storageKey = this.getStorageKey(name);
 		const repoItem = new RepoItem(this.repoName, name, item);
 		localStorage.setItem(storageKey, JSON.stringify(repoItem));
+		await this.sync();
 	}
 
 	async load(name: string): Promise<RepoItem> {
@@ -55,7 +57,7 @@ export class LocalStorageCodeStorage extends Repo {
 				try {
 					const storedValue = localStorage.getItem(key);
 					if (storedValue) {
-						const parsed = JSON.parse(storedValue);
+						const parsed = JSON5.parse(storedValue);
 						if (parsed && parsed.name && parsed.env) {
 							items.push(new RepoItem(this.repoName, parsed.name, parsed.env));
 						}
@@ -78,7 +80,7 @@ export class LocalStorageCodeStorage extends Repo {
 		}
 
 		try {
-			const parsed = JSON.parse(storedValue);
+			const parsed = JSON5.parse(storedValue);
 			if (parsed && parsed.name && parsed.env) {
 				return new RepoItem(this.repoName, parsed.name, parsed.env);
 			}

@@ -1,5 +1,5 @@
 import type { EnvSchema } from "@stationeers-ic/ic10";
-import { type RepositoryKey, useProjectStore } from "@/stores/projects";
+import { projectStore, type RepositoryKey } from "@/stores/projects";
 
 export class RepoItem {
 	constructor(
@@ -7,6 +7,15 @@ export class RepoItem {
 		public name: string,
 		public env: EnvSchema,
 	) {}
+
+	toJson() {
+		try {
+			return JSON.stringify(this.env, null, 2);
+		} catch (error) {
+			console.error("Error converting RepoItem to JSON:", error);
+			return null;
+		}
+	}
 }
 
 export interface Repo {
@@ -22,11 +31,9 @@ export abstract class Repo {
 	protected constructor() {}
 
 	async sync(): Promise<void> {
-		const { addProject } = useProjectStore();
-
 		const list = await this.list();
 		for (const element of list) {
-			addProject(element);
+			projectStore.addProject(element);
 		}
 	}
 }

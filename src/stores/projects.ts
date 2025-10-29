@@ -1,4 +1,3 @@
-import type { EnvSchema } from "@stationeers-ic/ic10";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -14,8 +13,9 @@ export type RepositoryConfig = {
 	};
 };
 export type RepositoryKey = keyof RepositoryConfig;
-export type ProjectLists = Record<RepositoryKey, Record<string, EnvSchema>>;
-export const isRepositoryKey = (key: string): key is RepositoryKey => {
+export type ProjectLists = Record<RepositoryKey, Record<string, RepoItem>>;
+export const isRepositoryKey = (key: any): key is RepositoryKey => {
+	if (typeof key !== "string") return false;
 	return key in repoList;
 };
 export interface ProjectStore {
@@ -30,18 +30,20 @@ export interface ProjectStore {
 	setGistToken: (token: string) => void;
 
 	// Проекты методы
-	setLocalStorageProjects: (projects: Record<string, EnvSchema>) => void;
-	setGistProjects: (projects: Record<string, EnvSchema>) => void;
+	setLocalStorageProjects: (projects: Record<string, RepoItem>) => void;
+	setGistProjects: (projects: Record<string, RepoItem>) => void;
 	addProject: (project: RepoItem) => void;
 	removeLocalStorageProject: (id: string) => void;
 	removeGistProject: (id: string) => void;
-	updateLocalStorageProject: (id: string, project: EnvSchema) => void;
-	updateGistProject: (id: string, project: EnvSchema) => void;
+	updateLocalStorageProject: (id: string, project: RepoItem) => void;
+	updateGistProject: (id: string, project: RepoItem) => void;
 
 	// Выбор методов
-	getSelectedRepository: () => Repo | undefined;
 	setSelectedRepository: (repository: RepositoryKey | null) => void;
 	setSelectedProject: (repository: RepositoryKey | null, project: string | null) => void;
+
+	getSelectedRepository: () => Repo | null;
+	getSelectedProject: () => RepoItem | null;
 }
 
 export const useProjectStore = create<ProjectStore>()(
@@ -66,10 +68,25 @@ export const useProjectStore = create<ProjectStore>()(
 
 				getSelectedRepository: () => {
 					const repo = get().selectedRepository;
-					if (repo && typeof repoList[repo] !== "undefined") {
-						return repoList[repo];
+					if (!isRepositoryKey(repo)) {
+						return null;
 					}
-					return undefined;
+					return repoList[repo];
+				},
+				getSelectedProject: () => {
+					const repo = get().selectedRepository;
+					if (!isRepositoryKey(repo)) {
+						return null;
+					}
+					const project = get().selectedProject;
+					if (!project) {
+						return null;
+					}
+					const repoItem = get().projects[repo][project];
+					if (!repoItem) {
+						return null;
+					}
+					return repoItem;
 				},
 
 				// Репозиторий методы
@@ -122,7 +139,7 @@ export const useProjectStore = create<ProjectStore>()(
 						}
 
 						// Безопасное добавление
-						state.projects[repoKey][project.name] = project.env;
+						state.projects[repoKey][project.name] = project;
 					}),
 
 				removeLocalStorageProject: (id) =>
@@ -153,6 +170,7 @@ export const useProjectStore = create<ProjectStore>()(
 				setSelectedRepository: (repository) =>
 					set((state) => {
 						state.selectedRepository = repository;
+						state.selectedProject = null;
 					}),
 
 				setSelectedProject: (repository, project) =>
@@ -172,3 +190,7 @@ export const useProjectStore = create<ProjectStore>()(
 		},
 	),
 );
+
+export const projectStore = {
+	addProject: (project: RepoItem) => useProjectStore.getState().addProject(project),
+};

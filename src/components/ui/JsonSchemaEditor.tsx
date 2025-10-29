@@ -5,11 +5,12 @@ import { useRef } from "react";
 
 interface JsonSchemaEditorProps {
 	value: string;
-	onChange: (value: string | undefined) => void;
+	onChange?: (value: string | undefined) => void;
 	schema: any;
 	schemaUri: string;
 	theme?: string;
 	height?: string | number;
+	readOnly?: boolean;
 }
 
 export const JsonSchemaEditor = ({
@@ -17,6 +18,7 @@ export const JsonSchemaEditor = ({
 	onChange,
 	schema,
 	schemaUri,
+	readOnly = false,
 	theme = "ic10",
 	height = "100%",
 }: JsonSchemaEditorProps) => {
@@ -49,6 +51,7 @@ export const JsonSchemaEditor = ({
 				onChange={onChange}
 				language="json"
 				options={{
+					readOnly: readOnly,
 					minimap: { enabled: false },
 				}}
 				theme={theme}

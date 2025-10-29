@@ -1,4 +1,4 @@
-import { ButtonGroup, EmptyState, SegmentGroup } from "@chakra-ui/react";
+import { ButtonGroup, EmptyState, SegmentGroup, Separator, VStack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import CreateProjectDialog from "@/components/ui/projects/CreateProjectDialog";
 import type { RepositoryKey } from "@/stores/projects";
@@ -37,7 +37,9 @@ export function ProjectList({ selectedRepository, projects, selectedProject, onS
 	}
 
 	return (
-		<>
+		<VStack align="stretch">
+			<CreateProjectDialog repository={selectedRepository} />
+			<Separator />
 			<SegmentGroup.Root
 				orientation="vertical"
 				defaultValue={selectedProject || undefined}
@@ -56,9 +58,6 @@ export function ProjectList({ selectedRepository, projects, selectedProject, onS
 					}))}
 				/>
 			</SegmentGroup.Root>
-			<ButtonGroup mt={4}>
-				<CreateProjectDialog repository={selectedRepository} />
-			</ButtonGroup>
-		</>
+		</VStack>
 	);
 }
