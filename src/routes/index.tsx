@@ -3,7 +3,7 @@ import { Box, Grid, GridItem, HStack, Text, VStack } from "@chakra-ui/react";
 import Editor from "@monaco-editor/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import Chips from "@/components/ui/Chips";
+import Chips from "@/components/ui/chips";
 import { InitialEnvironmentEditor } from "@/components/ui/InitialEnvironmentEditor";
 import { Terminal } from "@/components/ui/Terminal";
 import { useIc10Store } from "@/stores/ic10Store";

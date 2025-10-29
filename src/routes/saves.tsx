@@ -10,7 +10,7 @@ export const Route = createFileRoute("/saves")({
 function Saves() {
 	const [saves, setSaves] = useState<StoredItem[]>([]);
 	useEffect(() => {
-		const stores = CodeStorages.map((storage) => storage.list());
+		const stores = Object.entries(CodeStorages).map(([_, storage]) => storage.list());
 		Promise.all(stores).then((results) => {
 			let _saves: StoredItem[] = [];
 			results.forEach((r: StoredItem[]) => {

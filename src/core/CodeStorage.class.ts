@@ -1,6 +1,6 @@
 export type StoredItem = {
 	name: string;
-	code: string;
+	env: string;
 	description?: string;
 };
 
@@ -56,7 +56,7 @@ export class LocalStorageCodeStorage extends CodeStorage {
 		if (!item) {
 			throw new Error(`Item with name "${name}" not found`);
 		}
-		return item.code;
+		return item.env;
 	}
 
 	async delete(name: string): Promise<string[]> {
@@ -86,4 +86,8 @@ export class LocalStorageCodeStorage extends CodeStorage {
 	}
 }
 
-export default [LocalStorageCodeStorage.getInstance()] as const;
+export const list: { [key: string]: CodeStorage } = {
+	LocalStorageCodeStorage: LocalStorageCodeStorage.getInstance(),
+} as const;
+
+export default list;
