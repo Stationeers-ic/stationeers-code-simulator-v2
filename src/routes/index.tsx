@@ -1,55 +1,35 @@
-// App.tsx
-import { Box, Grid, GridItem, HStack, Text, VStack } from "@chakra-ui/react";
-import Editor from "@monaco-editor/react";
+import { Grid, GridItem } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useTranslation } from "react-i18next";
-import Chips from "@/components/ui/chips";
-import { InitialEnvironmentEditor } from "@/components/ui/InitialEnvironmentEditor";
-import { Terminal } from "@/components/ui/Terminal";
-import { useIc10Store } from "@/stores/ic10Store";
+import { useEffect, useState } from "react";
+import CodeStorages, { type StoredItem } from "@/core/CodeStorage.class";
 
 export const Route = createFileRoute("/")({
-	component: Index,
+	component: Saves,
 });
 
-export function Index() {
-	const { t } = useTranslation();
-	// Получаем состояние и действия из хранилища
-	const { currentEnv } = useIc10Store();
-
+function Saves() {
+	const [saves, setSaves] = useState<StoredItem[]>([]);
+	useEffect(() => {
+		const stores = Object.entries(CodeStorages).map(([_, storage]) => storage.list());
+		Promise.all(stores).then((results) => {
+			let _saves: StoredItem[] = [];
+			results.forEach((r: StoredItem[]) => {
+				_saves = [..._saves, ...r];
+			});
+			setSaves(_saves);
+		});
+	}, []);
 	return (
-		<VStack align="stretch" className="test2">
-			<Grid templateColumns="2fr 1fr 1fr" gap={6} mb={6}>
-				{/* IC10 Code Editor */}
-				<GridItem>
-					<Chips />
-				</GridItem>
-				<GridItem>
-					<VStack align="stretch" height={"100%"}>
-						<HStack justify="space-between">
-							<Text fontWeight="bold">{t("app.currentEnvironment")}</Text>
-							<Box width="47px" height={35} />
-						</HStack>
-						<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
-							<Editor
-								value={currentEnv}
-								language="json"
-								options={{
-									minimap: { enabled: false },
-									readOnly: true,
-								}}
-								theme="ic10"
-							/>
-						</Box>
-					</VStack>
-				</GridItem>
-				<GridItem>
-					<InitialEnvironmentEditor />
-				</GridItem>
-			</Grid>
-			<Terminal />
-		</VStack>
+		<Grid templateColumns="repeat(6, 1fr)" gap={6} mb={6} w="100%" h="100%">
+			<GridItem h="100%">
+				{saves.map((s) => (
+					<>{s.name}</>
+				))}
+			</GridItem>
+			<GridItem h="100%">test2</GridItem>
+			<GridItem h="100%" colSpan={4}>
+				test3
+			</GridItem>
+		</Grid>
 	);
 }
-
-export default Index;
