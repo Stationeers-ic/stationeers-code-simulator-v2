@@ -2,6 +2,7 @@ import { Button, CloseButton, Dialog } from "@chakra-ui/react";
 import { EnvSchema } from "@stationeers-ic/ic10";
 import { useTranslation } from "react-i18next";
 import * as v from "valibot";
+import { toaster } from "@/components/chakra/toaster";
 import { ProjectForm, type ProjectFormData } from "@/components/ui/projects/ProjectForm";
 import { type RepositoryKey, useProjectStore } from "@/stores/projects";
 
@@ -11,14 +12,22 @@ interface CreateProjectDialogProps {
 
 export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 	const { t } = useTranslation();
-	const { getSelectedRepository } = useProjectStore();
+	const { getSelectedRepository, setSelectedProject } = useProjectStore();
 	const onSubmit = async (data: ProjectFormData): Promise<void> => {
 		try {
-			const env = v.safeParse(EnvSchema, JSON.parse(data?.env || "{}"));
+			const env = v.safeParse(EnvSchema, JSON.parse(data.env || "{}"));
 			if (env.success) {
 				try {
 					await getSelectedRepository()?.save(env.output);
+					setSelectedProject(repository, data.name);
+					toaster.create({
+						title: t(""),
+						description: t(""),
+						type: "success",
+						duration: 3000,
+					});
 				} catch (e) {
+					toaster;
 					// toast: ошибка сохранения проверьте настройки репозитория
 				}
 			} else {

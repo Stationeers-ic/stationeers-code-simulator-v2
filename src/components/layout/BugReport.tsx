@@ -3,10 +3,10 @@ import { Box, Button, IconButton, Input, Portal, Textarea, VStack } from "@chakr
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LuBug, LuX } from "react-icons/lu";
+import { toaster } from "@/components/chakra/toaster";
 import { useIc10Store } from "@/stores/ic10Store";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
 import { useTerminalStore } from "@/stores/terminalStore";
-import { toaster } from "../chakra/toaster";
 
 interface BugReportData {
 	email: string;
@@ -16,7 +16,7 @@ interface BugReportData {
 	terminal: string;
 }
 
-const WEBHOOK_URL = "https://n8n.traineratwot.site/webhook/b2f66dcc-a2a7-4ed1-9b2d-0261de8ca648";
+const WEBHOOK_URL = "http://192.168.100.61:5678/webhook-test/b2f66dcc-a2a7-4ed1-9b2d-0261de8ca648";
 
 const INITIAL_FORM_STATE: BugReportData = {
 	email: "",

@@ -27,7 +27,7 @@ export interface ProjectFormData {
 	description?: string;
 	version?: string;
 	tags?: string[];
-	env?: string;
+	env: string;
 }
 
 export interface ProjectFormProps {
@@ -97,11 +97,11 @@ export const ProjectForm = ({ onSubmit }: ProjectFormProps) => {
 		if (validateForm()) {
 			const submitData: ProjectFormData = {
 				name: formData.name,
+				env: formData.env,
 				...(formData.author && { author: formData.author }),
 				...(formData.description && { description: formData.description }),
 				...(formData.version && { version: formData.version }),
 				...(formData.tags && formData.tags.length > 0 && { tags: formData.tags }),
-				...(formData.env && { env: formData.env }),
 			};
 
 			onSubmit(submitData);
@@ -243,7 +243,7 @@ export const ProjectForm = ({ onSubmit }: ProjectFormProps) => {
 							<Field label={t("projectForm.fields.envVariables.label")} required>
 								<JsonSchemaEditor
 									value={formData.env || ""}
-									onChange={(value) => setFormData({ ...formData, env: value })}
+									onChange={(value) => setFormData({ ...formData, env: value ?? "" })}
 									height={"400px"}
 									schema={schema}
 									schemaUri={schemaUri}
