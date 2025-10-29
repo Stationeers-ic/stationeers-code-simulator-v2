@@ -1,5 +1,6 @@
 // stores/initialEnvStore.ts
 
+import JSON5 from "json5";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
@@ -146,7 +147,7 @@ const configToString = (config: EnvConfig): string => {
 // Вспомогательная функция для парсинга JSON строки в конфиг
 const stringToConfig = (str: string): EnvConfig | null => {
 	try {
-		const parsed = JSON.parse(str);
+		const parsed = JSON5.parse(str);
 		return {
 			version: parsed.version ?? startEnvConfig.version,
 			chips: parsed.chips ?? startEnvConfig.chips,

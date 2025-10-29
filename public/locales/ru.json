@@ -77,7 +77,7 @@
             "header": "Создание проекта в $t(project.repository.name.{{repository}})"
         },
         "header": {
-            "preview": "Предварительный просмотр",
+            "preview": "Просмотр",
             "projects": "Проекты",
             "repositories": "Репозитории"
         },

@@ -1,4 +1,6 @@
 // stores/languageStore.ts
+
+import JSON5 from "json5";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -33,7 +35,7 @@ export const getInitialLanguage = (): string => {
 	try {
 		const stored = localStorage.getItem("language-storage");
 		if (stored) {
-			const parsed = JSON.parse(stored);
+			const parsed = JSON5.parse(stored);
 			return parsed.state?.currentLanguage || getBrowserLanguage();
 		}
 	} catch (error) {

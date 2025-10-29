@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import repoList from "@/core/repositories";
-import type { Repo } from "@/core/repositories/Repo.class";
+import type { Repo, RepoItem } from "@/core/repositories/Repo.class";
 export type RepositoryConfig = {
 	localStorage: {
 		enable: boolean;
@@ -15,7 +15,9 @@ export type RepositoryConfig = {
 };
 export type RepositoryKey = keyof RepositoryConfig;
 export type ProjectLists = Record<RepositoryKey, Record<string, EnvSchema>>;
-
+export const isRepositoryKey = (key: string): key is RepositoryKey => {
+	return key in repoList;
+};
 export interface ProjectStore {
 	selectedRepository: RepositoryKey | null;
 	selectedProject: string | null;
@@ -30,8 +32,7 @@ export interface ProjectStore {
 	// Проекты методы
 	setLocalStorageProjects: (projects: Record<string, EnvSchema>) => void;
 	setGistProjects: (projects: Record<string, EnvSchema>) => void;
-	addLocalStorageProject: (id: string, project: EnvSchema) => void;
-	addGistProject: (id: string, project: EnvSchema) => void;
+	addProject: (project: RepoItem) => void;
 	removeLocalStorageProject: (id: string) => void;
 	removeGistProject: (id: string) => void;
 	updateLocalStorageProject: (id: string, project: EnvSchema) => void;
@@ -98,14 +99,30 @@ export const useProjectStore = create<ProjectStore>()(
 						state.projects.gist = projects;
 					}),
 
-				addLocalStorageProject: (id, project) =>
+				addProject: (project: RepoItem) =>
 					set((state) => {
-						state.projects.localStorage[id] = project;
-					}),
+						// Проверка типа репозитория
+						if (!isRepositoryKey(project.repo)) {
+							console.error(`Invalid repository: ${project.repo}`);
+							return;
+						}
 
-				addGistProject: (id, project) =>
-					set((state) => {
-						state.projects.gist[id] = project;
+						const repoKey = project.repo as RepositoryKey;
+
+						// Проверяем, что репозиторий включен
+						if (!state.repositories[repoKey]?.enable) {
+							console.error(`Repository ${repoKey} is disabled`);
+							return;
+						}
+
+						// Проверяем уникальность имени проекта
+						if (state.projects[repoKey][project.name]) {
+							console.error(`Project ${project.name} already exists in ${repoKey}`);
+							return;
+						}
+
+						// Безопасное добавление
+						state.projects[repoKey][project.name] = project.env;
 					}),
 
 				removeLocalStorageProject: (id) =>

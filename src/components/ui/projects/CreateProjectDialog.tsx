@@ -1,5 +1,6 @@
 import { Button, CloseButton, Dialog } from "@chakra-ui/react";
 import { EnvSchema } from "@stationeers-ic/ic10";
+import JSON5 from "json5";
 import { useTranslation } from "react-i18next";
 import * as v from "valibot";
 import { toaster } from "@/components/chakra/toaster";
@@ -17,7 +18,7 @@ export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 	const onSubmit = async (data: ProjectFormData): Promise<void> => {
 		try {
 			// Парсинг и валидация окружения
-			const env = v.safeParse(EnvSchema, JSON.parse(data.env || "{}"));
+			const env = v.safeParse(EnvSchema, JSON5.parse(data.env || "{}"));
 
 			if (!env.success) {
 				toaster.create({
@@ -31,7 +32,7 @@ export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 
 			try {
 				// Сохранение проекта
-				await getSelectedRepository()?.save(env.output);
+				await getSelectedRepository()?.save(data.name, env.output);
 				setSelectedProject(repository, data.name);
 
 				toaster.create({

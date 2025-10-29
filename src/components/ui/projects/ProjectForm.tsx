@@ -14,6 +14,7 @@ import {
 	VStack,
 } from "@chakra-ui/react";
 import type { EnvSchema } from "@stationeers-ic/ic10";
+import JSON5 from "json5";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LuFileUp } from "react-icons/lu";
@@ -57,7 +58,7 @@ export const ProjectForm = ({ onSubmit }: ProjectFormProps) => {
 	const setFormData = (data: ProjectFormData) => {
 		if (data?.env) {
 			try {
-				const env = JSON.parse(data.env) as EnvSchema;
+				const env = JSON5.parse(data.env) as EnvSchema;
 				if (typeof env.project === "undefined") {
 					env.project = {};
 				}
@@ -69,7 +70,9 @@ export const ProjectForm = ({ onSubmit }: ProjectFormProps) => {
 					env.project.tags = data.tags || undefined;
 				}
 				data.env = JSON.stringify(env, null, 2);
-			} catch (e) {}
+			} catch (e) {
+				console.error(e);
+			}
 		}
 		_setFormData(data);
 	};
