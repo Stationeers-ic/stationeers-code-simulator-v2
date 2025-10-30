@@ -1,138 +1,142 @@
 {
-    "app": {
-        "currentEnvironment": "Current Environment",
-        "initialEnvironment": "Initial Environment",
-        "reset": "Reset"
+  "app": {
+    "currentEnvironment": "Current Environment",
+    "initialEnvironment": "Initial Environment",
+    "reset": "Reset"
+  },
+  "menu": {
+    "step": "Step",
+    "initialize": "Initialize",
+    "reset": "Reset",
+    "saves": "Saves",
+    "settings": "Settings",
+    "main": "Main",
+    "projects": "Projects",
+    "editor": "Editor"
+  },
+  "terminal": {
+    "title": "Terminal Output",
+    "clear": "Clear",
+    "noOutput": "No output yet. Execute steps to see output…"
+  },
+  "ic10Code": {
+    "error": "Error",
+    "missingRunner": "Chip {{chipId}} is missing runner. Make sure the chip is properly initialized."
+  },
+  "docs": {
+    "title": "Docs",
+    "notFound": "Documentation not found",
+    "error": "Error loading documentation"
+  },
+  "bugReport": {
+    "title": "Report a bug",
+    "close": "Close",
+    "email": "Email",
+    "message": "Message",
+    "messagePlaceholder": "Describe the problem…",
+    "submit": "Submit",
+    "reportBug": "Report a bug",
+    "success": {
+      "title": "Successfully sent",
+      "description": "Thank you for your bug report!"
     },
-    "menu": {
-        "step": "Step",
-        "initialize": "Initialize",
-        "reset": "Reset",
-        "saves": "Saves",
-        "settings": "Settings",
-        "main": "Main",
-        "projects": "Projects",
-        "editor": "Editor"
-    },
-    "terminal": {
-        "title": "Terminal Output",
-        "clear": "Clear",
-        "noOutput": "No output yet. Execute steps to see output…"
-    },
-    "ic10Code": {
-        "error": "Error",
-        "missingRunner": "Chip {{chipId}} is missing runner. Make sure the chip is properly initialized."
-    },
-    "docs": {
-        "title": "Docs",
-        "notFound": "Documentation not found",
-        "error": "Error loading documentation"
-    },
-    "bugReport": {
-        "title": "Report a bug",
-        "close": "Close",
-        "email": "Email",
-        "message": "Message",
-        "messagePlaceholder": "Describe the problem…",
-        "submit": "Submit",
-        "reportBug": "Report a bug",
-        "success": {
-            "title": "Successfully sent",
-            "description": "Thank you for your bug report!"
-        },
-        "error": {
-            "title": "Error",
-            "description": "Failed to send report. Please try again later.",
-            "httpStatus": "HTTP error! status: {0}"
-        }
-    },
-    "pwa": {
-        "app-ready-to-work-offline": "App ready to work offline",
-        "close": "Close",
-        "new-content-available-click-reload-to-update": "New content available, click reload to update.",
-        "reload": "Reload",
-        "update-available": "Update Available"
-    },
-    "project": {
-        "dialog": {
-            "header": "Create Project in '$t(project.repository.name.{{repository}})'"
-        },
-        "repository": {
-            "name": {
-                "localStorage": "Browser",
-                "gist": "gist.github.com"
-            },
-            "needSelect": "Please select a repository"
-        },
-        "header": {
-            "repositories": "Repositories",
-            "projects": "Projects",
-            "preview": "Preview"
-        },
-        "create": {
-            "button": "Create project",
-            "env_error": {
-                "description": "Check that your environment settings are correct",
-                "title": "Validation error"
-            },
-            "save_error": {
-                "description": "Check your repository settings",
-                "title": "Save error"
-            },
-            "success": {
-                "description": "The project has been successfully created",
-                "title": "Success"
-            },
-            "unknown_error": {
-                "description": "Something went wrong",
-                "title": "Error"
-            }
-        },
-        "notFound": "Project not found",
-        "needSelect": "Please select a project"
-    },
-    "projectForm": {
-        "fields": {
-            "name": {
-                "label": "Project Name",
-                "placeholder": "Enter project name"
-            },
-            "author": {
-                "label": "Author",
-                "placeholder": "Enter author name"
-            },
-            "version": {
-                "label": "Version",
-                "placeholder": "1.0.0"
-            },
-            "description": {
-                "label": "Description",
-                "placeholder": "Enter project description"
-            },
-            "tags": {
-                "label": "Tags",
-                "placeholder": "Add a tag",
-                "addButton": "Add"
-            },
-            "envFile": {
-                "label": "Upload Environment File"
-            },
-            "envVariables": {
-                "label": "Environment Variables",
-                "placeholder": "{}"
-            }
-        },
-        "errors": {
-            "nameRequired": "Name is required",
-            "versionInvalid": "Must be SemVer eg: (1.0.0)"
-        },
-        "fileUpload": {
-            "success": "File uploaded",
-            "description": "{{fileName}} has been loaded"
-        },
-        "actions": {
-            "cancel": "Cancel",
-            "submit": "Create Project"
-        }
+    "error": {
+      "title": "Error",
+      "description": "Failed to send report. Please try again later.",
+      "httpStatus": "HTTP error! status: {0}"
     }
+  },
+  "pwa": {
+    "app-ready-to-work-offline": "App ready to work offline",
+    "close": "Close",
+    "new-content-available-click-reload-to-update": "New content available, click reload to update.",
+    "reload": "Reload",
+    "update-available": "Update Available"
+  },
+  "project": {
+    "dialog": {
+      "header": "Create Project in '$t(project.repository.name.{{repository}})'"
+    },
+    "repository": {
+      "name": {
+        "localStorage": "Browser",
+        "gist": "gist.github.com"
+      },
+      "needSelect": "Please select a repository"
+    },
+    "header": {
+      "repositories": "Repositories",
+      "projects": "Projects",
+      "preview": "Preview"
+    },
+    "create": {
+      "button": "Create project",
+      "env_error": {
+        "description": "Check that your environment settings are correct",
+        "title": "Validation error"
+      },
+      "save_error": {
+        "description": "Check your repository settings",
+        "title": "Save error"
+      },
+      "success": {
+        "description": "The project has been successfully created",
+        "title": "Success"
+      },
+      "unknown_error": {
+        "description": "Something went wrong",
+        "title": "Error"
+      },
+      "error": {
+        "exist_name": "This project name: '{{name}}' already exist in '$t(project.repository.name.{{repository}})'",
+        "exist_name_description": "Rename the project or edit exist"
+      }
+    },
+    "notFound": "Project not found",
+    "needSelect": "Please select a project"
+  },
+  "projectForm": {
+    "fields": {
+      "name": {
+        "label": "Project Name",
+        "placeholder": "Enter project name"
+      },
+      "author": {
+        "label": "Author",
+        "placeholder": "Enter author name"
+      },
+      "version": {
+        "label": "Version",
+        "placeholder": "1.0.0"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Enter project description"
+      },
+      "tags": {
+        "label": "Tags",
+        "placeholder": "Add a tag",
+        "addButton": "Add"
+      },
+      "envFile": {
+        "label": "Upload Environment File"
+      },
+      "envVariables": {
+        "label": "Environment Variables",
+        "placeholder": "{}"
+      }
+    },
+    "errors": {
+      "nameRequired": "Name is required",
+      "versionInvalid": "Must be SemVer eg: (1.0.0)"
+    },
+    "fileUpload": {
+      "success": "File uploaded",
+      "description": "{{fileName}} has been loaded"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "submit": "Create Project"
+    }
+  }
 }

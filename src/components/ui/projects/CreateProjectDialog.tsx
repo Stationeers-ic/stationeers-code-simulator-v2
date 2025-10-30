@@ -1,10 +1,11 @@
-import { Button, CloseButton, Dialog } from "@chakra-ui/react";
+import { Button, CloseButton, Dialog, HStack } from "@chakra-ui/react";
 import { EnvSchema } from "@stationeers-ic/ic10";
 import JSON5 from "json5";
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import * as v from "valibot";
 import { toaster } from "@/components/chakra/toaster";
-import { ProjectForm, type ProjectFormData } from "@/components/ui/projects/ProjectForm";
+import { ProjectForm, type ProjectFormRef } from "@/components/ui/projects/ProjectForm";
 import { type RepositoryKey, useProjectStore } from "@/stores/projects";
 
 interface CreateProjectDialogProps {
@@ -13,12 +14,34 @@ interface CreateProjectDialogProps {
 
 export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 	const { t } = useTranslation();
-	const { getSelectedRepository, setSelectedProject } = useProjectStore();
+	const { getSelectedRepository, setSelectedProject, getRepositoryProjects } = useProjectStore();
+	const formRef = useRef<ProjectFormRef>(null);
+	const submitRef = useRef<HTMLButtonElement>(null);
 
-	const onSubmit = async (data: ProjectFormData): Promise<void> => {
+	const handleSubmit = async (): Promise<void> => {
+		if (!formRef.current) return;
+
+		// Валидация формы
+		if (!formRef.current.validateForm()) {
+			return;
+		}
+
+		const formData = formRef.current.getFormData();
+		if (!formData) return;
+
 		try {
+			const exiestingProjects = getRepositoryProjects(repository);
+			if (exiestingProjects && Object.keys(exiestingProjects).includes(formData.name)) {
+				toaster.create({
+					title: t("project.create.error.exist_name", { name: formData.name, repository }),
+					description: t("project.create.error.exist_name_description"),
+					type: "error",
+					duration: 5000,
+				});
+				return;
+			}
 			// Парсинг и валидация окружения
-			const env = v.safeParse(EnvSchema, JSON5.parse(data.env || "{}"));
+			const env = v.safeParse(EnvSchema, JSON5.parse(formData.env || "{}"));
 
 			if (!env.success) {
 				toaster.create({
@@ -27,13 +50,14 @@ export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 					type: "error",
 					duration: 5000,
 				});
+				submitRef.current?.click();
 				return;
 			}
 
 			try {
 				// Сохранение проекта
-				await getSelectedRepository()?.save(data.name, env.output);
-				setSelectedProject(repository, data.name);
+				await getSelectedRepository()?.save(formData.name, env.output);
+				setSelectedProject(repository, formData.name);
 
 				toaster.create({
 					title: t("project.create.success.title"),
@@ -76,11 +100,19 @@ export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 					</Dialog.Header>
 
 					<Dialog.Body>
-						<ProjectForm onSubmit={onSubmit} />
+						<ProjectForm ref={formRef} />
 					</Dialog.Body>
 
+					<Dialog.Footer>
+						<HStack gap={3} justify="flex-end" pt={4} w="full">
+							<Button onClick={handleSubmit} colorPalette="blue" size="md" px={8}>
+								{t("projectForm.actions.submit")}
+							</Button>
+						</HStack>
+					</Dialog.Footer>
+
 					<Dialog.CloseTrigger asChild>
-						<CloseButton size="sm" />
+						<CloseButton ref={submitRef} size="sm" />
 					</Dialog.CloseTrigger>
 				</Dialog.Content>
 			</Dialog.Positioner>

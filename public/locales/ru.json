@@ -1,138 +1,142 @@
 {
-    "menu": {
-        "step": "Шаг",
-        "initialize": "Инициализировать",
-        "reset": "Рестарт",
-        "saves": "Сохранения",
-        "settings": "Настройки",
-        "main": "Главная",
-        "editor": "Редактор",
-        "projects": "Проекты"
+  "menu": {
+    "step": "Шаг",
+    "initialize": "Инициализировать",
+    "reset": "Рестарт",
+    "saves": "Сохранения",
+    "settings": "Настройки",
+    "main": "Главная",
+    "editor": "Редактор",
+    "projects": "Проекты"
+  },
+  "app": {
+    "currentEnvironment": "Текущее состояние",
+    "initialEnvironment": "Начально состояние",
+    "reset": "Сбросить"
+  },
+  "terminal": {
+    "title": "Вывод консоли",
+    "clear": "Очистить",
+    "noOutput": "Пока нет результатов. Выполните шаги, чтобы увидеть выход …"
+  },
+  "ic10Code": {
+    "missingRunner": "В чипе {{chipId}} отсутствует \"запускатор\". Убедитесь, что чип правильно инициализирован.",
+    "error": "Ошибка"
+  },
+  "docs": {
+    "title": "Документация",
+    "error": "Ошибка при загрузке документации",
+    "notFound": "Документация не найдена"
+  },
+  "bugReport": {
+    "message": "Сообщение",
+    "submit": "Отправить",
+    "title": "Сообщить об ошибке",
+    "close": "Закрыть",
+    "email": "Электронная почта",
+    "messagePlaceholder": "Опишите проблему…",
+    "reportBug": "Сообщить об ошибке",
+    "success": {
+      "title": "Успешно отправлен",
+      "description": "Спасибо за сообщение о баге!"
     },
-    "app": {
-        "currentEnvironment": "Текущее состояние",
-        "initialEnvironment": "Начально состояние",
-        "reset": "Сбросить"
-    },
-    "terminal": {
-        "title": "Вывод консоли",
-        "clear": "Очистить",
-        "noOutput": "Пока нет результатов. Выполните шаги, чтобы увидеть выход …"
-    },
-    "ic10Code": {
-        "missingRunner": "В чипе {{chipId}} отсутствует \"запускатор\". Убедитесь, что чип правильно инициализирован.",
-        "error": "Ошибка"
-    },
-    "docs": {
-        "title": "Документация",
-        "error": "Ошибка при загрузке документации",
-        "notFound": "Документация не найдена"
-    },
-    "bugReport": {
-        "message": "Сообщение",
-        "submit": "Отправить",
-        "title": "Сообщить об ошибке",
-        "close": "Закрыть",
-        "email": "Электронная почта",
-        "messagePlaceholder": "Опишите проблему…",
-        "reportBug": "Сообщить об ошибке",
-        "success": {
-            "title": "Успешно отправлен",
-            "description": "Спасибо за сообщение о баге!"
-        },
-        "error": {
-            "title": "Ошибка",
-            "description": "Не удалось отправить отчет. Пожалуйста, попробуйте еще раз позже.",
-            "httpStatus": "Ошибка HTTP! статус: {0}"
-        }
-    },
-    "pwa": {
-        "app-ready-to-work-offline": "Приложение готово к работе в автономном режиме",
-        "update-available": "Обновление доступно",
-        "new-content-available-click-reload-to-update": "Доступен новый контент, перезагрузка клика для обновления.",
-        "reload": "Перезагрузить",
-        "close": "Закрыть"
-    },
-    "project": {
-        "create": {
-            "button": "Создать проект",
-            "success": {
-                "title": "Успех",
-                "description": "Проект успешно создан"
-            },
-            "env_error": {
-                "title": "Ошибка валидации",
-                "description": "Проверьте корректность настроек окружения"
-            },
-            "save_error": {
-                "title": "Ошибка сохранения",
-                "description": "Проверьте настройки репозитория"
-            },
-            "unknown_error": {
-                "title": "Ошибка",
-                "description": "Что-то пошло не так"
-            }
-        },
-        "dialog": {
-            "header": "Создание проекта в $t(project.repository.name.{{repository}})"
-        },
-        "header": {
-            "preview": "Просмотр",
-            "projects": "Проекты",
-            "repositories": "Репозитории"
-        },
-        "repository": {
-            "name": {
-                "gist": "gist.github.com",
-                "localStorage": "Браузер"
-            },
-            "needSelect": "Пожалуйста, выберите репозиторий"
-        },
-        "notFound": "Проект не найден",
-        "needSelect": "Пожалуйста, выберите проект"
-    },
-    "projectForm": {
-        "fields": {
-            "name": {
-                "label": "Название проекта",
-                "placeholder": "Введите название проекта"
-            },
-            "author": {
-                "label": "Автор",
-                "placeholder": "Введите имя автора"
-            },
-            "version": {
-                "label": "Версия",
-                "placeholder": "1.0.0"
-            },
-            "description": {
-                "label": "Описание",
-                "placeholder": "Введите описание проекта"
-            },
-            "tags": {
-                "label": "Теги",
-                "placeholder": "Добавить тег",
-                "addButton": "Добавить"
-            },
-            "envFile": {
-                "label": "Загрузить файл окружения"
-            },
-            "envVariables": {
-                "label": "Переменные окружения",
-                "placeholder": "{}"
-            }
-        },
-        "errors": {
-            "nameRequired": "Название обязательно",
-            "versionInvalid": "Должна быть версия SemVer, например: (1.0.0)"
-        },
-        "fileUpload": {
-            "success": "Файл загружен",
-            "description": "{{fileName}} был загружен"
-        },
-        "actions": {
-            "cancel": "Отмена",
-            "submit": "Создать проект"
-        }
+    "error": {
+      "title": "Ошибка",
+      "description": "Не удалось отправить отчет. Пожалуйста, попробуйте еще раз позже.",
+      "httpStatus": "Ошибка HTTP! статус: {0}"
     }
+  },
+  "pwa": {
+    "app-ready-to-work-offline": "Приложение готово к работе в автономном режиме",
+    "update-available": "Обновление доступно",
+    "new-content-available-click-reload-to-update": "Доступен новый контент, перезагрузка клика для обновления.",
+    "reload": "Перезагрузить",
+    "close": "Закрыть"
+  },
+  "project": {
+    "create": {
+      "button": "Создать проект",
+      "success": {
+        "title": "Успех",
+        "description": "Проект успешно создан"
+      },
+      "env_error": {
+        "title": "Ошибка валидации",
+        "description": "Проверьте корректность настроек окружения"
+      },
+      "save_error": {
+        "title": "Ошибка сохранения",
+        "description": "Проверьте настройки репозитория"
+      },
+      "unknown_error": {
+        "title": "Ошибка",
+        "description": "Что-то пошло не так"
+      },
+      "error": {
+        "exist_name": "Это имя проекта: '{{name}}' уже существует в '$t(project.repository.name.{{repository}})'",
+        "exist_name_description": "Переименуйте проект или отредактируйте существующий"
+      }
+    },
+    "dialog": {
+      "header": "Создание проекта в $t(project.repository.name.{{repository}})"
+    },
+    "header": {
+      "preview": "Просмотр",
+      "projects": "Проекты",
+      "repositories": "Репозитории"
+    },
+    "repository": {
+      "name": {
+        "gist": "gist.github.com",
+        "localStorage": "Браузер"
+      },
+      "needSelect": "Пожалуйста, выберите репозиторий"
+    },
+    "notFound": "Проект не найден",
+    "needSelect": "Пожалуйста, выберите проект"
+  },
+  "projectForm": {
+    "fields": {
+      "name": {
+        "label": "Название проекта",
+        "placeholder": "Введите название проекта"
+      },
+      "author": {
+        "label": "Автор",
+        "placeholder": "Введите имя автора"
+      },
+      "version": {
+        "label": "Версия",
+        "placeholder": "1.0.0"
+      },
+      "description": {
+        "label": "Описание",
+        "placeholder": "Введите описание проекта"
+      },
+      "tags": {
+        "label": "Теги",
+        "placeholder": "Добавить тег",
+        "addButton": "Добавить"
+      },
+      "envFile": {
+        "label": "Загрузить файл окружения"
+      },
+      "envVariables": {
+        "label": "Переменные окружения",
+        "placeholder": "{}"
+      }
+    },
+    "errors": {
+      "nameRequired": "Название обязательно",
+      "versionInvalid": "Должна быть версия SemVer, например: (1.0.0)"
+    },
+    "fileUpload": {
+      "success": "Файл загружен",
+      "description": "{{fileName}} был загружен"
+    },
+    "actions": {
+      "cancel": "Отмена",
+      "submit": "Создать проект"
+    }
+  }
 }

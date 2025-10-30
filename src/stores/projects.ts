@@ -3,6 +3,7 @@ import { devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import repoList from "@/core/repositories";
 import type { Repo, RepoItem } from "@/core/repositories/Repo.class";
+import { initialEnvStore } from "./initialEnvStore";
 export type RepositoryConfig = {
 	localStorage: {
 		enable: boolean;
@@ -30,8 +31,6 @@ export interface ProjectStore {
 	setGistToken: (token: string) => void;
 
 	// Проекты методы
-	setLocalStorageProjects: (projects: Record<string, RepoItem>) => void;
-	setGistProjects: (projects: Record<string, RepoItem>) => void;
 	addProject: (project: RepoItem) => void;
 	removeLocalStorageProject: (id: string) => void;
 	removeGistProject: (id: string) => void;
@@ -44,6 +43,8 @@ export interface ProjectStore {
 
 	getSelectedRepository: () => Repo | null;
 	getSelectedProject: () => RepoItem | null;
+
+	getRepositoryProjects: (repo: RepositoryKey) => Record<string, RepoItem> | null;
 }
 
 export const useProjectStore = create<ProjectStore>()(
@@ -88,6 +89,12 @@ export const useProjectStore = create<ProjectStore>()(
 					}
 					return repoItem;
 				},
+				getRepositoryProjects: (repo) => {
+					if (!isRepositoryKey(repo)) {
+						return null;
+					}
+					return get().projects[repo];
+				},
 
 				// Репозиторий методы
 				setLocalStorageEnable: (enable) =>
@@ -103,17 +110,6 @@ export const useProjectStore = create<ProjectStore>()(
 				setGistToken: (token) =>
 					set((state) => {
 						state.repositories.gist.token = token;
-					}),
-
-				// Проекты методы
-				setLocalStorageProjects: (projects) =>
-					set((state) => {
-						state.projects.localStorage = projects;
-					}),
-
-				setGistProjects: (projects) =>
-					set((state) => {
-						state.projects.gist = projects;
 					}),
 
 				addProject: (project: RepoItem) =>
@@ -173,11 +169,18 @@ export const useProjectStore = create<ProjectStore>()(
 						state.selectedProject = null;
 					}),
 
-				setSelectedProject: (repository, project) =>
+				setSelectedProject: (repository, project) => {
 					set((state) => {
 						state.selectedRepository = repository;
 						state.selectedProject = project;
-					}),
+					});
+					const p = get().getSelectedProject();
+					if (p) {
+						initialEnvStore.setProject(p);
+					} else {
+						initialEnvStore.resetEnvConfig();
+					}
+				},
 			})),
 		),
 		{

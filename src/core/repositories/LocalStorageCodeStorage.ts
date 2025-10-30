@@ -1,7 +1,7 @@
 import type { EnvSchema } from "@stationeers-ic/ic10";
+import JSON5 from "json5";
 import type { RepositoryKey } from "@/stores/projects";
 import { Repo, RepoItem } from "./Repo.class";
-import JSON5 from "json5";
 export class LocalStorageCodeStorage extends Repo {
 	get repoName(): RepositoryKey {
 		return "localStorage";

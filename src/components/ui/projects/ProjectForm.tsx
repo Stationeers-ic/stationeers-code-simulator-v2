@@ -1,12 +1,10 @@
 import {
 	Box,
-	Button,
 	CloseButton,
 	createToaster,
 	FileUpload,
 	Grid,
 	GridItem,
-	HStack,
 	Input,
 	InputGroup,
 	TagsInput,
@@ -15,12 +13,13 @@ import {
 } from "@chakra-ui/react";
 import type { EnvSchema } from "@stationeers-ic/ic10";
 import JSON5 from "json5";
-import { useState } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LuFileUp } from "react-icons/lu";
 import Field from "@/components/ui/field";
 import { JsonSchemaEditor } from "@/components/ui/JsonSchemaEditor";
 import { useEnvSchema } from "@/hooks/useJsonSchema";
+import { configToString, startEnvConfig } from "@/stores/initialEnvStore";
 
 export interface ProjectFormData {
 	name: string;
@@ -32,7 +31,12 @@ export interface ProjectFormData {
 }
 
 export interface ProjectFormProps {
-	onSubmit: (data: ProjectFormData) => void;
+	initialData?: Partial<ProjectFormData>;
+}
+
+export interface ProjectFormRef {
+	getFormData: () => ProjectFormData | null;
+	validateForm: () => boolean;
 }
 
 const semVerPattern =
@@ -43,7 +47,7 @@ const toaster = createToaster({
 	pauseOnPageIdle: true,
 });
 
-export const ProjectForm = ({ onSubmit }: ProjectFormProps) => {
+export const ProjectForm = forwardRef<ProjectFormRef, ProjectFormProps>(({ initialData }, ref) => {
 	const { schema, schemaUri } = useEnvSchema();
 	const { t } = useTranslation();
 
@@ -53,8 +57,12 @@ export const ProjectForm = ({ onSubmit }: ProjectFormProps) => {
 		description: "",
 		version: "",
 		tags: [],
-		env: "",
+		env: configToString(startEnvConfig),
+		...initialData,
 	});
+
+	const [errors, setErrors] = useState<Partial<Record<keyof ProjectFormData, string>>>({});
+
 	const setFormData = (data: ProjectFormData) => {
 		if (data?.env) {
 			try {
@@ -77,8 +85,6 @@ export const ProjectForm = ({ onSubmit }: ProjectFormProps) => {
 		_setFormData(data);
 	};
 
-	const [errors, setErrors] = useState<Partial<Record<keyof ProjectFormData, string>>>({});
-
 	const validateForm = (): boolean => {
 		const newErrors: Partial<Record<keyof ProjectFormData, string>> = {};
 
@@ -94,22 +100,22 @@ export const ProjectForm = ({ onSubmit }: ProjectFormProps) => {
 		return Object.keys(newErrors).length === 0;
 	};
 
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-
-		if (validateForm()) {
-			const submitData: ProjectFormData = {
-				name: formData.name,
-				env: formData.env,
-				...(formData.author && { author: formData.author }),
-				...(formData.description && { description: formData.description }),
-				...(formData.version && { version: formData.version }),
-				...(formData.tags && formData.tags.length > 0 && { tags: formData.tags }),
-			};
-
-			onSubmit(submitData);
-		}
+	const getFormData = (): ProjectFormData => {
+		return {
+			name: formData.name,
+			env: formData.env,
+			...(formData.author && { author: formData.author }),
+			...(formData.description && { description: formData.description }),
+			...(formData.version && { version: formData.version }),
+			...(formData.tags && formData.tags.length > 0 && { tags: formData.tags }),
+		};
 	};
+
+	// Экспортируем методы через ref
+	useImperativeHandle(ref, () => ({
+		getFormData,
+		validateForm,
+	}));
 
 	const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
@@ -131,7 +137,7 @@ export const ProjectForm = ({ onSubmit }: ProjectFormProps) => {
 
 	return (
 		<Box asChild>
-			<form onSubmit={handleSubmit}>
+			<form>
 				<Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={6}>
 					{/* Left Column - Basic Information */}
 					<GridItem>
@@ -254,17 +260,8 @@ export const ProjectForm = ({ onSubmit }: ProjectFormProps) => {
 							</Field>
 						</VStack>
 					</GridItem>
-
-					{/* Action Buttons - Full Width */}
-					<GridItem colSpan={{ base: 1, md: 2 }}>
-						<HStack gap={3} justify="flex-end" pt={4} borderTop="1px solid" borderColor="gray.200">
-							<Button type="submit" colorPalette="blue" size="md" px={8}>
-								{t("projectForm.actions.submit")}
-							</Button>
-						</HStack>
-					</GridItem>
 				</Grid>
 			</form>
 		</Box>
 	);
-};
+});

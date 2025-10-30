@@ -1,8 +1,8 @@
-import { useProjectStore } from "@/stores/projects";
 import { EmptyState } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { JsonSchemaEditor } from "../JsonSchemaEditor";
 import { useEnvSchema } from "@/hooks/useJsonSchema";
+import { useProjectStore } from "@/stores/projects";
+import { JsonSchemaEditor } from "../JsonSchemaEditor";
 
 interface ProjectPreviewProps {
 	selectedProject: string | null;
