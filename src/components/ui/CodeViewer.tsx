@@ -1,5 +1,6 @@
 import Editor from "@monaco-editor/react";
 import type React from "react";
+import { json2string } from "@/helpers";
 
 interface JsonViewerProps {
 	data: object | string;
@@ -8,7 +9,7 @@ interface JsonViewerProps {
 }
 
 const CodeViewer: React.FC<JsonViewerProps> = ({ data, language, height = 400 }) => {
-	const jsonString = typeof data === "string" ? data : JSON.stringify(data, null, 2);
+	const jsonString = typeof data === "string" ? data : json2string(data);
 
 	return (
 		<Editor

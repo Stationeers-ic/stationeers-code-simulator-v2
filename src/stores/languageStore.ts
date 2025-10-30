@@ -1,8 +1,8 @@
 // stores/languageStore.ts
 
-import JSON5 from "json5";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { json2string, string2Json } from "@/helpers";
 
 interface LanguageState {
 	currentLanguage: string;
@@ -35,7 +35,7 @@ export const getInitialLanguage = (): string => {
 	try {
 		const stored = localStorage.getItem("language-storage");
 		if (stored) {
-			const parsed = JSON5.parse(stored);
+			const parsed = string2Json<any>(stored);
 			return parsed.state?.currentLanguage || getBrowserLanguage();
 		}
 	} catch (error) {
@@ -43,14 +43,7 @@ export const getInitialLanguage = (): string => {
 	}
 
 	const lang = getBrowserLanguage();
-	localStorage.setItem(
-		"language-storage",
-		JSON.stringify({
-			state: {
-				currentLanguage: lang,
-			},
-		}),
-	);
+	localStorage.setItem("language-storage", json2string({ state: { currentLanguage: lang } }, true));
 	return lang;
 };
 

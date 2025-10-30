@@ -1,5 +1,5 @@
 import type { EnvSchema } from "@stationeers-ic/ic10";
-import JSON5 from "json5";
+import { json2string, string2Json } from "@/helpers";
 import type { RepositoryKey } from "@/stores/projects";
 import { Repo, RepoItem } from "./Repo.class";
 export class LocalStorageCodeStorage extends Repo {
@@ -27,7 +27,7 @@ export class LocalStorageCodeStorage extends Repo {
 	async save(name: string, item: EnvSchema): Promise<void> {
 		const storageKey = this.getStorageKey(name);
 		const repoItem = new RepoItem(this.repoName, name, item);
-		localStorage.setItem(storageKey, JSON.stringify(repoItem));
+		localStorage.setItem(storageKey, json2string(repoItem, true));
 		await this.sync();
 	}
 
@@ -57,7 +57,7 @@ export class LocalStorageCodeStorage extends Repo {
 				try {
 					const storedValue = localStorage.getItem(key);
 					if (storedValue) {
-						const parsed = JSON5.parse(storedValue);
+						const parsed = string2Json<RepoItem>(storedValue);
 						if (parsed && parsed.name && parsed.env) {
 							items.push(new RepoItem(this.repoName, parsed.name, parsed.env));
 						}
@@ -80,7 +80,7 @@ export class LocalStorageCodeStorage extends Repo {
 		}
 
 		try {
-			const parsed = JSON5.parse(storedValue);
+			const parsed = string2Json<RepoItem>(storedValue);
 			if (parsed && parsed.name && parsed.env) {
 				return new RepoItem(this.repoName, parsed.name, parsed.env);
 			}

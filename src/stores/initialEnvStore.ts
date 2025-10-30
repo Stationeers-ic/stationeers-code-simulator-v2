@@ -1,10 +1,10 @@
 // stores/initialEnvStore.ts
 
 import type { EnvSchema } from "@stationeers-ic/ic10";
-import JSON5 from "json5";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import type { RepoItem } from "@/core/repositories/Repo.class";
+import { json2string, string2Json } from "@/helpers";
 
 export const startEnvConfig: EnvSchema = {
 	version: 1,
@@ -89,22 +89,16 @@ interface InitialEnvState {
 	setChipCode: (chipId: number, code: string) => void;
 }
 
-// Вспомогательная функция для создания JSON строки из конфига
 export const configToString = (config: EnvConfig): string => {
-	return JSON.stringify(
-		{
-			$schema: "https://raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Schemas/env.schema.json",
-			...config,
-		},
-		null,
-		3,
-	);
+	return json2string({
+		$schema: "https://raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Schemas/env.schema.json",
+		...config,
+	});
 };
 
-// Вспомогательная функция для парсинга JSON строки в конфиг
 const stringToConfig = (str: string): EnvConfig | null => {
 	try {
-		const parsed = JSON5.parse(str);
+		const parsed = string2Json<EnvConfig>(str);
 		return {
 			version: parsed.version ?? startEnvConfig.version,
 			project: parsed.project,
@@ -308,7 +302,7 @@ export const useInitialEnvStore = create<InitialEnvState>()(
 const state = useInitialEnvStore.getState();
 export const initialEnvStore = {
 	setProject: (project: RepoItem) => {
-		state.setInitialEnv(JSON.stringify(project.env));
+		state.setInitialEnv(json2string(project.env));
 		state.setHasChange(false);
 	},
 	resetEnvConfig: () => {

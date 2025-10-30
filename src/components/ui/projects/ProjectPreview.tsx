@@ -63,9 +63,7 @@ export function ProjectPreview({ project }: ProjectPreviewProps) {
 							<Input readOnly={true} value={project.env.project.tags} />
 						</Field.Root>
 					</Stack>
-				) : (
-					<></>
-				)}
+				) : null}
 			</Card.Body>
 			<Card.Footer justifyContent="flex-end">
 				{requireConfirm ? (

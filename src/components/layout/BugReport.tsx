@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LuBug, LuX } from "react-icons/lu";
 import { toaster } from "@/components/chakra/toaster";
+import { json2string } from "@/helpers";
 import { useIc10Store } from "@/stores/ic10Store";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
 import { useTerminalStore } from "@/stores/terminalStore";
@@ -72,7 +73,7 @@ export const BugReportButton = () => {
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(data),
+			body: json2string(data),
 		});
 
 		if (!response.ok) {

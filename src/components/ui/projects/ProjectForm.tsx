@@ -12,12 +12,12 @@ import {
 	VStack,
 } from "@chakra-ui/react";
 import type { EnvSchema } from "@stationeers-ic/ic10";
-import JSON5 from "json5";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LuFileUp } from "react-icons/lu";
 import Field from "@/components/ui/field";
 import { JsonSchemaEditor } from "@/components/ui/JsonSchemaEditor";
+import { json2string, string2Json } from "@/helpers";
 import { useEnvSchema } from "@/hooks/useJsonSchema";
 import { configToString, startEnvConfig } from "@/stores/initialEnvStore";
 
@@ -66,7 +66,7 @@ export const ProjectForm = forwardRef<ProjectFormRef, ProjectFormProps>(({ initi
 	const setFormData = (data: ProjectFormData) => {
 		if (data?.env) {
 			try {
-				const env = JSON5.parse(data.env) as EnvSchema;
+				const env = string2Json<EnvSchema>(data.env);
 				if (typeof env.project === "undefined") {
 					env.project = {};
 				}
@@ -77,7 +77,7 @@ export const ProjectForm = forwardRef<ProjectFormRef, ProjectFormProps>(({ initi
 				if (typeof data.tags !== "undefined" && data.tags.length > 0) {
 					env.project.tags = data.tags || undefined;
 				}
-				data.env = JSON.stringify(env, null, 2);
+				data.env = json2string(env);
 			} catch (e) {
 				console.error(e);
 			}

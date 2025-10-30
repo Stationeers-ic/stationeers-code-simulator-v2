@@ -1,5 +1,6 @@
 import type { EnvSchema } from "@stationeers-ic/ic10";
 import repoList from "@/core/repositories";
+import { json2string } from "@/helpers";
 import { projectStore, type RepositoryKey } from "@/stores/projects";
 export class RepoItem {
 	constructor(
@@ -10,7 +11,7 @@ export class RepoItem {
 
 	toJson() {
 		try {
-			return JSON.stringify(this.env, null, 2);
+			return json2string(this.env);
 		} catch (error) {
 			console.error("Error converting RepoItem to JSON:", error);
 			return null;
