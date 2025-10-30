@@ -1,4 +1,4 @@
-import { Button, CloseButton, Dialog, HStack, useDialog } from "@chakra-ui/react";
+import { Button, CloseButton, Dialog, HStack } from "@chakra-ui/react";
 import { EnvSchema } from "@stationeers-ic/ic10";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";

@@ -1,7 +1,9 @@
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, ButtonGroup, IconButton } from "@chakra-ui/react";
+import { LuTrash2 } from "react-icons/lu";
 import type { RepoItem } from "@/core/repositories/Repo.class";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
 import { type RepositoryKey, useProjectStore } from "@/stores/projects";
+import ConfirmButton from "../ConfirmButton";
 
 interface ProjectSelectItemProps {
 	repository: RepositoryKey;
@@ -44,9 +46,26 @@ export function ProjectSelectItem({ repository, projectKey, selected, onSelect }
 	);
 
 	return (
-		<Button variant={ussed ? "outline" : selected ? "surface" : "ghost"} position="relative" onClick={handleClick}>
-			{buttonContent}
-		</Button>
+		<ButtonGroup w={"100%"} position={"relative"}>
+			<Button
+				w={"calc(100% - 40px)"}
+				variant={ussed ? "outline" : selected ? "surface" : "ghost"}
+				onClick={handleClick}
+			>
+				{buttonContent}
+			</Button>
+			<ConfirmButton
+				onConfirm={(): void => {
+					throw new Error("Function not implemented.");
+				}}
+				confirmMessage={`delete project   ? ${projectKey}`}
+				confirmButtonText="delete"
+			>
+				<IconButton colorPalette={"red"} w={"40px"} variant="solid">
+					<LuTrash2 />
+				</IconButton>
+			</ConfirmButton>
+		</ButtonGroup>
 	);
 }
 
