@@ -83,7 +83,10 @@
       "repositories": "Репозитории"
     },
     "repository": {
-      "name": {},
+      "name": {
+        "gist": "gist.github.com",
+        "localStorage": "Браузер"
+      },
       "needSelect": "Пожалуйста, выберите репозиторий"
     },
     "notFound": "Проект не найден",

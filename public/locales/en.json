@@ -56,7 +56,10 @@
       "header": "Create Project in '$t(project.repository.name.{{repository}})'"
     },
     "repository": {
-      "name": {},
+      "name": {
+        "localStorage": "Browser",
+        "gist": "gist.github.com"
+      },
       "needSelect": "Please select a repository"
     },
     "header": {

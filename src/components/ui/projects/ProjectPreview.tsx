@@ -48,23 +48,19 @@ export function ProjectPreview({ project }: ProjectPreviewProps) {
 					<Stack gap="4" w="full">
 						<Field.Root hidden={!project.env.project?.name}>
 							<Field.Label>{t("projectForm.fields.name.label")}</Field.Label>
-							<Input value={project.env.project.name} />
+							<Input readOnly={true} value={project.env.project.name} />
 						</Field.Root>
 						<Field.Root hidden={!project.env.project?.author}>
 							<Field.Label>{t("projectForm.fields.author.label")}</Field.Label>
-							<Input value={project.env.project.author} />
+							<Input readOnly={true} value={project.env.project.author} />
 						</Field.Root>
 						<Field.Root hidden={!project.env.project?.version}>
 							<Field.Label>{t("projectForm.fields.version.label")}</Field.Label>
-							<Input value={project.env.project.version} />
-						</Field.Root>
-						<Field.Root hidden={!project.env.project?.description}>
-							<Field.Label>{t("projectForm.fields.description.label")}</Field.Label>
-							<Input value={project.env.project.description} />
+							<Input readOnly={true} value={project.env.project.version} />
 						</Field.Root>
 						<Field.Root hidden={!project.env.project?.tags}>
 							<Field.Label>{t("projectForm.fields.tags.label")}</Field.Label>
-							<Input value={project.env.project.tags} />
+							<Input readOnly={true} value={project.env.project.tags} />
 						</Field.Root>
 					</Stack>
 				) : (
