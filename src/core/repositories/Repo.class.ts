@@ -1,6 +1,6 @@
 import type { EnvSchema } from "@stationeers-ic/ic10";
 import { projectStore, type RepositoryKey } from "@/stores/projects";
-
+import repoList from "@/core/repositories";
 export class RepoItem {
 	constructor(
 		public repo: RepositoryKey,
@@ -15,6 +15,10 @@ export class RepoItem {
 			console.error("Error converting RepoItem to JSON:", error);
 			return null;
 		}
+	}
+
+	save(env: EnvSchema): void | Promise<void> {
+		return repoList[this.repo].save(this.name, env);
 	}
 }
 

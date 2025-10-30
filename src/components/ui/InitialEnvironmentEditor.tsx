@@ -4,12 +4,23 @@ import { useTranslation } from "react-i18next";
 import { JsonSchemaEditor } from "@/components/ui/JsonSchemaEditor";
 import { useEnvSchema } from "@/hooks/useJsonSchema";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
+import { useEffect } from "react";
+import { useProjectStore } from "@/stores/projects";
 
 export const InitialEnvironmentEditor = () => {
 	const { t } = useTranslation();
 	const { initialEnv, setInitialEnv, resetInitialEnv } = useInitialEnvStore();
+	const { selectedProject, getSelectedProject } = useProjectStore();
 	const { schema, schemaUri } = useEnvSchema();
 
+	useEffect(() => {
+		if (!initialEnv && selectedProject) {
+			const env = getSelectedProject()?.toJson();
+			if (env) {
+				setInitialEnv(env);
+			}
+		}
+	}, [initialEnv]);
 	return (
 		<VStack align="stretch" height={"100%"}>
 			<HStack justify="space-between">

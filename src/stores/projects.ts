@@ -188,4 +188,5 @@ export const useProjectStore = create<ProjectStore>()(
 
 export const projectStore = {
 	addProject: (project: RepoItem) => useProjectStore.getState().addProject(project),
+	getSelectedProject: (): RepoItem | null => useProjectStore.getState().getSelectedProject(),
 };
