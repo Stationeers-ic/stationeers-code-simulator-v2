@@ -1,6 +1,6 @@
-import { Button, CloseButton, Dialog, HStack } from "@chakra-ui/react";
+import { Button, CloseButton, Dialog, HStack, useDialog } from "@chakra-ui/react";
 import { EnvSchema } from "@stationeers-ic/ic10";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as v from "valibot";
 import { toaster } from "@/components/chakra/toaster";
@@ -16,7 +16,7 @@ export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 	const { t } = useTranslation();
 	const { getSelectedRepository, setSelectedProject, getRepositoryProjects } = useProjectStore();
 	const formRef = useRef<ProjectFormRef>(null);
-	const submitRef = useRef<HTMLButtonElement>(null);
+	const [isOpen, setIsOpen] = useState(false);
 
 	const handleSubmit = async (): Promise<void> => {
 		if (!formRef.current) return;
@@ -50,7 +50,6 @@ export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 					type: "error",
 					duration: 5000,
 				});
-				submitRef.current?.click();
 				return;
 			}
 
@@ -65,6 +64,7 @@ export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 					type: "success",
 					duration: 3000,
 				});
+				setIsOpen(false);
 			} catch (saveError) {
 				toaster.create({
 					title: t("project.create.save_error.title"),
@@ -86,7 +86,12 @@ export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 	};
 
 	return (
-		<Dialog.Root size="xl" closeOnInteractOutside={false}>
+		<Dialog.Root
+			open={isOpen}
+			onOpenChange={(details) => setIsOpen(details.open)}
+			size="xl"
+			closeOnInteractOutside={false}
+		>
 			<Dialog.Trigger asChild>
 				<Button>{t("project.create.button")}</Button>
 			</Dialog.Trigger>
@@ -112,7 +117,7 @@ export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 					</Dialog.Footer>
 
 					<Dialog.CloseTrigger asChild>
-						<CloseButton ref={submitRef} size="sm" />
+						<CloseButton size="sm" />
 					</Dialog.CloseTrigger>
 				</Dialog.Content>
 			</Dialog.Positioner>
