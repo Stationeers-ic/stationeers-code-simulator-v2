@@ -1,11 +1,12 @@
-import { ButtonGroup, EmptyState, SegmentGroup, Separator, VStack } from "@chakra-ui/react";
+import { ButtonGroup, EmptyState, Separator, VStack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import CreateProjectDialog from "@/components/ui/projects/CreateProjectDialog";
-import type { RepositoryKey } from "@/stores/projects";
+import ProjectSelectItem from "@/components/ui/projects/ProjectSelectItem";
+import type { ProjectLists, RepositoryKey } from "@/stores/projects";
 
 interface ProjectListProps {
 	selectedRepository: RepositoryKey | null;
-	projects: Record<string, Record<string, any>>;
+	projects: ProjectLists;
 	selectedProject: string | null;
 	onSelectProject: (repository: RepositoryKey, project: string) => void;
 }
@@ -40,24 +41,18 @@ export function ProjectList({ selectedRepository, projects, selectedProject, onS
 		<VStack align="stretch">
 			<CreateProjectDialog repository={selectedRepository} />
 			<Separator />
-			<SegmentGroup.Root
-				orientation="vertical"
-				defaultValue={selectedProject || undefined}
-				onValueChange={(e) => {
-					if (e.value && selectedRepository) {
-						onSelectProject(selectedRepository, e.value);
-					}
-				}}
-			>
-				<SegmentGroup.Indicator />
-				<SegmentGroup.Items
-					items={Object.entries(projects[selectedRepository]).map(([k, _v]) => ({
-						label: k,
-						value: k,
-						disabled: false,
-					}))}
-				/>
-			</SegmentGroup.Root>
+			<VStack align="stretch">
+				{Object.entries(projects[selectedRepository]).map(([k, v]) => (
+					<ProjectSelectItem
+						key={k}
+						repository={selectedRepository}
+						projectKey={k}
+						project={v}
+						selected={selectedProject === k}
+						onSelect={onSelectProject}
+					/>
+				))}
+			</VStack>
 		</VStack>
 	);
 }

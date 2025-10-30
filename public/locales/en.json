@@ -54,6 +54,7 @@
     "update-available": "Update Available"
   },
   "project": {
+    "unsavedChangesWarning": "You have unsaved changes. If you switch projects, your changes will be lost. Do you want to continue?",
     "dialog": {
       "header": "Create Project in '$t(project.repository.name.{{repository}})'"
     },
@@ -138,5 +139,9 @@
       "cancel": "Cancel",
       "submit": "Create Project"
     }
+  },
+  "common": {
+    "cancel": "Cancel",
+    "continue": "Continue"
   }
 }

@@ -64,6 +64,8 @@ type EnvConfig = EnvSchema;
 interface InitialEnvState {
 	// Старый API - для обратной совместимости
 	initialEnv: string;
+	hasChange: boolean;
+	setHasChange: (hasChange: boolean) => void;
 	setInitialEnv: (env: string) => void;
 	getInitialEnv: () => string;
 	resetInitialEnv: () => void;
@@ -116,178 +118,202 @@ const stringToConfig = (str: string): EnvConfig | null => {
 };
 
 export const useInitialEnvStore = create<InitialEnvState>()(
-	devtools((set, get) => ({
-		// Инициализация старых полей
-		initialEnv: "",
+	devtools(
+		(set, get) => ({
+			// Инициализация старых полей
+			initialEnv: "",
+			hasChange: false,
 
-		// Инициализация новых полей
-		version: startEnvConfig.version,
-		project: undefined,
-		chips: startEnvConfig.chips,
-		devices: startEnvConfig.devices,
-		networks: startEnvConfig.networks,
+			// Инициализация новых полей
+			version: startEnvConfig.version,
+			project: undefined,
+			chips: startEnvConfig.chips,
+			devices: startEnvConfig.devices,
+			networks: startEnvConfig.networks,
 
-		setInitialEnv: (initialEnv) => {
-			const trimmed = initialEnv.trim();
-			const config = stringToConfig(trimmed);
-			console.log(initialEnv.length);
-			if (config) {
+			setHasChange: (hasChange) => {
+				set({ hasChange });
+			},
+
+			setInitialEnv: (initialEnv) => {
+				const trimmed = initialEnv.trim();
+				const config = stringToConfig(trimmed);
+				if (config) {
+					set({
+						hasChange: true,
+						initialEnv: configToString(config),
+						version: config.version,
+						project: config.project,
+						chips: config.chips,
+						devices: config.devices,
+						networks: config.networks,
+					});
+				} else {
+					set({ initialEnv: trimmed });
+				}
+			},
+
+			getInitialEnv: () => get().initialEnv,
+
+			resetInitialEnv: () =>
 				set({
-					initialEnv: configToString(config),
-					version: config.version,
-					project: config.project,
-					chips: config.chips,
-					devices: config.devices,
-					networks: config.networks,
-				});
-			} else {
-				set({ initialEnv: trimmed });
-			}
+					hasChange: true,
+					initialEnv: configToString(startEnvConfig),
+					version: startEnvConfig.version,
+					chips: startEnvConfig.chips,
+					devices: startEnvConfig.devices,
+					networks: startEnvConfig.networks,
+				}),
+
+			// Новый API - обновление отдельных блоков
+			setVersion: (version) =>
+				set((state) => {
+					const newConfig = {
+						version,
+						chips: state.chips,
+						devices: state.devices,
+						networks: state.networks,
+					};
+					return {
+						version,
+						hasChange: true,
+						initialEnv: configToString(newConfig),
+					};
+				}),
+
+			setChips: (chips) =>
+				set((state) => {
+					const newConfig = {
+						version: state.version,
+						chips,
+						devices: state.devices,
+						networks: state.networks,
+					};
+					return {
+						chips,
+						hasChange: true,
+						initialEnv: configToString(newConfig),
+					};
+				}),
+
+			setDevices: (devices) =>
+				set((state) => {
+					const newConfig = {
+						version: state.version,
+						chips: state.chips,
+						devices,
+						networks: state.networks,
+					};
+					return {
+						devices,
+						hasChange: true,
+						initialEnv: configToString(newConfig),
+					};
+				}),
+
+			setNetworks: (networks) =>
+				set((state) => {
+					const newConfig = {
+						version: state.version,
+						chips: state.chips,
+						devices: state.devices,
+						networks,
+					};
+					return {
+						networks,
+						hasChange: true,
+						initialEnv: configToString(newConfig),
+					};
+				}),
+
+			// Получение конфига как объекта
+			getEnvConfig: () => {
+				const state = get();
+				return {
+					version: state.version,
+					chips: state.chips,
+					devices: state.devices,
+					networks: state.networks,
+				};
+			},
+
+			// Обновление нескольких блоков одновременно
+			setEnvConfig: (config) =>
+				set((state) => {
+					const newConfig = {
+						version: config.version ?? state.version,
+						chips: config.chips ?? state.chips,
+						devices: config.devices ?? state.devices,
+						networks: config.networks ?? state.networks,
+					};
+					return {
+						...newConfig,
+						hasChange: true,
+						initialEnv: configToString(newConfig),
+					};
+				}),
+
+			// Сброс к начальным значениям
+			resetEnvConfig: () =>
+				set({
+					initialEnv: "",
+					version: undefined,
+					project: undefined,
+					chips: undefined,
+					devices: undefined,
+					networks: undefined,
+				}),
+
+			// Установка кода для конкретного чипа по ID
+			setChipCode: (chipId: number, code: string) =>
+				set((state) => {
+					// Проверяем, существует ли чип с таким ID
+					const chipIndex = state.chips.findIndex((chip) => chip.id === chipId);
+					if (chipIndex === -1) {
+						return state; // Чип не найден - возвращаем состояние без изменений
+					}
+
+					// Проверяем, изменился ли код
+					const currentChip = state.chips[chipIndex];
+					if (currentChip.code === code) {
+						return state; // Код не изменился - возвращаем состояние без изменений
+					}
+
+					// Создаем новый массив chips с обновленным чипом
+					const newChips = [...state.chips];
+					newChips[chipIndex] = {
+						...currentChip,
+						code,
+					};
+
+					const newConfig = {
+						version: state.version,
+						chips: newChips,
+						devices: state.devices,
+						networks: state.networks,
+					};
+
+					return {
+						hasChange: true,
+						chips: newChips,
+						initialEnv: configToString(newConfig),
+					};
+				}),
+		}),
+		{
+			name: "initial-env-store",
 		},
-
-		getInitialEnv: () => get().initialEnv,
-
-		resetInitialEnv: () =>
-			set({
-				initialEnv: configToString(startEnvConfig),
-				version: startEnvConfig.version,
-				chips: startEnvConfig.chips,
-				devices: startEnvConfig.devices,
-				networks: startEnvConfig.networks,
-			}),
-
-		// Новый API - обновление отдельных блоков
-		setVersion: (version) =>
-			set((state) => {
-				const newConfig = {
-					version,
-					chips: state.chips,
-					devices: state.devices,
-					networks: state.networks,
-				};
-				return {
-					version,
-					initialEnv: configToString(newConfig),
-				};
-			}),
-
-		setChips: (chips) =>
-			set((state) => {
-				const newConfig = {
-					version: state.version,
-					chips,
-					devices: state.devices,
-					networks: state.networks,
-				};
-				return {
-					chips,
-					initialEnv: configToString(newConfig),
-				};
-			}),
-
-		setDevices: (devices) =>
-			set((state) => {
-				const newConfig = {
-					version: state.version,
-					chips: state.chips,
-					devices,
-					networks: state.networks,
-				};
-				return {
-					devices,
-					initialEnv: configToString(newConfig),
-				};
-			}),
-
-		setNetworks: (networks) =>
-			set((state) => {
-				const newConfig = {
-					version: state.version,
-					chips: state.chips,
-					devices: state.devices,
-					networks,
-				};
-				return {
-					networks,
-					initialEnv: configToString(newConfig),
-				};
-			}),
-
-		// Получение конфига как объекта
-		getEnvConfig: () => {
-			const state = get();
-			return {
-				version: state.version,
-				chips: state.chips,
-				devices: state.devices,
-				networks: state.networks,
-			};
-		},
-
-		// Обновление нескольких блоков одновременно
-		setEnvConfig: (config) =>
-			set((state) => {
-				const newConfig = {
-					version: config.version ?? state.version,
-					chips: config.chips ?? state.chips,
-					devices: config.devices ?? state.devices,
-					networks: config.networks ?? state.networks,
-				};
-				return {
-					...newConfig,
-					initialEnv: configToString(newConfig),
-				};
-			}),
-
-		// Сброс к начальным значениям
-		resetEnvConfig: () =>
-			set({
-				initialEnv: "",
-				version: undefined,
-				project: undefined,
-				chips: undefined,
-				devices: undefined,
-				networks: undefined,
-			}),
-
-		// Установка кода для конкретного чипа по ID
-		setChipCode: (chipId: number, code: string) =>
-			set((state) => {
-				// Проверяем, существует ли чип с таким ID
-				const chipIndex = state.chips.findIndex((chip) => chip.id === chipId);
-				if (chipIndex === -1) {
-					return state; // Чип не найден - возвращаем состояние без изменений
-				}
-
-				// Проверяем, изменился ли код
-				const currentChip = state.chips[chipIndex];
-				if (currentChip.code === code) {
-					return state; // Код не изменился - возвращаем состояние без изменений
-				}
-
-				// Создаем новый массив chips с обновленным чипом
-				const newChips = [...state.chips];
-				newChips[chipIndex] = {
-					...currentChip,
-					code,
-				};
-
-				const newConfig = {
-					version: state.version,
-					chips: newChips,
-					devices: state.devices,
-					networks: state.networks,
-				};
-
-				return {
-					chips: newChips,
-					initialEnv: configToString(newConfig),
-				};
-			}),
-	})),
+	),
 );
+const state = useInitialEnvStore.getState();
 export const initialEnvStore = {
-	setProject: (project: RepoItem) => useInitialEnvStore.getState().setInitialEnv(JSON.stringify(project.env)),
-	resetEnvConfig: () => useInitialEnvStore.getState().resetEnvConfig(),
-	getInitialEnv: () => useInitialEnvStore.getState().getInitialEnv(),
+	setProject: (project: RepoItem) => {
+		state.setInitialEnv(JSON.stringify(project.env));
+		state.setHasChange(false);
+	},
+	resetEnvConfig: () => {
+		state.resetEnvConfig();
+		state.setHasChange(false);
+	},
+	getInitialEnv: () => state.getInitialEnv(),
 };
