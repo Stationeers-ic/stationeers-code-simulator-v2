@@ -2,13 +2,14 @@ import { ButtonGroup, EmptyState, Separator, VStack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import CreateProjectDialog from "@/components/ui/projects/CreateProjectDialog";
 import ProjectSelectItem from "@/components/ui/projects/ProjectSelectItem";
+import type { RepoItem } from "@/core/repositories/Repo.class";
 import type { ProjectLists, RepositoryKey } from "@/stores/projects";
 
 interface ProjectListProps {
 	selectedRepository: RepositoryKey | null;
 	projects: ProjectLists;
-	selectedProject: string | null;
-	onSelectProject: (repository: RepositoryKey, project: string) => void;
+	selectedProject: RepoItem | null;
+	onSelectProject: (project: RepoItem) => void;
 }
 
 export function ProjectList({ selectedRepository, projects, selectedProject, onSelectProject }: ProjectListProps) {
@@ -48,7 +49,7 @@ export function ProjectList({ selectedRepository, projects, selectedProject, onS
 						repository={selectedRepository}
 						projectKey={k}
 						project={v}
-						selected={selectedProject === k}
+						selected={!!selectedProject && selectedProject.name === k}
 						onSelect={onSelectProject}
 					/>
 				))}

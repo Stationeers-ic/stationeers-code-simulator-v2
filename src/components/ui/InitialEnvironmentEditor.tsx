@@ -1,10 +1,10 @@
 // components/InitialEnvironmentEditor.tsx
 import { Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { JsonSchemaEditor } from "@/components/ui/JsonSchemaEditor";
 import { useEnvSchema } from "@/hooks/useJsonSchema";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
-import { useEffect } from "react";
 import { useProjectStore } from "@/stores/projects";
 
 export const InitialEnvironmentEditor = () => {

@@ -3,8 +3,8 @@ import { Button, HStack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { LuPlay, LuRedo } from "react-icons/lu";
 import { useInitIc10 } from "@/components/hooks/initIc10";
-import { useIc10Store } from "@/stores/ic10Store";
 import Save from "@/components/ui/chips/Save";
+import { useIc10Store } from "@/stores/ic10Store";
 
 export default function ChipActions() {
 	const { t } = useTranslation();

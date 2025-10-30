@@ -1,6 +1,6 @@
 import type { EnvSchema } from "@stationeers-ic/ic10";
-import { projectStore, type RepositoryKey } from "@/stores/projects";
 import repoList from "@/core/repositories";
+import { projectStore, type RepositoryKey } from "@/stores/projects";
 export class RepoItem {
 	constructor(
 		public repo: RepositoryKey,

@@ -1,33 +1,34 @@
 import { Box, Button } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
-import { ConfirmButton } from "@/components/ui/ConfirmButton";
 import type { RepoItem } from "@/core/repositories/Repo.class";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
-import type { RepositoryKey } from "@/stores/projects";
+import { type RepositoryKey, useProjectStore } from "@/stores/projects";
 
 interface ProjectSelectItemProps {
 	repository: RepositoryKey;
 	projectKey: string;
 	selected: boolean;
 	project: RepoItem;
-	onSelect: (repository: RepositoryKey, project: string) => void;
+	onSelect: (project: RepoItem) => void;
 }
 
 export function ProjectSelectItem({ repository, projectKey, selected, onSelect }: ProjectSelectItemProps) {
 	const { hasChange } = useInitialEnvStore();
-	const { t } = useTranslation();
-
+	const { getProject, selectedProject } = useProjectStore();
+	const ussed = projectKey === selectedProject;
 	const handleClick = () => {
 		if (selected) {
 			return;
 		}
-		onSelect(repository, projectKey);
+		const project = getProject(repository, projectKey);
+		if (project) {
+			onSelect(project);
+		}
 	};
 
 	const buttonContent = (
 		<>
 			{projectKey}
-			{selected && hasChange && (
+			{ussed && hasChange && (
 				<Box
 					position="absolute"
 					top="4px"
@@ -42,28 +43,8 @@ export function ProjectSelectItem({ repository, projectKey, selected, onSelect }
 		</>
 	);
 
-	if (!selected && hasChange) {
-		return (
-			<ConfirmButton
-				onConfirm={handleClick}
-				confirmMessage={t("project.unsavedChangesWarning")}
-				confirmButtonText={t("common.continue")}
-				cancelButtonText={t("common.cancel")}
-			>
-				<Button variant="ghost" cursor="pointer">
-					{projectKey}
-				</Button>
-			</ConfirmButton>
-		);
-	}
-
 	return (
-		<Button
-			variant={selected ? "surface" : "ghost"}
-			position="relative"
-			cursor={selected ? "default" : "pointer"}
-			onClick={handleClick}
-		>
+		<Button variant={ussed ? "outline" : selected ? "surface" : "ghost"} position="relative" onClick={handleClick}>
 			{buttonContent}
 		</Button>
 	);

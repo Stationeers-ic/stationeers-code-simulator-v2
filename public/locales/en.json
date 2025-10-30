@@ -8,9 +8,7 @@
     "step": "Step",
     "initialize": "Initialize",
     "reset": "Reset",
-    "saves": "Saves",
     "settings": "Settings",
-    "main": "Main",
     "projects": "Projects",
     "editor": "Editor",
     "saved": "Saved",
@@ -21,10 +19,7 @@
     "clear": "Clear",
     "noOutput": "No output yet. Execute steps to see output…"
   },
-  "ic10Code": {
-    "error": "Error",
-    "missingRunner": "Chip {{chipId}} is missing runner. Make sure the chip is properly initialized."
-  },
+  "ic10Code": {},
   "docs": {
     "title": "Docs",
     "notFound": "Documentation not found",
@@ -61,10 +56,7 @@
       "header": "Create Project in '$t(project.repository.name.{{repository}})'"
     },
     "repository": {
-      "name": {
-        "localStorage": "Browser",
-        "gist": "gist.github.com"
-      },
+      "name": {},
       "needSelect": "Please select a repository"
     },
     "header": {
@@ -96,7 +88,8 @@
       }
     },
     "notFound": "Project not found",
-    "needSelect": "Please select a project"
+    "needSelect": "Please select a project",
+    "run_edit": "Start edit"
   },
   "projectForm": {
     "fields": {
@@ -118,15 +111,13 @@
       },
       "tags": {
         "label": "Tags",
-        "placeholder": "Add a tag",
-        "addButton": "Add"
+        "placeholder": "Add a tag"
       },
       "envFile": {
         "label": "Upload Environment File"
       },
       "envVariables": {
-        "label": "Environment Variables",
-        "placeholder": "{}"
+        "label": "Environment Variables"
       }
     },
     "errors": {
@@ -138,7 +129,6 @@
       "description": "{{fileName}} has been loaded"
     },
     "actions": {
-      "cancel": "Cancel",
       "submit": "Create Project"
     }
   },

@@ -42,6 +42,7 @@ export interface ProjectStore {
 
 	getSelectedRepository: () => Repo | null;
 	getSelectedProject: () => RepoItem | null;
+	getProject: (repository: RepositoryKey, project: string) => RepoItem | null;
 
 	getRepositoryProjects: (repo: RepositoryKey) => Record<string, RepoItem> | null;
 }
@@ -80,6 +81,16 @@ export const useProjectStore = create<ProjectStore>()(
 					}
 					const project = get().selectedProject;
 					if (!project) {
+						return null;
+					}
+					const repoItem = get().projects[repo][project];
+					if (!repoItem) {
+						return null;
+					}
+					return repoItem;
+				},
+				getProject(repo, project) {
+					if (!isRepositoryKey(repo)) {
 						return null;
 					}
 					const repoItem = get().projects[repo][project];
