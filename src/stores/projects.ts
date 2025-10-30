@@ -38,7 +38,6 @@ export interface ProjectStore {
 	updateGistProject: (id: string, project: RepoItem) => void;
 
 	// Выбор методов
-	setSelectedRepository: (repository: RepositoryKey | null) => void;
 	setSelectedProject: (repository: RepositoryKey | null, project: string | null) => void;
 
 	getSelectedRepository: () => Repo | null;
@@ -160,13 +159,6 @@ export const useProjectStore = create<ProjectStore>()(
 						if (state.projects.gist[id]) {
 							state.projects.gist[id] = project;
 						}
-					}),
-
-				// Выбор методов
-				setSelectedRepository: (repository) =>
-					set((state) => {
-						state.selectedRepository = repository;
-						state.selectedProject = null;
 					}),
 
 				setSelectedProject: (repository, project) => {

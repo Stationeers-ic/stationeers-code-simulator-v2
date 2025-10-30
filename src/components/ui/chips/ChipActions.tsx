@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { LuPlay, LuRedo } from "react-icons/lu";
 import { useInitIc10 } from "@/components/hooks/initIc10";
 import { useIc10Store } from "@/stores/ic10Store";
+import Save from "@/components/ui/chips/Save";
 
 export default function ChipActions() {
 	const { t } = useTranslation();
@@ -12,14 +13,15 @@ export default function ChipActions() {
 
 	return (
 		<HStack>
-			<Button size="sm" onClick={step} disabled={!initialized} colorScheme="blue">
+			<Button size="sm" onClick={step} disabled={!initialized} colorPalette="blue">
 				<LuPlay />
 				{t("menu.step")}
 			</Button>
-			<Button size="sm" onClick={init} colorScheme="green">
+			<Button size="sm" onClick={init} colorPalette="yellow">
 				<LuRedo />
 				{initialized ? t("menu.reset") : t("menu.initialize")}
 			</Button>
+			<Save />
 		</HStack>
 	);
 }

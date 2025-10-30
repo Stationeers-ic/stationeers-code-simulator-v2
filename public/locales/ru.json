@@ -7,7 +7,9 @@
     "settings": "Настройки",
     "main": "Главная",
     "editor": "Редактор",
-    "projects": "Проекты"
+    "projects": "Проекты",
+    "saved": "Сохранено",
+    "save": "Сохранить"
   },
   "app": {
     "currentEnvironment": "Текущее состояние",

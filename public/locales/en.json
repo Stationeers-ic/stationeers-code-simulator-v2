@@ -12,7 +12,9 @@
     "settings": "Settings",
     "main": "Main",
     "projects": "Projects",
-    "editor": "Editor"
+    "editor": "Editor",
+    "saved": "Saved",
+    "save": "Save"
   },
   "terminal": {
     "title": "Terminal Output",

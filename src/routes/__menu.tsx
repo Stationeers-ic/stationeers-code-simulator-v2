@@ -16,7 +16,6 @@ function Menu() {
 						<LuStar />
 						{t("menu.projects")}
 					</MenuLink>
-					<Docs />
 					<MenuLink to="/editor">
 						<LuSaveAll />
 						{t("menu.editor")}
@@ -28,6 +27,7 @@ function Menu() {
 				</HStack>
 				<HStack gap={3}>
 					<LanguageSelector />
+					<Docs />
 				</HStack>
 			</HStack>
 		</Box>
