@@ -87,7 +87,9 @@
       },
       "error": {
         "exist_name": "This project name: '{{name}}' already exist in '$t(project.repository.name.{{repository}})'",
-        "exist_name_description": "Rename the project or edit exist"
+        "exist_name_description": "Rename the project or edit exist",
+        "no_repository": "Repository not found",
+        "no_repository_description": "Repository not found "
       }
     },
     "notFound": "Project not found",
