@@ -86,7 +86,7 @@
     },
     "repository": {
       "name": {
-        "gist": "gist.github.com",
+        "gist": "gist.github.com [WIP]",
         "localStorage": "Браузер"
       },
       "needSelect": "Пожалуйста, выберите репозиторий"

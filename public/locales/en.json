@@ -59,7 +59,7 @@
     "repository": {
       "name": {
         "localStorage": "Browser",
-        "gist": "gist.github.com"
+        "gist": "gist.github.com [WIP]"
       },
       "needSelect": "Please select a repository"
     },
