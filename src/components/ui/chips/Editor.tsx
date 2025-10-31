@@ -103,6 +103,8 @@ export function ChipEditor({ chip }: ChipEditorProps) {
 			language="ic10"
 			onChange={onChange}
 			options={{
+				fontFamily: "Fira Code",
+				fontLigatures: true,
 				minimap: { enabled: false },
 				lineNumbers(lineNumber) {
 					return `${lineNumber - 1}`;

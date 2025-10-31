@@ -37,6 +37,8 @@ export function Index() {
 									value={currentEnv}
 									language="json"
 									options={{
+										fontFamily: "Fira Code",
+										fontLigatures: true,
 										minimap: { enabled: false },
 										readOnly: true,
 									}}

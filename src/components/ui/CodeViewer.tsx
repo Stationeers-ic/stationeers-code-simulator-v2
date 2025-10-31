@@ -1,6 +1,7 @@
 import Editor from "@monaco-editor/react";
 import type React from "react";
 import { json2string } from "@/helpers";
+import { t } from "i18next";
 
 interface JsonViewerProps {
 	data: object | string;
@@ -18,6 +19,8 @@ const CodeViewer: React.FC<JsonViewerProps> = ({ data, language, height = 400 })
 			value={jsonString}
 			theme="ic10"
 			options={{
+				fontFamily: "Fira Code",
+				fontLigatures: true,
 				readOnly: true,
 				lineNumbers: "off",
 				folding: false,

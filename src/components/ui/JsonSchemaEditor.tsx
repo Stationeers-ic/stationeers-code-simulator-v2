@@ -51,6 +51,8 @@ export const JsonSchemaEditor = ({
 				onChange={onChange}
 				language="json"
 				options={{
+					fontFamily: "Fira Code",
+					fontLigatures: true,
 					readOnly: readOnly,
 					minimap: { enabled: false },
 				}}
