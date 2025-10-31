@@ -18,14 +18,17 @@ export class RepoItem {
 		}
 	}
 
-	save(env: EnvSchema): void | Promise<void> {
-		return repoList[this.repo].save(this.name, env);
+	save(env: EnvSchema | undefined = undefined): void | Promise<void> {
+		if (env) {
+			this.env = env;
+		}
+		return repoList[this.repo].save(this);
 	}
 }
 
 export interface Repo {
 	repoName: RepositoryKey;
-	save(name: string, item: EnvSchema): void | Promise<void>;
+	save(item: RepoItem): void | Promise<void>;
 	load(name: string): RepoItem | Promise<RepoItem>;
 	delete(name: string): string[] | Promise<string[]>;
 	list(): RepoItem[] | Promise<RepoItem[]>;
@@ -38,7 +41,7 @@ export abstract class Repo {
 	async sync(): Promise<void> {
 		const list = await this.list();
 		for (const element of list) {
-			projectStore.addProject(element);
+			projectStore.setProject(element);
 		}
 	}
 }

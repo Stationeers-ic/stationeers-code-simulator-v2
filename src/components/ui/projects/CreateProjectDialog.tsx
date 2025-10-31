@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import * as v from "valibot";
 import { toaster } from "@/components/chakra/toaster";
 import { ProjectForm, type ProjectFormRef } from "@/components/ui/projects/ProjectForm";
+import { RepoItem } from "@/core/repositories/Repo.class";
 import { string2Json } from "@/helpers";
 import { type RepositoryKey, useProjectStore } from "@/stores/projects";
 
@@ -14,9 +15,10 @@ interface CreateProjectDialogProps {
 
 export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 	const { t } = useTranslation();
-	const { getSelectedRepository, setSelectedProject, getRepositoryProjects } = useProjectStore();
+	const { getRepository, setSelectedProject, getRepositoryProjects } = useProjectStore();
 	const formRef = useRef<ProjectFormRef>(null);
 	const [isOpen, setIsOpen] = useState(false);
+	const [isloading, setIsloading] = useState(false);
 
 	const handleSubmit = async (): Promise<void> => {
 		if (!formRef.current) return;
@@ -30,6 +32,7 @@ export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 		if (!formData) return;
 
 		try {
+			setIsloading(true);
 			const exiestingProjects = getRepositoryProjects(repository);
 			if (exiestingProjects && Object.keys(exiestingProjects).includes(formData.name)) {
 				toaster.create({
@@ -55,7 +58,18 @@ export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 
 			try {
 				// Сохранение проекта
-				await getSelectedRepository()?.save(formData.name, env.output);
+				const repo = getRepository(repository);
+				if (!repo) {
+					toaster.create({
+						title: t("project.create.error.no_repository"),
+						description: t("project.create.error.no_repository_description"),
+						type: "error",
+						duration: 5000,
+					});
+					return;
+				}
+				const item = new RepoItem(repo.repoName, formData.name, env.output);
+				await repo.save(item);
 				setSelectedProject(repository, formData.name);
 
 				toaster.create({
@@ -82,6 +96,8 @@ export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 				duration: 5000,
 			});
 			console.error(e);
+		} finally {
+			setIsloading(false);
 		}
 	};
 
@@ -110,7 +126,7 @@ export function CreateProjectDialog({ repository }: CreateProjectDialogProps) {
 
 					<Dialog.Footer>
 						<HStack gap={3} justify="flex-end" pt={4} w="full">
-							<Button onClick={handleSubmit} colorPalette="blue" size="md" px={8}>
+							<Button loading={isloading} onClick={handleSubmit} colorPalette="blue" size="md" px={8}>
 								{t("projectForm.actions.submit")}
 							</Button>
 						</HStack>

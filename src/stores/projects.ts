@@ -31,7 +31,7 @@ export interface ProjectStore {
 	setGistToken: (token: string) => void;
 
 	// Проекты методы
-	addProject: (project: RepoItem) => void;
+	setProject: (project: RepoItem) => void;
 	removeLocalStorageProject: (id: string) => void;
 	removeGistProject: (id: string) => void;
 	updateLocalStorageProject: (id: string, project: RepoItem) => void;
@@ -41,6 +41,7 @@ export interface ProjectStore {
 	setSelectedProject: (repository: RepositoryKey | null, project: string | null) => void;
 
 	getSelectedRepository: () => Repo | null;
+	getRepository: (repo: string) => Repo | null;
 	getSelectedProject: () => RepoItem | null;
 	getProject: (repository: RepositoryKey, project: string) => RepoItem | null;
 
@@ -69,6 +70,12 @@ export const useProjectStore = create<ProjectStore>()(
 
 				getSelectedRepository: () => {
 					const repo = get().selectedRepository;
+					if (!isRepositoryKey(repo)) {
+						return null;
+					}
+					return repoList[repo];
+				},
+				getRepository: (repo) => {
 					if (!isRepositoryKey(repo)) {
 						return null;
 					}
@@ -122,7 +129,7 @@ export const useProjectStore = create<ProjectStore>()(
 						state.repositories.gist.token = token;
 					}),
 
-				addProject: (project: RepoItem) =>
+				setProject: (project: RepoItem) =>
 					set((state) => {
 						// Проверка типа репозитория
 						if (!isRepositoryKey(project.repo)) {
@@ -137,13 +144,9 @@ export const useProjectStore = create<ProjectStore>()(
 							console.error(`Repository ${repoKey} is disabled`);
 							return;
 						}
-
-						// Проверяем уникальность имени проекта
-						if (state.projects[repoKey][project.name]) {
-							console.error(`Project ${project.name} already exists in ${repoKey}`);
-							return;
+						if (typeof state.projects[repoKey] === "undefined") {
+							state.projects[repoKey] = {};
 						}
-
 						// Безопасное добавление
 						state.projects[repoKey][project.name] = project;
 					}),
@@ -198,6 +201,6 @@ export const useProjectStore = create<ProjectStore>()(
 );
 
 export const projectStore = {
-	addProject: (project: RepoItem) => useProjectStore.getState().addProject(project),
+	setProject: (project: RepoItem) => useProjectStore.getState().setProject(project),
 	getSelectedProject: (): RepoItem | null => useProjectStore.getState().getSelectedProject(),
 };

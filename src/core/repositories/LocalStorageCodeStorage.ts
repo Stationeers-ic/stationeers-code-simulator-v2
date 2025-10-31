@@ -1,4 +1,3 @@
-import type { EnvSchema } from "@stationeers-ic/ic10";
 import { json2string, string2Json } from "@/helpers";
 import type { RepositoryKey } from "@/stores/projects";
 import { Repo, RepoItem } from "./Repo.class";
@@ -24,10 +23,9 @@ export class LocalStorageCodeStorage extends Repo {
 		return `${this.repoName}_${name}`;
 	}
 
-	async save(name: string, item: EnvSchema): Promise<void> {
-		const storageKey = this.getStorageKey(name);
-		const repoItem = new RepoItem(this.repoName, name, item);
-		localStorage.setItem(storageKey, json2string(repoItem, true));
+	async save(item: RepoItem): Promise<void> {
+		const storageKey = this.getStorageKey(item.name);
+		localStorage.setItem(storageKey, json2string(item, true));
 		await this.sync();
 	}
 
