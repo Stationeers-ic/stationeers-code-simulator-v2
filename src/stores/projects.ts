@@ -46,6 +46,8 @@ export interface ProjectStore {
 	getProject: (repository: RepositoryKey, project: string) => RepoItem | null;
 
 	getRepositoryProjects: (repo: RepositoryKey) => Record<string, RepoItem> | null;
+	clearRepo: (repo: RepositoryKey) => void;
+	resetSelectedProject: () => void;
 }
 
 export const useProjectStore = create<ProjectStore>()(
@@ -80,6 +82,11 @@ export const useProjectStore = create<ProjectStore>()(
 						return null;
 					}
 					return repoList[repo];
+				},
+				clearRepo(repo) {
+					set((state) => {
+						state.projects[repo] = {};
+					});
 				},
 				getSelectedProject: () => {
 					const repo = get().selectedRepository;
@@ -187,6 +194,11 @@ export const useProjectStore = create<ProjectStore>()(
 						initialEnvStore.resetEnvConfig();
 					}
 				},
+				resetSelectedProject: () => {
+					set((state) => {
+						state.selectedProject = null;
+					});
+				},
 			})),
 		),
 		{
@@ -200,7 +212,9 @@ export const useProjectStore = create<ProjectStore>()(
 	),
 );
 
+const state = useProjectStore.getState();
 export const projectStore = {
-	setProject: (project: RepoItem) => useProjectStore.getState().setProject(project),
-	getSelectedProject: (): RepoItem | null => useProjectStore.getState().getSelectedProject(),
+	clearRepo: (repo: RepositoryKey) => state.clearRepo(repo),
+	setProject: (project: RepoItem) => state.setProject(project),
+	getSelectedProject: (): RepoItem | null => state.getSelectedProject(),
 };

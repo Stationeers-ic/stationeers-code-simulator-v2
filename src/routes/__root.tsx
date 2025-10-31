@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import Menu from "./__menu";
+import Menu from "./-menu";
 
 export function TopMenu() {
 	return (

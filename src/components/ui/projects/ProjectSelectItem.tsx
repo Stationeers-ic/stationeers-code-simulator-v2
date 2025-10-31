@@ -1,9 +1,12 @@
 import { Box, Button, ButtonGroup, IconButton } from "@chakra-ui/react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { LuTrash2 } from "react-icons/lu";
 import type { RepoItem } from "@/core/repositories/Repo.class";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
 import { type RepositoryKey, useProjectStore } from "@/stores/projects";
 import ConfirmButton from "../ConfirmButton";
+import signal from "@/Signal";
 
 interface ProjectSelectItemProps {
 	repository: RepositoryKey;
@@ -14,8 +17,11 @@ interface ProjectSelectItemProps {
 }
 
 export function ProjectSelectItem({ repository, projectKey, selected, onSelect }: ProjectSelectItemProps) {
+	const { t } = useTranslation();
 	const { hasChange } = useInitialEnvStore();
-	const { getProject, selectedProject } = useProjectStore();
+	const { getProject, selectedProject, resetSelectedProject } = useProjectStore();
+
+	const [loading, setLoading] = useState(false);
 	const ussed = projectKey === selectedProject;
 	const handleClick = () => {
 		if (selected) {
@@ -24,6 +30,26 @@ export function ProjectSelectItem({ repository, projectKey, selected, onSelect }
 		const project = getProject(repository, projectKey);
 		if (project) {
 			onSelect(project);
+		}
+	};
+
+	const deleteProject = async () => {
+		const project = getProject(repository, projectKey);
+		if (!project) {
+			return;
+		}
+		try {
+			setLoading(true);
+			const projectName = project.name;
+			project.delete();
+			if (ussed) {
+				resetSelectedProject();
+			}
+			signal.emit("projectDeleted", projectName);
+		} catch (error) {
+			console.error(`Error deleting project ${projectKey} from repository ${repository}:`, error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -55,13 +81,11 @@ export function ProjectSelectItem({ repository, projectKey, selected, onSelect }
 				{buttonContent}
 			</Button>
 			<ConfirmButton
-				onConfirm={(): void => {
-					throw new Error("Function not implemented.");
-				}}
-				confirmMessage={`delete project   ? ${projectKey}`}
-				confirmButtonText="delete"
+				onConfirm={deleteProject}
+				confirmMessage={t("project.delete.confirm", { project: projectKey })}
+				confirmButtonText={t("project.delete.button", { project: projectKey })}
 			>
-				<IconButton colorPalette={"red"} w={"40px"} variant="solid">
+				<IconButton loading={loading} colorPalette={"red"} w={"40px"} variant="solid">
 					<LuTrash2 />
 				</IconButton>
 			</ConfirmButton>

@@ -1,11 +1,11 @@
 import { Button, Card, EmptyState, Field, Input, Stack } from "@chakra-ui/react";
+import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ConfirmButton from "@/components/ui/ConfirmButton";
 import type { RepoItem } from "@/core/repositories/Repo.class";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
 import { useProjectStore } from "@/stores/projects";
-import { useNavigate } from "@tanstack/react-router";
 
 interface ProjectPreviewProps {
 	project: RepoItem | null;

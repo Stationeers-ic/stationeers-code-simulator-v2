@@ -94,7 +94,11 @@
     },
     "notFound": "Project not found",
     "needSelect": "Please select a project",
-    "run_edit": "Start edit"
+    "run_edit": "Start edit",
+    "delete": {
+      "button": "Delete",
+      "confirm": "Do you really want to delete the project: {{project}}"
+    }
   },
   "projectForm": {
     "fields": {

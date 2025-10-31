@@ -21,20 +21,18 @@ export function ProjectList({ selectedRepository, projects, selectedProject, onS
 
 	if (!hasProjects) {
 		return (
-			<EmptyState.Root>
-				<EmptyState.Content>
-					<EmptyState.Indicator>
-						{selectedRepository ? t("project.notFound") : t("project.repository.needSelect")}
-					</EmptyState.Indicator>
-					<EmptyState.Title />
-					<EmptyState.Description />
-					{selectedRepository && (
-						<ButtonGroup>
-							<CreateProjectDialog repository={selectedRepository} />
-						</ButtonGroup>
-					)}
-				</EmptyState.Content>
-			</EmptyState.Root>
+			<VStack align="stretch">
+				{selectedRepository ? <CreateProjectDialog repository={selectedRepository} /> : null}
+				<EmptyState.Root>
+					<EmptyState.Content>
+						<EmptyState.Indicator>
+							{selectedRepository ? t("project.notFound") : t("project.repository.needSelect")}
+						</EmptyState.Indicator>
+						<EmptyState.Title />
+						<EmptyState.Description />
+					</EmptyState.Content>
+				</EmptyState.Root>
+			</VStack>
 		);
 	}
 

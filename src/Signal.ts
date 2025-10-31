@@ -5,6 +5,7 @@ export interface Signals {
 	step(builer: Builer): void;
 	init(builer: Builer): void;
 	updateTerminal(): void;
+	projectDeleted(name: string): void;
 }
 
 class Signal extends EventEmitter<Signals> {

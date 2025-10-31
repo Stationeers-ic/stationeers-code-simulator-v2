@@ -29,23 +29,24 @@ export class LocalStorageCodeStorage extends Repo {
 		await this.sync();
 	}
 
-	async load(name: string): Promise<RepoItem> {
-		const item = await this.getItem(name);
+	load(name: string): RepoItem {
+		const item = this.getItem(name);
 		if (!item) {
 			throw new Error(`Item "${name}" not found in ${this.repoName}`);
 		}
 		return item;
 	}
 
-	async delete(name: string): Promise<string[]> {
+	async delete(name: string): Promise<void> {
 		const storageKey = this.getStorageKey(name);
 		localStorage.removeItem(storageKey);
 
-		const remainingItems = await this.list();
-		return remainingItems.map((item) => item.name);
+		const remainingItems = this.list();
+		remainingItems.map((item) => item.name);
+		await this.sync();
 	}
 
-	async list(): Promise<RepoItem[]> {
+	list(): RepoItem[] {
 		const items: RepoItem[] = [];
 		const prefix = this.getStorageKey("");
 
@@ -69,7 +70,7 @@ export class LocalStorageCodeStorage extends Repo {
 		return items;
 	}
 
-	async getItem(name: string): Promise<RepoItem | null> {
+	getItem(name: string): RepoItem | null {
 		const storageKey = this.getStorageKey(name);
 		const storedValue = localStorage.getItem(storageKey);
 

@@ -7,6 +7,7 @@ import { ProjectPreview } from "@/components/ui/projects/ProjectPreview";
 import { RepositoryList } from "@/components/ui/projects/RepositoryList";
 import type { RepoItem } from "@/core/repositories/Repo.class";
 import { useProjectStore } from "@/stores/projects";
+import signal from "@/Signal";
 
 export const Route = createFileRoute("/")({
 	component: Saves,
@@ -25,6 +26,20 @@ function Saves() {
 			}
 		}
 	}, [selectedRepo, selectedProject]);
+
+	useEffect(() => {
+		const handleProjectDeleted = (name: string) => {
+			if (selectedProjectState) {
+				if (selectedProjectState.name === name) {
+					setSelectedProjectState(null);
+				}
+			}
+		};
+		signal.on("projectDeleted", handleProjectDeleted);
+		return () => {
+			signal.off("projectDeleted", handleProjectDeleted);
+		};
+	}, [selectedProjectState, setSelectedProjectState]);
 
 	return (
 		<Grid templateColumns="1fr 1fr 4fr" templateRows={"1rem 1fr"} gap={6} mb={6} w="100%" h="100%">

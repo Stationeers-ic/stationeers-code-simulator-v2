@@ -24,22 +24,26 @@ export class RepoItem {
 		}
 		return repoList[this.repo].save(this);
 	}
+	delete(): void | Promise<void> {
+		return repoList[this.repo].delete(this.name);
+	}
 }
 
 export interface Repo {
 	repoName: RepositoryKey;
 	save(item: RepoItem): void | Promise<void>;
 	load(name: string): RepoItem | Promise<RepoItem>;
-	delete(name: string): string[] | Promise<string[]>;
+	delete(name: string): void | Promise<void>;
 	list(): RepoItem[] | Promise<RepoItem[]>;
 	getItem(name: string): (RepoItem | null) | Promise<RepoItem | null>;
-	sync(): Promise<void>;
+	sync(): void | Promise<void>;
 }
 export abstract class Repo {
 	protected constructor() {}
 
 	async sync(): Promise<void> {
 		const list = await this.list();
+		projectStore.clearRepo(this.repoName);
 		for (const element of list) {
 			projectStore.setProject(element);
 		}
