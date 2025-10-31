@@ -9,13 +9,13 @@ import LoadLang from "@/components/lang/LoadLang";
 import PWABadge from "@/PWABadge";
 import signal from "@/Signal";
 import "@/assets/main.scss";
-import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { createHashHistory, createRouter, RouterProvider } from "@tanstack/react-router";
 import { UnLoad } from "@/components/layout/UnLoad";
 import { routeTree } from "@/routeTree.gen";
 import { getInitialLanguage } from "@/stores/languageStore";
-
+const hashHistory = createHashHistory();
 // Create a new router instance
-const router = createRouter({ routeTree });
+const router = createRouter({ routeTree, history: hashHistory });
 
 declare global {
 	interface Window {
