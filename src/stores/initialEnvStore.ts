@@ -130,20 +130,23 @@ export const useInitialEnvStore = create<InitialEnvState>()(
 			},
 
 			setInitialEnv: (initialEnv) => {
-				const trimmed = initialEnv.trim();
-				const config = stringToConfig(trimmed);
-				if (config) {
-					set({
-						hasChange: true,
-						initialEnv: configToString(config),
-						version: config.version,
-						project: config.project,
-						chips: config.chips,
-						devices: config.devices,
-						networks: config.networks,
-					});
-				} else {
-					set({ initialEnv: trimmed });
+				try {
+					const config = stringToConfig(initialEnv);
+					if (config) {
+						set({
+							hasChange: true,
+							initialEnv: initialEnv,
+							version: config.version,
+							project: config.project,
+							chips: config.chips,
+							devices: config.devices,
+							networks: config.networks,
+						});
+					} else {
+						set({ initialEnv: initialEnv });
+					}
+				} catch (error) {
+					set({ initialEnv: initialEnv });
 				}
 			},
 
@@ -226,6 +229,7 @@ export const useInitialEnvStore = create<InitialEnvState>()(
 				return {
 					version: state.version,
 					chips: state.chips,
+					project: state.project,
 					devices: state.devices,
 					networks: state.networks,
 				};
@@ -237,9 +241,10 @@ export const useInitialEnvStore = create<InitialEnvState>()(
 					const newConfig = {
 						version: config.version ?? state.version,
 						chips: config.chips ?? state.chips,
+						project: config.chips ?? state.project,
 						devices: config.devices ?? state.devices,
 						networks: config.networks ?? state.networks,
-					};
+					} as EnvConfig;
 					return {
 						...newConfig,
 						hasChange: true,

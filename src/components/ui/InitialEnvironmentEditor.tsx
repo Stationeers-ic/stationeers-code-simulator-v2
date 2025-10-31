@@ -21,6 +21,13 @@ export const InitialEnvironmentEditor = () => {
 			}
 		}
 	}, [initialEnv]);
+
+	const onChange = (value: string | undefined) => {
+		if (value) {
+			setInitialEnv(value);
+		}
+	};
+
 	return (
 		<VStack align="stretch" height={"100%"}>
 			<HStack justify="space-between">
@@ -29,12 +36,7 @@ export const InitialEnvironmentEditor = () => {
 				<Button onClick={resetInitialEnv}>{t("app.reset")}</Button>
 			</HStack>
 			<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
-				<JsonSchemaEditor
-					value={initialEnv}
-					onChange={(value) => value && setInitialEnv(value)}
-					schema={schema}
-					schemaUri={schemaUri}
-				/>
+				<JsonSchemaEditor value={initialEnv} onChange={onChange} schema={schema} schemaUri={schemaUri} />
 			</Box>
 		</VStack>
 	);

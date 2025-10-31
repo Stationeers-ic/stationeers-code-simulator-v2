@@ -3,7 +3,6 @@ import { useInitialEnvStore } from "@/stores/initialEnvStore";
 
 export function UnLoad() {
 	const hasChange = useInitialEnvStore((state) => state.hasChange);
-	console.log("hasChange", hasChange);
 	useEffect(() => {
 		if (!hasChange) return; // Не добавляем слушатель, если нет изменений
 
