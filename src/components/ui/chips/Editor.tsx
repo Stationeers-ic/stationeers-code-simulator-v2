@@ -1,7 +1,8 @@
-import { Editor } from "@monaco-editor/react";
+// components/ChipEditor.tsx
 import type { ChipSchema } from "@stationeers-ic/ic10";
 import * as monaco from "monaco-editor";
 import { useEffect, useRef } from "react";
+import { BaseEditor } from "@/components/BaseEditor";
 import { useInitIc10 } from "@/components/hooks/initIc10";
 import signal from "@/Signal";
 import { useIc10Store } from "@/stores/ic10Store";
@@ -27,7 +28,7 @@ export function ChipEditor({ chip }: ChipEditorProps) {
 		}
 	};
 
-	const plugin = (editor: monaco.editor.IStandaloneCodeEditor) => {
+	const onMount = (editor: monaco.editor.IStandaloneCodeEditor) => {
 		decorationsRef.current = editor.createDecorationsCollection([]);
 
 		const highlightLine = (currentLine: number, futureLine: number) => {
@@ -67,26 +68,25 @@ export function ChipEditor({ chip }: ChipEditorProps) {
 				highlightLine(realContext.currentLinePosition, realContext.getNextLineIndex());
 			}
 		};
+
 		const updateHighClear = () => {
 			decorationsRef.current?.clear();
 			lastHighlightRef.current = { current: 0, future: 0 };
 		};
+
 		signal.on("step", updateHighlight);
 		signal.on("init", updateHighClear);
-		// Сохраняем функцию отписки в ref
+
 		unsubscribeRef.current = () => {
 			signal.off("step", updateHighlight);
 			signal.off("init", updateHighClear);
 		};
 
-		// Первоначальное обновление
 		updateHighlight();
 	};
 
-	// Очистка при размонтировании
 	useEffect(() => {
 		return () => {
-			// Отписываемся от события
 			if (unsubscribeRef.current) {
 				unsubscribeRef.current();
 				unsubscribeRef.current = null;
@@ -96,21 +96,17 @@ export function ChipEditor({ chip }: ChipEditorProps) {
 	}, []);
 
 	return (
-		<Editor
-			theme="ic10"
+		<BaseEditor
 			key={`editor-${chip.id}`}
 			value={chip.code}
 			language="ic10"
 			onChange={onChange}
+			onMount={onMount}
 			options={{
-				fontFamily: "Fira Code",
-				fontLigatures: true,
-				minimap: { enabled: false },
-				lineNumbers(lineNumber) {
+				lineNumbers(lineNumber: number) {
 					return `${lineNumber - 1}`;
 				},
 			}}
-			onMount={plugin}
 		/>
 	);
 }

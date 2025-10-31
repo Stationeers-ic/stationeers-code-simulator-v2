@@ -1,8 +1,8 @@
 // App.tsx
 import { Box, Grid, GridItem, HStack, Text, VStack } from "@chakra-ui/react";
-import Editor from "@monaco-editor/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { BaseEditor } from "@/components/BaseEditor";
 import { BugReportButton } from "@/components/layout/BugReport";
 import Chips from "@/components/ui/chips";
 import { InitialEnvironmentEditor } from "@/components/ui/InitialEnvironmentEditor";
@@ -33,17 +33,7 @@ export function Index() {
 								<Box width="47px" height={35} />
 							</HStack>
 							<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
-								<Editor
-									value={currentEnv}
-									language="json"
-									options={{
-										fontFamily: "Fira Code",
-										fontLigatures: true,
-										minimap: { enabled: false },
-										readOnly: true,
-									}}
-									theme="ic10"
-								/>
+								<BaseEditor value={currentEnv} language="json" readOnly={true} />
 							</Box>
 						</VStack>
 					</GridItem>

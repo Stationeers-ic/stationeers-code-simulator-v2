@@ -1,7 +1,8 @@
 // components/JsonSchemaEditor.tsx
 import { Box } from "@chakra-ui/react";
-import Editor, { type Monaco } from "@monaco-editor/react";
+import type { Monaco } from "@monaco-editor/react";
 import { useRef } from "react";
+import { BaseEditor } from "@/components/BaseEditor";
 
 interface JsonSchemaEditorProps {
 	value: string;
@@ -28,7 +29,6 @@ export const JsonSchemaEditor = ({
 	const handleEditorWillMount = (monaco: Monaco) => {
 		monacoRef.current = monaco;
 
-		// Настраиваем схему только один раз
 		if (!isSchemaConfigured.current) {
 			monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
 				validate: true,
@@ -46,17 +46,12 @@ export const JsonSchemaEditor = ({
 
 	return (
 		<Box height={height}>
-			<Editor
+			<BaseEditor
 				value={value}
 				onChange={onChange}
 				language="json"
-				options={{
-					fontFamily: "Fira Code",
-					fontLigatures: true,
-					readOnly: readOnly,
-					minimap: { enabled: false },
-				}}
 				theme={theme}
+				readOnly={readOnly}
 				beforeMount={handleEditorWillMount}
 			/>
 		</Box>
