@@ -43,7 +43,6 @@ function PWABadge() {
 
 	useEffect(() => {
 		if (needRefresh) {
-			console.debug(t("pwa.update-available"));
 			toaster.create({
 				title: t("pwa.update-available"),
 				description: (

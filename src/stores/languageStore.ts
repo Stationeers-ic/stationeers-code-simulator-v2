@@ -1,6 +1,8 @@
 // stores/languageStore.ts
+
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { json2string, string2Json } from "@/helpers";
 
 interface LanguageState {
 	currentLanguage: string;
@@ -29,23 +31,19 @@ export const getBrowserLanguage = (): string => {
 // Получаем начальный язык (из localStorage или браузера)
 export const getInitialLanguage = (): string => {
 	if (typeof window === "undefined") return "en";
-	
+
 	try {
 		const stored = localStorage.getItem("language-storage");
 		if (stored) {
-			const parsed = JSON.parse(stored);
+			const parsed = string2Json<any>(stored);
 			return parsed.state?.currentLanguage || getBrowserLanguage();
 		}
 	} catch (error) {
 		console.error("Error reading from localStorage:", error);
 	}
-	
+
 	const lang = getBrowserLanguage();
-	localStorage.setItem("language-storage", JSON.stringify({
-		state: {
-			currentLanguage: lang,
-		}
-	}))
+	localStorage.setItem("language-storage", json2string({ state: { currentLanguage: lang } }, true));
 	return lang;
 };
 

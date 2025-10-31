@@ -7,17 +7,20 @@
   "menu": {
     "step": "Step",
     "initialize": "Initialize",
-    "reset": "Reset"
+    "reset": "Reset",
+    "settings": "Settings",
+    "projects": "Projects",
+    "editor": "Editor",
+    "saved": "Saved",
+    "save": "Save",
+    "restore": "Restore"
   },
   "terminal": {
     "title": "Terminal Output",
     "clear": "Clear",
     "noOutput": "No output yet. Execute steps to see output…"
   },
-  "ic10Code": {
-    "error": "Error",
-    "missingRunner": "Chip {{chipId}} is missing runner. Make sure the chip is properly initialized."
-  },
+  "ic10Code": {},
   "docs": {
     "title": "Docs",
     "notFound": "Documentation not found",
@@ -47,5 +50,100 @@
     "new-content-available-click-reload-to-update": "New content available, click reload to update.",
     "reload": "Reload",
     "update-available": "Update Available"
+  },
+  "project": {
+    "unsavedChangesWarning": "You have unsaved changes. If you switch projects, your changes will be lost. Do you want to continue?",
+    "dialog": {
+      "header": "Create Project in '$t(project.repository.name.{{repository}})'"
+    },
+    "repository": {
+      "name": {
+        "localStorage": "Browser",
+        "gist": "gist.github.com [WIP]"
+      },
+      "needSelect": "Please select a repository"
+    },
+    "header": {
+      "repositories": "Repositories",
+      "projects": "Projects",
+      "preview": "Preview"
+    },
+    "create": {
+      "button": "Create project",
+      "env_error": {
+        "description": "Check that your environment settings are correct",
+        "title": "Validation error"
+      },
+      "save_error": {
+        "description": "Check your repository settings",
+        "title": "Save error"
+      },
+      "success": {
+        "description": "The project has been successfully created",
+        "title": "Success"
+      },
+      "unknown_error": {
+        "description": "Something went wrong",
+        "title": "Error"
+      },
+      "error": {
+        "exist_name": "This project name: '{{name}}' already exist in '$t(project.repository.name.{{repository}})'",
+        "exist_name_description": "Rename the project or edit exist",
+        "no_repository": "Repository not found",
+        "no_repository_description": "Repository not found "
+      }
+    },
+    "notFound": "Project not found",
+    "needSelect": "Please select a project",
+    "run_edit": "Start edit",
+    "delete": {
+      "button": "Delete",
+      "confirm": "Do you really want to delete the project: {{project}}"
+    }
+  },
+  "projectForm": {
+    "fields": {
+      "name": {
+        "label": "Project Name",
+        "placeholder": "Enter project name"
+      },
+      "author": {
+        "label": "Author",
+        "placeholder": "Enter author name"
+      },
+      "version": {
+        "label": "Version",
+        "placeholder": "1.0.0"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Enter project description"
+      },
+      "tags": {
+        "label": "Tags",
+        "placeholder": "Add a tag"
+      },
+      "envFile": {
+        "label": "Upload Environment File"
+      },
+      "envVariables": {
+        "label": "Environment Variables"
+      }
+    },
+    "errors": {
+      "nameRequired": "Name is required",
+      "versionInvalid": "Must be SemVer eg: (1.0.0)"
+    },
+    "fileUpload": {
+      "success": "File uploaded",
+      "description": "{{fileName}} has been loaded"
+    },
+    "actions": {
+      "submit": "Create Project"
+    }
+  },
+  "common": {
+    "cancel": "Cancel",
+    "continue": "Continue"
   }
 }

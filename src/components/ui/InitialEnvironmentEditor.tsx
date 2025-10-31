@@ -1,55 +1,53 @@
+// components/InitialEnvironmentEditor.tsx
 import { Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
-import Editor, { type Monaco } from "@monaco-editor/react";
-import { use, useRef } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { fetchData } from "@/stores/data";
+import { JsonSchemaEditor } from "@/components/ui/JsonSchemaEditor";
+import { useEnvSchema } from "@/hooks/useJsonSchema";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
+import { useProjectStore } from "@/stores/projects";
 
 export const InitialEnvironmentEditor = () => {
-	const schema = use<any>(
-		fetchData("https://raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Schemas/env.schema.json"),
-	);
 	const { t } = useTranslation();
 	const { initialEnv, setInitialEnv, resetInitialEnv } = useInitialEnvStore();
-	const monacoRef = useRef<Monaco | null>(null);
-	// Функция для настройки Monaco Editor с JSON Schema
-	const handleEditorWillMount = (monaco: Monaco) => {
-		monacoRef.current = monaco;
+	const { selectedProject, getSelectedProject } = useProjectStore();
+	const { schema, schemaUri } = useEnvSchema();
 
-		// Настройка JSON Schema для валидации
-		monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-			validate: true,
-			schemas: [
-				{
-					uri: "https://raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Schemas/env.schema.json",
-					fileMatch: ["*"], // применяется ко всем JSON файлам
-					schema: schema,
-				},
-			],
-		});
+	useEffect(() => {
+		try {
+			if (!initialEnv && selectedProject) {
+				const env = getSelectedProject()?.toJson();
+				if (env) {
+					console.log("from project");
+					setInitialEnv(env, true);
+				} else {
+					const env = localStorage.getItem("temp-store");
+					if (env) {
+						console.log("from local");
+						setInitialEnv(env);
+					}
+				}
+			}
+		} catch (e) {}
+	}, [initialEnv]);
+
+	const onChange = (value: string | undefined) => {
+		if (value) {
+			try {
+				setInitialEnv(value);
+			} catch (e) {}
+		}
 	};
 
 	return (
-		<VStack align="stretch" height="100%">
+		<VStack align="stretch" height={"100%"}>
 			<HStack justify="space-between">
 				<Text fontWeight="bold">{t("app.initialEnvironment")}</Text>
 				<Box width="47px" height={35} />
-				<Button onClick={resetInitialEnv}>{t('app.reset')}</Button>
+				<Button onClick={resetInitialEnv}>{t("app.reset")}</Button>
 			</HStack>
-			<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md" minH={"500px"}>
-				<Editor
-					height={"100%"}
-					value={initialEnv}
-					onChange={(value) => {
-						value ? setInitialEnv(value) : null;
-					}}
-					language="json"
-					options={{
-						minimap: { enabled: false },
-					}}
-					theme="ic10"
-					beforeMount={handleEditorWillMount}
-				/>
+			<Box flex={1} border="2px solid" borderColor="gray.200" borderRadius="md">
+				<JsonSchemaEditor value={initialEnv} onChange={onChange} schema={schema} schemaUri={schemaUri} />
 			</Box>
 		</VStack>
 	);

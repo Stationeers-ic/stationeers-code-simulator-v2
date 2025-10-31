@@ -2,7 +2,12 @@
   "menu": {
     "step": "Шаг",
     "initialize": "Инициализировать",
-    "reset": "Рестарт"
+    "reset": "Рестарт",
+    "settings": "Настройки",
+    "editor": "Редактор",
+    "projects": "Проекты",
+    "saved": "Сохранено",
+    "save": "Сохранить"
   },
   "app": {
     "currentEnvironment": "Текущее состояние",
@@ -14,10 +19,7 @@
     "clear": "Очистить",
     "noOutput": "Пока нет результатов. Выполните шаги, чтобы увидеть выход …"
   },
-  "ic10Code": {
-    "missingRunner": "В чипе {{chipId}} отсутствует \"запускатор\". Убедитесь, что чип правильно инициализирован.",
-    "error": "Ошибка"
-  },
+  "ic10Code": {},
   "docs": {
     "title": "Документация",
     "error": "Ошибка при загрузке документации",
@@ -47,5 +49,100 @@
     "new-content-available-click-reload-to-update": "Доступен новый контент, перезагрузка клика для обновления.",
     "reload": "Перезагрузить",
     "close": "Закрыть"
+  },
+  "project": {
+    "create": {
+      "button": "Создать проект",
+      "success": {
+        "title": "Успех",
+        "description": "Проект успешно создан"
+      },
+      "env_error": {
+        "title": "Ошибка валидации",
+        "description": "Проверьте корректность настроек окружения"
+      },
+      "save_error": {
+        "title": "Ошибка сохранения",
+        "description": "Проверьте настройки репозитория"
+      },
+      "unknown_error": {
+        "title": "Ошибка",
+        "description": "Что-то пошло не так"
+      },
+      "error": {
+        "exist_name": "Это имя проекта: '{{name}}' уже существует в '$t(project.repository.name.{{repository}})'",
+        "exist_name_description": "Переименуйте проект или отредактируйте существующий",
+        "no_repository": "Репозиторий не найден",
+        "no_repository_description": "Репозиторий не найден"
+      }
+    },
+    "dialog": {
+      "header": "Создание проекта в $t(project.repository.name.{{repository}})"
+    },
+    "header": {
+      "preview": "Просмотр",
+      "projects": "Проекты",
+      "repositories": "Репозитории"
+    },
+    "repository": {
+      "name": {
+        "gist": "gist.github.com [WIP]",
+        "localStorage": "Браузер"
+      },
+      "needSelect": "Пожалуйста, выберите репозиторий"
+    },
+    "notFound": "Проект не найден",
+    "needSelect": "Пожалуйста, выберите проект",
+    "unsavedChangesWarning": "У вас есть несохраненные изменения. \nЕсли вы переключите проект, ваши изменения будут потеряны. \nХотите продолжить?",
+    "run_edit": "Начать редактирование",
+    "delete": {
+      "button": "Удалить",
+      "confirm": "Вы действительно хотите удалить проект: {{project}}"
+    }
+  },
+  "projectForm": {
+    "fields": {
+      "name": {
+        "label": "Название проекта",
+        "placeholder": "Введите название проекта"
+      },
+      "author": {
+        "label": "Автор",
+        "placeholder": "Введите имя автора"
+      },
+      "version": {
+        "label": "Версия",
+        "placeholder": "1.0.0"
+      },
+      "description": {
+        "label": "Описание",
+        "placeholder": "Введите описание проекта"
+      },
+      "tags": {
+        "label": "Теги",
+        "placeholder": "Добавить тег"
+      },
+      "envFile": {
+        "label": "Загрузить файл окружения"
+      },
+      "envVariables": {
+        "label": "Переменные окружения"
+      }
+    },
+    "errors": {
+      "nameRequired": "Название обязательно",
+      "versionInvalid": "Должна быть версия SemVer, например: (1.0.0)"
+    },
+    "fileUpload": {
+      "success": "Файл загружен",
+      "description": "{{fileName}} был загружен"
+    },
+    "actions": {
+      "submit": "Создать проект"
+    }
+  },
+  "common": {
+    "cancel": "Отмена",
+    "continue": "Все равно продолжить"
   }
 }

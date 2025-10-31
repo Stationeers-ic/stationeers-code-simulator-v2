@@ -1,16 +1,16 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.3.1/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.3.2/schema.json",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
 		"useIgnoreFile": true
 	},
 	"files": {
+		"includes": ["**", "!!public", "!!**/*.gen.ts"],
 		"maxSize": 999999999999999,
 		"ignoreUnknown": true
 	},
 	"formatter": {
-		"includes": ["./src"],
 		"lineEnding": "lf",
 		"useEditorconfig": false,
 		"enabled": true,

@@ -1,0 +1,7 @@
+{
+	"i18n-ally.localesPaths": ["public/locales"],
+	"i18n-ally.enabledFrameworks": ["react-i18next"],
+	"i18n-ally.keysInUse": ["project.repository.name.localStorage", "project.repository.name.gist"],
+	"i18n-ally.sourceLanguage": "en",
+	"i18n-ally.keystyle": "nested"
+}

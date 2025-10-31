@@ -1,9 +1,12 @@
 // stores/initialEnvStore.ts
 
+import type { EnvSchema } from "@stationeers-ic/ic10";
 import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
+import { devtools } from "zustand/middleware";
+import type { RepoItem } from "@/core/repositories/Repo.class";
+import { json2string, string2Json } from "@/helpers";
 
-const startEnvConfig = {
+export const startEnvConfig: EnvSchema = {
 	version: 1,
 	chips: [
 		{
@@ -15,6 +18,9 @@ const startEnvConfig = {
 			code: "",
 		},
 	],
+	project: {
+		name: "new Project",
+	},
 	devices: [
 		{
 			id: 1,
@@ -53,68 +59,20 @@ const startEnvConfig = {
 	],
 };
 
-const startEnv = `{
-   "$schema": "https://raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Schemas/env.schema.json",
-   "version": 1,
-   "chips": [
-      {
-         "id": 1,
-         "code": ""
-      },
-      {
-         "id": 2,
-         "code": ""
-      }
-   ],
-   "devices": [
-      {
-         "id": 1,
-         "PrefabName": "StructureCircuitHousingCompact",
-         "chip": 1,
-         "pins": [
-            {
-                "pin": "d1",
-                "device": 2,
-            },
-         ],
-         "ports": [
-            {
-               "port": "default",
-               "network": "base"
-            }
-         ]
-      },
-      {
-         "id": 2,
-         "PrefabName": "StructureAirConditioner",
-         "chip": 2,
-         "ports": [
-            {
-               "port": "default",
-               "network": "base"
-            }
-         ]
-      }
-   ],
-   "networks": [
-      {
-         "id": "base",
-         "type": "data"
-      }
-   ]
-}`;
-
-type EnvConfig = typeof startEnvConfig;
+type EnvConfig = EnvSchema;
 
 interface InitialEnvState {
 	// Старый API - для обратной совместимости
 	initialEnv: string;
-	setInitialEnv: (env: string) => void;
+	hasChange: boolean;
+	setHasChange: (hasChange: boolean) => void;
+	setInitialEnv: (env: string, skipAutoSave?: boolean) => void;
 	getInitialEnv: () => string;
 	resetInitialEnv: () => void;
 
 	// Новый API - работа с блоками
 	version: number;
+	project: EnvConfig["project"];
 	chips: EnvConfig["chips"];
 	devices: EnvConfig["devices"];
 	networks: EnvConfig["networks"];
@@ -131,24 +89,19 @@ interface InitialEnvState {
 	setChipCode: (chipId: number, code: string) => void;
 }
 
-// Вспомогательная функция для создания JSON строки из конфига
-const configToString = (config: EnvConfig): string => {
-	return JSON.stringify(
-		{
-			$schema: "https://raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Schemas/env.schema.json",
-			...config,
-		},
-		null,
-		3,
-	);
+export const configToString = (config: EnvConfig): string => {
+	return json2string({
+		$schema: "https://raw.githubusercontent.com/Stationeers-ic/ic10/refs/heads/main/src/Schemas/env.schema.json",
+		...config,
+	});
 };
 
-// Вспомогательная функция для парсинга JSON строки в конфиг
 const stringToConfig = (str: string): EnvConfig | null => {
 	try {
-		const parsed = JSON.parse(str);
+		const parsed = string2Json<EnvConfig>(str);
 		return {
 			version: parsed.version ?? startEnvConfig.version,
+			project: parsed.project,
 			chips: parsed.chips ?? startEnvConfig.chips,
 			devices: parsed.devices ?? startEnvConfig.devices,
 			networks: parsed.networks ?? startEnvConfig.networks,
@@ -158,208 +111,275 @@ const stringToConfig = (str: string): EnvConfig | null => {
 	}
 };
 
+// Функция для сохранения в localStorage
+export const saveTempEnv = (initialEnv: string) => {
+	try {
+		const data = {
+			initialEnv: string2Json(initialEnv),
+			date: new Date().toISOString(),
+		};
+		localStorage.setItem("temp-store", json2string(data));
+		console.log("saved");
+	} catch (error) {
+		localStorage.setItem("temp-store", "");
+	}
+};
+export const getTempEnv = () => {
+	console.log("read");
+	return string2Json<{
+		date: string;
+		initialEnv: EnvConfig;
+	}>(localStorage.getItem("temp-store"));
+};
+
 export const useInitialEnvStore = create<InitialEnvState>()(
 	devtools(
-		persist(
-			(set, get) => ({
-				// Инициализация старых полей
-				initialEnv: startEnv,
+		(set, get) => ({
+			// Инициализация старых полей
+			initialEnv: "",
+			hasChange: false,
 
-				// Инициализация новых полей
-				version: startEnvConfig.version,
-				chips: startEnvConfig.chips,
-				devices: startEnvConfig.devices,
-				networks: startEnvConfig.networks,
+			// Инициализация новых полей
+			version: startEnvConfig.version,
+			project: undefined,
+			chips: startEnvConfig.chips,
+			devices: startEnvConfig.devices,
+			networks: startEnvConfig.networks,
 
-				// Старый API
-				setInitialEnv: (initialEnv) => {
-					const trimmed = initialEnv.trim();
-					const config = stringToConfig(trimmed);
+			setHasChange: (hasChange) => {
+				set({ hasChange });
+			},
 
+			setInitialEnv: (initialEnv, skipAutoSave = false) => {
+				try {
+					const config = stringToConfig(initialEnv);
 					if (config) {
-						set({
-							initialEnv: trimmed,
-							version: config.version,
-							chips: config.chips,
-							devices: config.devices,
-							networks: config.networks,
+						set(() => {
+							const newState = {
+								hasChange: true,
+								initialEnv: initialEnv,
+								version: config.version,
+								project: config.project,
+								chips: config.chips,
+								devices: config.devices,
+								networks: config.networks,
+							};
+							// Сохраняем в localStorage после обновления состояния
+							if (!skipAutoSave) {
+								setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+							}
+							return newState;
 						});
 					} else {
-						set({ initialEnv: trimmed });
+						set(() => {
+							const newState = { initialEnv: initialEnv };
+							// Сохраняем в localStorage после обновления состояния
+							setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+							return newState;
+						});
 					}
-				},
+				} catch (error) {
+					set(() => {
+						const newState = { initialEnv: initialEnv };
+						// Сохраняем в localStorage после обновления состояния
+						setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+						return newState;
+					});
+				}
+			},
 
-				getInitialEnv: () => get().initialEnv,
+			getInitialEnv: () => get().initialEnv,
 
-				resetInitialEnv: () =>
-					set({
-						initialEnv: startEnv,
+			resetInitialEnv: () =>
+				set(() => {
+					const newState = {
+						hasChange: true,
+						initialEnv: configToString(startEnvConfig),
 						version: startEnvConfig.version,
 						chips: startEnvConfig.chips,
 						devices: startEnvConfig.devices,
 						networks: startEnvConfig.networks,
-					}),
+					};
+					// Сохраняем в localStorage после обновления состояния
+					setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+					return newState;
+				}),
 
-				// Новый API - обновление отдельных блоков
-				setVersion: (version) =>
-					set((state) => {
-						const newConfig = {
-							version,
-							chips: state.chips,
-							devices: state.devices,
-							networks: state.networks,
-						};
-						return {
-							version,
-							initialEnv: configToString(newConfig),
-						};
-					}),
-
-				setChips: (chips) =>
-					set((state) => {
-						const newConfig = {
-							version: state.version,
-							chips,
-							devices: state.devices,
-							networks: state.networks,
-						};
-						return {
-							chips,
-							initialEnv: configToString(newConfig),
-						};
-					}),
-
-				setDevices: (devices) =>
-					set((state) => {
-						const newConfig = {
-							version: state.version,
-							chips: state.chips,
-							devices,
-							networks: state.networks,
-						};
-						return {
-							devices,
-							initialEnv: configToString(newConfig),
-						};
-					}),
-
-				setNetworks: (networks) =>
-					set((state) => {
-						const newConfig = {
-							version: state.version,
-							chips: state.chips,
-							devices: state.devices,
-							networks,
-						};
-						return {
-							networks,
-							initialEnv: configToString(newConfig),
-						};
-					}),
-
-				// Получение конфига как объекта
-				getEnvConfig: () => {
-					const state = get();
-					return {
-						version: state.version,
+			// Новый API - обновление отдельных блоков
+			setVersion: (version) =>
+				set((state) => {
+					const newConfig = {
+						version,
 						chips: state.chips,
 						devices: state.devices,
 						networks: state.networks,
 					};
-				},
+					const newState = {
+						version,
+						hasChange: true,
+						initialEnv: configToString(newConfig),
+					};
+					// Сохраняем в localStorage после обновления состояния
+					setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+					return newState;
+				}),
 
-				// Обновление нескольких блоков одновременно
-				setEnvConfig: (config) =>
-					set((state) => {
-						const newConfig = {
-							version: config.version ?? state.version,
-							chips: config.chips ?? state.chips,
-							devices: config.devices ?? state.devices,
-							networks: config.networks ?? state.networks,
-						};
-						return {
-							...newConfig,
-							initialEnv: configToString(newConfig),
-						};
-					}),
+			setChips: (chips) =>
+				set((state) => {
+					const newConfig = {
+						version: state.version,
+						chips,
+						devices: state.devices,
+						networks: state.networks,
+					};
+					const newState = {
+						chips,
+						hasChange: true,
+						initialEnv: configToString(newConfig),
+					};
+					// Сохраняем в localStorage после обновления состояния
+					setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+					return newState;
+				}),
 
-				// Сброс к начальным значениям
-				resetEnvConfig: () =>
-					set({
-						initialEnv: startEnv,
-						version: startEnvConfig.version,
-						chips: startEnvConfig.chips,
-						devices: startEnvConfig.devices,
-						networks: startEnvConfig.networks,
-					}),
+			setDevices: (devices) =>
+				set((state) => {
+					const newConfig = {
+						version: state.version,
+						chips: state.chips,
+						devices,
+						networks: state.networks,
+					};
+					const newState = {
+						devices,
+						hasChange: true,
+						initialEnv: configToString(newConfig),
+					};
+					// Сохраняем в localStorage после обновления состояния
+					setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+					return newState;
+				}),
 
-				// Установка кода для конкретного чипа по ID
-				setChipCode: (chipId: number, code: string) =>
-					set((state) => {
-						// Проверяем, существует ли чип с таким ID
-						const chipIndex = state.chips.findIndex((chip) => chip.id === chipId);
-						if (chipIndex === -1) {
-							return state; // Чип не найден - возвращаем состояние без изменений
-						}
+			setNetworks: (networks) =>
+				set((state) => {
+					const newConfig = {
+						version: state.version,
+						chips: state.chips,
+						devices: state.devices,
+						networks,
+					};
+					const newState = {
+						networks,
+						hasChange: true,
+						initialEnv: configToString(newConfig),
+					};
+					// Сохраняем в localStorage после обновления состояния
+					setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+					return newState;
+				}),
 
-						// Проверяем, изменился ли код
-						const currentChip = state.chips[chipIndex];
-						if (currentChip.code === code) {
-							return state; // Код не изменился - возвращаем состояние без изменений
-						}
-
-						// Создаем новый массив chips с обновленным чипом
-						const newChips = [...state.chips];
-						newChips[chipIndex] = {
-							...currentChip,
-							code,
-						};
-
-						const newConfig = {
-							version: state.version,
-							chips: newChips,
-							devices: state.devices,
-							networks: state.networks,
-						};
-
-						return {
-							chips: newChips,
-							initialEnv: configToString(newConfig),
-						};
-					}),
-			}),
-			{
-				name: "initial-env-storage",
-				onRehydrateStorage: () => (state) => {
-					if (state) {
-						// Если есть старый формат (только initialEnv)
-						if (state.initialEnv && state.initialEnv.trim()) {
-							const config = stringToConfig(state.initialEnv);
-							if (config) {
-								state.version = config.version;
-								state.chips = config.chips;
-								state.devices = config.devices;
-								state.networks = config.networks;
-							}
-						}
-						// Если нет initialEnv, восстанавливаем из блоков или дефолта
-						else if (!state.initialEnv || !state.initialEnv.trim()) {
-							const config = {
-								version: state.version ?? startEnvConfig.version,
-								chips: state.chips ?? startEnvConfig.chips,
-								devices: state.devices ?? startEnvConfig.devices,
-								networks: state.networks ?? startEnvConfig.networks,
-							};
-							state.initialEnv = configToString(config);
-							state.version = config.version;
-							state.chips = config.chips;
-							state.devices = config.devices;
-							state.networks = config.networks;
-						}
-					}
-				},
-				version: 2, // Увеличиваем версию для миграции
+			// Получение конфига как объекта
+			getEnvConfig: () => {
+				const state = get();
+				return {
+					version: state.version,
+					chips: state.chips,
+					project: state.project,
+					devices: state.devices,
+					networks: state.networks,
+				};
 			},
-		),
+
+			// Обновление нескольких блоков одновременно
+			setEnvConfig: (config) =>
+				set((state) => {
+					const newConfig = {
+						version: config.version ?? state.version,
+						chips: config.chips ?? state.chips,
+						project: config.project ?? state.project,
+						devices: config.devices ?? state.devices,
+						networks: config.networks ?? state.networks,
+					} as EnvConfig;
+					const newState = {
+						...newConfig,
+						hasChange: true,
+						initialEnv: configToString(newConfig),
+					};
+					// Сохраняем в localStorage после обновления состояния
+					setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+					return newState;
+				}),
+
+			// Сброс к начальным значениям
+			resetEnvConfig: () =>
+				set(() => {
+					const newState = {
+						initialEnv: "",
+						version: undefined,
+						project: undefined,
+						chips: undefined,
+						devices: undefined,
+						networks: undefined,
+					};
+					// Сохраняем в localStorage после обновления состояния
+					setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+					return newState;
+				}),
+
+			// Установка кода для конкретного чипа по ID
+			setChipCode: (chipId: number, code: string) =>
+				set((state) => {
+					// Проверяем, существует ли чип с таким ID
+					const chipIndex = state.chips.findIndex((chip) => chip.id === chipId);
+					if (chipIndex === -1) {
+						return state; // Чип не найден - возвращаем состояние без изменений
+					}
+
+					// Проверяем, изменился ли код
+					const currentChip = state.chips[chipIndex];
+					if (currentChip.code === code) {
+						return state; // Код не изменился - возвращаем состояние без изменений
+					}
+
+					// Создаем новый массив chips с обновленным чипом
+					const newChips = [...state.chips];
+					newChips[chipIndex] = {
+						...currentChip,
+						code,
+					};
+
+					const newConfig = {
+						version: state.version,
+						chips: newChips,
+						devices: state.devices,
+						networks: state.networks,
+					};
+
+					const newState = {
+						hasChange: true,
+						chips: newChips,
+						initialEnv: configToString(newConfig),
+					};
+					// Сохраняем в localStorage после обновления состояния
+					setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+					return newState;
+				}),
+		}),
+		{
+			name: "initial-env-store",
+		},
 	),
 );
+
+const state = useInitialEnvStore.getState();
+export const initialEnvStore = {
+	setProject: (project: RepoItem) => {
+		state.setInitialEnv(json2string(project.env));
+		state.setHasChange(false);
+	},
+	resetEnvConfig: () => {
+		state.resetEnvConfig();
+		state.setHasChange(false);
+	},
+	getInitialEnv: () => state.getInitialEnv(),
+};

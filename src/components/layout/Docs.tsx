@@ -39,7 +39,7 @@ function Docs() {
 		<Drawer.Root size="xl">
 			<Drawer.Backdrop />
 			<Drawer.Trigger asChild>
-				<Button>
+				<Button size="sm">
 					<LuDock />
 					{t("docs.title")}
 				</Button>
@@ -66,7 +66,6 @@ function Docs() {
 												const { children, className } = props;
 												const match = /language-(\w+)/.exec(className || "");
 												if (match) {
-													console.log(match);
 													const language = match[1].toLowerCase();
 													const codeString = String(children).replace(/\n$/, "");
 													const lineCount = codeString.split("\n").length;

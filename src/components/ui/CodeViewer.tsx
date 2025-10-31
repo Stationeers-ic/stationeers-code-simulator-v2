@@ -1,5 +1,6 @@
-import Editor from "@monaco-editor/react";
 import type React from "react";
+import { BaseEditor } from "@/components/BaseEditor";
+import { json2string } from "@/helpers";
 
 interface JsonViewerProps {
 	data: object | string;
@@ -8,16 +9,15 @@ interface JsonViewerProps {
 }
 
 const CodeViewer: React.FC<JsonViewerProps> = ({ data, language, height = 400 }) => {
-	const jsonString = typeof data === "string" ? data : JSON.stringify(data, null, 2);
+	const jsonString = typeof data === "string" ? data : json2string(data);
 
 	return (
-		<Editor
+		<BaseEditor
 			height={height}
 			language={language}
 			value={jsonString}
-			theme="ic10"
+			readOnly={true}
 			options={{
-				readOnly: true,
 				lineNumbers: "off",
 				folding: false,
 				foldingHighlight: false,
@@ -26,7 +26,6 @@ const CodeViewer: React.FC<JsonViewerProps> = ({ data, language, height = 400 })
 				glyphMargin: false,
 				lineDecorationsWidth: 0,
 				lineNumbersMinChars: 0,
-				minimap: { enabled: false },
 				scrollbar: {
 					horizontal: "hidden",
 					vertical: "hidden",

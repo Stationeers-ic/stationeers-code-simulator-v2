@@ -15,7 +15,11 @@ export function ChipTabs({ chips }: TabsProps) {
 				<Tabs.Trigger key={`${chip.id}-${updateCounter}`} value={chip.id.toString()}>
 					<LuTerminal />
 					{chip.id}
-					<Kbd>{builder?.Chips.get(chip.id)?.getRunner()?.realContext?.currentLinePosition ?? 0}</Kbd>
+					<Kbd>
+						{(builder?.Chips.get(chip.id)?.getRunner()?.realContext?.currentLinePosition ?? 0)
+							.toFixed(0)
+							.padStart(3, "0")}
+					</Kbd>
 				</Tabs.Trigger>
 			))}
 		</>

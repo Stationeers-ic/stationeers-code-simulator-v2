@@ -1,8 +1,10 @@
 // components/ui/BugReportButton.tsx
-import { Box, Button, createToaster, IconButton, Input, Portal, Textarea, VStack } from "@chakra-ui/react";
+import { Box, Button, IconButton, Input, Portal, Textarea, VStack } from "@chakra-ui/react";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LuBug, LuX } from "react-icons/lu";
+import { toaster } from "@/components/chakra/toaster";
+import { json2string } from "@/helpers";
 import { useIc10Store } from "@/stores/ic10Store";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
 import { useTerminalStore } from "@/stores/terminalStore";
@@ -15,7 +17,7 @@ interface BugReportData {
 	terminal: string;
 }
 
-const WEBHOOK_URL = "https://n8n.traineratwot.site/webhook/b2f66dcc-a2a7-4ed1-9b2d-0261de8ca648";
+const WEBHOOK_URL = "http://192.168.100.61:5678/webhook-test/b2f66dcc-a2a7-4ed1-9b2d-0261de8ca648";
 
 const INITIAL_FORM_STATE: BugReportData = {
 	email: "",
@@ -24,11 +26,6 @@ const INITIAL_FORM_STATE: BugReportData = {
 	debug_env: "",
 	terminal: "",
 };
-
-const toaster = createToaster({
-	placement: "top-end",
-	pauseOnPageIdle: true,
-});
 
 export const BugReportButton = () => {
 	const { t } = useTranslation();
@@ -76,7 +73,7 @@ export const BugReportButton = () => {
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(data),
+			body: json2string(data),
 		});
 
 		if (!response.ok) {
@@ -109,17 +106,7 @@ export const BugReportButton = () => {
 				setIsLoading(false);
 			}
 		},
-		[
-			formData,
-			getDebugEnv,
-			getInitialEnv,
-			submitBugReport,
-			showSuccessToast,
-			showErrorToast,
-			resetForm,
-			closeForm,
-			t,
-		],
+		[formData, getDebugEnv, getInitialEnv, submitBugReport, showSuccessToast, showErrorToast, resetForm, closeForm, t],
 	);
 
 	const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
