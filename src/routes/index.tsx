@@ -6,8 +6,8 @@ import { ProjectList } from "@/components/ui/projects/ProjectList";
 import { ProjectPreview } from "@/components/ui/projects/ProjectPreview";
 import { RepositoryList } from "@/components/ui/projects/RepositoryList";
 import type { RepoItem } from "@/core/repositories/Repo.class";
-import { useProjectStore } from "@/stores/projects";
 import signal from "@/Signal";
+import { useProjectStore } from "@/stores/projects";
 
 export const Route = createFileRoute("/")({
 	component: Saves,

@@ -1,4 +1,4 @@
-import { ButtonGroup, EmptyState, Separator, VStack } from "@chakra-ui/react";
+import { EmptyState, Separator, VStack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import CreateProjectDialog from "@/components/ui/projects/CreateProjectDialog";
 import ProjectSelectItem from "@/components/ui/projects/ProjectSelectItem";

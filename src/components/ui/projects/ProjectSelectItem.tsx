@@ -3,10 +3,10 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LuTrash2 } from "react-icons/lu";
 import type { RepoItem } from "@/core/repositories/Repo.class";
+import signal from "@/Signal";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
 import { type RepositoryKey, useProjectStore } from "@/stores/projects";
 import ConfirmButton from "../ConfirmButton";
-import signal from "@/Signal";
 
 interface ProjectSelectItemProps {
 	repository: RepositoryKey;
