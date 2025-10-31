@@ -5,6 +5,7 @@ import ConfirmButton from "@/components/ui/ConfirmButton";
 import type { RepoItem } from "@/core/repositories/Repo.class";
 import { useInitialEnvStore } from "@/stores/initialEnvStore";
 import { useProjectStore } from "@/stores/projects";
+import { useNavigate } from "@tanstack/react-router";
 
 interface ProjectPreviewProps {
 	project: RepoItem | null;
@@ -12,17 +13,19 @@ interface ProjectPreviewProps {
 
 export function ProjectPreview({ project }: ProjectPreviewProps) {
 	const { t } = useTranslation();
+	const navigate = useNavigate();
 	const { hasChange } = useInitialEnvStore();
 	const { selectedProject, setSelectedProject } = useProjectStore();
 	const [requireConfirm, setRequireConfirm] = useState(false);
 
 	useEffect(() => {
-		setRequireConfirm(hasChange && selectedProject !== project);
+		setRequireConfirm(hasChange && project !== null && selectedProject !== project.name);
 	}, [hasChange, selectedProject, project]);
 
 	const select = () => {
 		if (project) {
 			setSelectedProject(project.repo, project.name);
+			navigate({ to: "/editor" });
 		}
 	};
 
