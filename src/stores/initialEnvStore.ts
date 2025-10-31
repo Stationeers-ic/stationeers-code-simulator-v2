@@ -66,7 +66,7 @@ interface InitialEnvState {
 	initialEnv: string;
 	hasChange: boolean;
 	setHasChange: (hasChange: boolean) => void;
-	setInitialEnv: (env: string) => void;
+	setInitialEnv: (env: string, skipAutoSave?: boolean) => void;
 	getInitialEnv: () => string;
 	resetInitialEnv: () => void;
 
@@ -111,6 +111,27 @@ const stringToConfig = (str: string): EnvConfig | null => {
 	}
 };
 
+// Функция для сохранения в localStorage
+export const saveTempEnv = (initialEnv: string) => {
+	try {
+		const data = {
+			initialEnv: string2Json(initialEnv),
+			date: new Date().toISOString(),
+		};
+		localStorage.setItem("temp-store", json2string(data));
+		console.log("saved");
+	} catch (error) {
+		localStorage.setItem("temp-store", "");
+	}
+};
+export const getTempEnv = () => {
+	console.log("read");
+	return string2Json<{
+		date: string;
+		initialEnv: EnvConfig;
+	}>(localStorage.getItem("temp-store"));
+};
+
 export const useInitialEnvStore = create<InitialEnvState>()(
 	devtools(
 		(set, get) => ({
@@ -129,37 +150,59 @@ export const useInitialEnvStore = create<InitialEnvState>()(
 				set({ hasChange });
 			},
 
-			setInitialEnv: (initialEnv) => {
+			setInitialEnv: (initialEnv, skipAutoSave = false) => {
 				try {
 					const config = stringToConfig(initialEnv);
 					if (config) {
-						set({
-							hasChange: true,
-							initialEnv: initialEnv,
-							version: config.version,
-							project: config.project,
-							chips: config.chips,
-							devices: config.devices,
-							networks: config.networks,
+						set(() => {
+							const newState = {
+								hasChange: true,
+								initialEnv: initialEnv,
+								version: config.version,
+								project: config.project,
+								chips: config.chips,
+								devices: config.devices,
+								networks: config.networks,
+							};
+							// Сохраняем в localStorage после обновления состояния
+							if (!skipAutoSave) {
+								setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+							}
+							return newState;
 						});
 					} else {
-						set({ initialEnv: initialEnv });
+						set(() => {
+							const newState = { initialEnv: initialEnv };
+							// Сохраняем в localStorage после обновления состояния
+							setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+							return newState;
+						});
 					}
 				} catch (error) {
-					set({ initialEnv: initialEnv });
+					set(() => {
+						const newState = { initialEnv: initialEnv };
+						// Сохраняем в localStorage после обновления состояния
+						setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+						return newState;
+					});
 				}
 			},
 
 			getInitialEnv: () => get().initialEnv,
 
 			resetInitialEnv: () =>
-				set({
-					hasChange: true,
-					initialEnv: configToString(startEnvConfig),
-					version: startEnvConfig.version,
-					chips: startEnvConfig.chips,
-					devices: startEnvConfig.devices,
-					networks: startEnvConfig.networks,
+				set(() => {
+					const newState = {
+						hasChange: true,
+						initialEnv: configToString(startEnvConfig),
+						version: startEnvConfig.version,
+						chips: startEnvConfig.chips,
+						devices: startEnvConfig.devices,
+						networks: startEnvConfig.networks,
+					};
+					// Сохраняем в localStorage после обновления состояния
+					setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+					return newState;
 				}),
 
 			// Новый API - обновление отдельных блоков
@@ -171,11 +214,14 @@ export const useInitialEnvStore = create<InitialEnvState>()(
 						devices: state.devices,
 						networks: state.networks,
 					};
-					return {
+					const newState = {
 						version,
 						hasChange: true,
 						initialEnv: configToString(newConfig),
 					};
+					// Сохраняем в localStorage после обновления состояния
+					setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+					return newState;
 				}),
 
 			setChips: (chips) =>
@@ -186,11 +232,14 @@ export const useInitialEnvStore = create<InitialEnvState>()(
 						devices: state.devices,
 						networks: state.networks,
 					};
-					return {
+					const newState = {
 						chips,
 						hasChange: true,
 						initialEnv: configToString(newConfig),
 					};
+					// Сохраняем в localStorage после обновления состояния
+					setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+					return newState;
 				}),
 
 			setDevices: (devices) =>
@@ -201,11 +250,14 @@ export const useInitialEnvStore = create<InitialEnvState>()(
 						devices,
 						networks: state.networks,
 					};
-					return {
+					const newState = {
 						devices,
 						hasChange: true,
 						initialEnv: configToString(newConfig),
 					};
+					// Сохраняем в localStorage после обновления состояния
+					setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+					return newState;
 				}),
 
 			setNetworks: (networks) =>
@@ -216,11 +268,14 @@ export const useInitialEnvStore = create<InitialEnvState>()(
 						devices: state.devices,
 						networks,
 					};
-					return {
+					const newState = {
 						networks,
 						hasChange: true,
 						initialEnv: configToString(newConfig),
 					};
+					// Сохраняем в localStorage после обновления состояния
+					setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+					return newState;
 				}),
 
 			// Получение конфига как объекта
@@ -241,26 +296,34 @@ export const useInitialEnvStore = create<InitialEnvState>()(
 					const newConfig = {
 						version: config.version ?? state.version,
 						chips: config.chips ?? state.chips,
-						project: config.chips ?? state.project,
+						project: config.project ?? state.project,
 						devices: config.devices ?? state.devices,
 						networks: config.networks ?? state.networks,
 					} as EnvConfig;
-					return {
+					const newState = {
 						...newConfig,
 						hasChange: true,
 						initialEnv: configToString(newConfig),
 					};
+					// Сохраняем в localStorage после обновления состояния
+					setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+					return newState;
 				}),
 
 			// Сброс к начальным значениям
 			resetEnvConfig: () =>
-				set({
-					initialEnv: "",
-					version: undefined,
-					project: undefined,
-					chips: undefined,
-					devices: undefined,
-					networks: undefined,
+				set(() => {
+					const newState = {
+						initialEnv: "",
+						version: undefined,
+						project: undefined,
+						chips: undefined,
+						devices: undefined,
+						networks: undefined,
+					};
+					// Сохраняем в localStorage после обновления состояния
+					setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+					return newState;
 				}),
 
 			// Установка кода для конкретного чипа по ID
@@ -292,11 +355,14 @@ export const useInitialEnvStore = create<InitialEnvState>()(
 						networks: state.networks,
 					};
 
-					return {
+					const newState = {
 						hasChange: true,
 						chips: newChips,
 						initialEnv: configToString(newConfig),
 					};
+					// Сохраняем в localStorage после обновления состояния
+					setTimeout(() => saveTempEnv(newState.initialEnv), 0);
+					return newState;
 				}),
 		}),
 		{
@@ -304,6 +370,7 @@ export const useInitialEnvStore = create<InitialEnvState>()(
 		},
 	),
 );
+
 const state = useInitialEnvStore.getState();
 export const initialEnvStore = {
 	setProject: (project: RepoItem) => {

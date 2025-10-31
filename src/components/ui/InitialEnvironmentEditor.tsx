@@ -14,17 +14,28 @@ export const InitialEnvironmentEditor = () => {
 	const { schema, schemaUri } = useEnvSchema();
 
 	useEffect(() => {
-		if (!initialEnv && selectedProject) {
-			const env = getSelectedProject()?.toJson();
-			if (env) {
-				setInitialEnv(env);
+		try {
+			if (!initialEnv && selectedProject) {
+				const env = getSelectedProject()?.toJson();
+				if (env) {
+					console.log("from project");
+					setInitialEnv(env, true);
+				} else {
+					const env = localStorage.getItem("temp-store");
+					if (env) {
+						console.log("from local");
+						setInitialEnv(env);
+					}
+				}
 			}
-		}
+		} catch (e) {}
 	}, [initialEnv]);
 
 	const onChange = (value: string | undefined) => {
 		if (value) {
-			setInitialEnv(value);
+			try {
+				setInitialEnv(value);
+			} catch (e) {}
 		}
 	};
 

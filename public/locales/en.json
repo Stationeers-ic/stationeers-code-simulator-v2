@@ -12,7 +12,8 @@
     "projects": "Projects",
     "editor": "Editor",
     "saved": "Saved",
-    "save": "Save"
+    "save": "Save",
+    "restore": "Restore"
   },
   "terminal": {
     "title": "Terminal Output",
