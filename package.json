@@ -20,6 +20,7 @@
 		"@stationeers-ic/monaco-lang-ic10": "^0.2.5",
 		"@tanstack/react-router": "^1.139.1",
 		"@tanstack/react-router-devtools": "^1.139.1",
+		"@xyflow/react": "^12.9.3",
 		"deep-equal": "^2.2.3",
 		"eventemitter3": "^5.0.1",
 		"fast-deep-equal": "^3.1.3",
