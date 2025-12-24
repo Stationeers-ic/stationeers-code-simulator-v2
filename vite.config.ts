@@ -5,6 +5,12 @@ import { VitePWA } from "vite-plugin-pwa";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
+	server: {
+		watch: {
+			// Игнорируем ненужные для отслеживания папки
+			ignored: ["**/node_modules/**", "**/.git/**", "**/dist/**", "**/.build/**", "**/*.log", "**/coverage/**"],
+		},
+	},
 	plugins: [
 		tanstackRouter({
 			target: "react",
