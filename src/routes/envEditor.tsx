@@ -30,7 +30,7 @@ export const initialNodes: Node[] = [
 		id: "A",
 		type: "resizableGroup", // используем новый тип
 		data: {
-			label: "Group2",
+			label: "network 1",
 			backgroundColor: "rgba(0, 100, 255, 0.15)", // можно менять
 			borderColor: "cyan.500", // можно менять
 		},
@@ -44,14 +44,14 @@ export const initialNodes: Node[] = [
 	{
 		id: "B",
 		type: "input",
-		data: { label: "child node 1" },
+		data: { label: "Housing" },
 		position: { x: 10, y: 10 },
 		parentId: "A",
 		extent: "parent",
 	},
 	{
 		id: "C",
-		data: { label: "child node 2" },
+		data: { label: "Air cooller" },
 		position: { x: 10, y: 90 },
 		parentId: "A",
 		extent: "parent",
