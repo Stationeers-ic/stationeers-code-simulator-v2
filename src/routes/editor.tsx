@@ -10,10 +10,10 @@ import { Terminal } from "@/components/ui/Terminal";
 import { useIc10Store } from "@/stores/ic10Store";
 
 export const Route = createFileRoute("/editor")({
-	component: Index,
+	component: Editor,
 });
 
-export function Index() {
+export function Editor() {
 	const { t } = useTranslation();
 	// Получаем состояние и действия из хранилища
 	const { currentEnv } = useIc10Store();
@@ -48,4 +48,4 @@ export function Index() {
 	);
 }
 
-export default Index;
+export default Editor;

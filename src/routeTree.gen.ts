@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as EnvEditorRouteImport } from './routes/envEditor'
 import { Route as EditorRouteImport } from './routes/editor'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnvEditorRoute = EnvEditorRouteImport.update({
+  id: '/envEditor',
+  path: '/envEditor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EditorRoute = EditorRouteImport.update({
@@ -32,30 +38,34 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/editor': typeof EditorRoute
+  '/envEditor': typeof EnvEditorRoute
   '/settings': typeof SettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/editor': typeof EditorRoute
+  '/envEditor': typeof EnvEditorRoute
   '/settings': typeof SettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/editor': typeof EditorRoute
+  '/envEditor': typeof EnvEditorRoute
   '/settings': typeof SettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/editor' | '/settings'
+  fullPaths: '/' | '/editor' | '/envEditor' | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/editor' | '/settings'
-  id: '__root__' | '/' | '/editor' | '/settings'
+  to: '/' | '/editor' | '/envEditor' | '/settings'
+  id: '__root__' | '/' | '/editor' | '/envEditor' | '/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   EditorRoute: typeof EditorRoute
+  EnvEditorRoute: typeof EnvEditorRoute
   SettingsRoute: typeof SettingsRoute
 }
 
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/envEditor': {
+      id: '/envEditor'
+      path: '/envEditor'
+      fullPath: '/envEditor'
+      preLoaderRoute: typeof EnvEditorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/editor': {
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   EditorRoute: EditorRoute,
+  EnvEditorRoute: EnvEditorRoute,
   SettingsRoute: SettingsRoute,
 }
 export const routeTree = rootRouteImport
