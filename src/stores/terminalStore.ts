@@ -29,6 +29,8 @@ export const useTerminalStore = create<TerminalState>()((set, get) => ({
 	messages: new Set<string>(),
 
 	addError: (error: Ic10Error) => {
+		console.warn(error);
+
 		const { errorIds, entries } = get();
 
 		// Проверяем уникальность по error.id
@@ -52,6 +54,7 @@ export const useTerminalStore = create<TerminalState>()((set, get) => ({
 	},
 
 	addMessage: (message: string) => {
+		console.log(message);
 		const { messages, entries } = get();
 
 		// Проверяем уникальность по тексту

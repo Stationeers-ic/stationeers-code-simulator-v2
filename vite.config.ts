@@ -69,6 +69,7 @@ export default defineConfig({
 		},
 	],
 	build: {
+		sourcemap: "inline",
 		chunkSizeWarningLimit: 1024,
 		rollupOptions: {
 			output: {

@@ -13,6 +13,7 @@ import { createHashHistory, createRouter, RouterProvider } from "@tanstack/react
 import { UnLoad } from "@/components/layout/UnLoad";
 import { routeTree } from "@/routeTree.gen";
 import { getInitialLanguage } from "@/stores/languageStore";
+
 const hashHistory = createHashHistory();
 // Create a new router instance
 const router = createRouter({ routeTree, history: hashHistory });

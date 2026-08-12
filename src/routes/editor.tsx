@@ -13,7 +13,7 @@ export const Route = createFileRoute("/editor")({
 	component: Index,
 });
 
-export function Index() {
+function Index() {
 	const { t } = useTranslation();
 	// Получаем состояние и действия из хранилища
 	const { currentEnv } = useIc10Store();
