@@ -3,5 +3,32 @@
 	"i18n-ally.enabledFrameworks": ["react-i18next"],
 	"i18n-ally.keysInUse": ["project.repository.name.localStorage", "project.repository.name.gist"],
 	"i18n-ally.sourceLanguage": "en",
-	"i18n-ally.keystyle": "nested"
+	"i18n-ally.keystyle": "nested",
+	"workbench.colorCustomizations": {
+		"activityBar.activeBackground": "#b147ef",
+		"activityBar.background": "#b147ef",
+		"activityBar.foreground": "#e7e7e7",
+		"activityBar.inactiveForeground": "#e7e7e799",
+		"activityBarBadge.background": "#eda832",
+		"activityBarBadge.foreground": "#15202b",
+		"activityBarTop.activeBackground": "#b147ef",
+		"activityBarTop.background": "#b147ef",
+		"activityBarTop.foreground": "#e7e7e7",
+		"activityBarTop.inactiveForeground": "#e7e7e799",
+		"commandCenter.border": "#e7e7e799",
+		"commandCenter.foreground": "#e7e7e7",
+		"sash.hoverBorder": "#b147ef",
+		"statusBar.background": "#9d18eb",
+		"statusBar.debuggingBackground": "#9d18eb",
+		"statusBar.debuggingForeground": "#e7e7e7",
+		"statusBar.foreground": "#e7e7e7",
+		"statusBarItem.hoverBackground": "#b147ef",
+		"statusBarItem.remoteBackground": "#eb9b14",
+		"statusBarItem.remoteForeground": "#e7e7e7",
+		"titleBar.activeBackground": "#9d18eb",
+		"titleBar.activeForeground": "#e7e7e7",
+		"titleBar.inactiveBackground": "#9d18eb99",
+		"titleBar.inactiveForeground": "#e7e7e799"
+	},
+	"peacock.color": "#9d18eb"
 }
