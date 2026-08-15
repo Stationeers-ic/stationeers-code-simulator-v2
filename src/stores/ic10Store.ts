@@ -153,7 +153,7 @@ export const useIc10Store = create<Ic10State>()(
 				// Ищем раннер с нужным chipId
 				for (const runner of builder.Runners.values()) {
 					if (runner.realContext.housing?.id === chipId) {
-						return runner.realContext;
+						return runner.realContext as ic10.RealContext;
 					}
 				}
 

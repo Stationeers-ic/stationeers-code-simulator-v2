@@ -7,7 +7,7 @@ export function json2string<T = any>(obj: T, minify = false): string {
 	}
 }
 
-export function string2Json<T = unknown>(str?: null | ""): object;
+export function string2Json(str?: null | ""): object;
 export function string2Json<T = unknown>(str: string): T;
 export function string2Json<T = unknown>(str?: string | null): T | object;
 export function string2Json<T = unknown>(str?: string | null): T | object {

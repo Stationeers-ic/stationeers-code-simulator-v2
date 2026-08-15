@@ -14,11 +14,7 @@ export default defineConfig({
 			routeFileIgnorePrefix: "-",
 			quoteStyle: "single",
 		}),
-		react({
-			babel: {
-				plugins: [["babel-plugin-react-compiler"]],
-			},
-		}),
+		react(),
 		tsconfigPaths(),
 		VitePWA({
 			registerType: "prompt",
@@ -44,7 +40,7 @@ export default defineConfig({
 				globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
 				cleanupOutdatedCaches: true,
 				clientsClaim: true,
-				maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
+				maximumFileSizeToCacheInBytes: 40 * 1024 * 1024,
 			},
 
 			devOptions: {
